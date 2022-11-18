@@ -35,8 +35,8 @@ public class GridManager : MonoBehaviour
             
             case InputActionPhase.Performed:
                 Vector3Int newval = new Vector3Int();
-                newval.x = +curr_val.x + curr_val.y;
-                newval.y = -curr_val.x + curr_val.y;
+                newval.x = +curr_val.y;
+                newval.y = -curr_val.x;
                 Debug.Log(newval);
                 updateCursorPos(newval);
                 break;
