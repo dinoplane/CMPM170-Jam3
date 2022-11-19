@@ -17,7 +17,7 @@ public class GridManager : MonoBehaviour
     {
         cursor = GameObject.Find("Cursor");
         tmap = GameObject.Find("Grid").GetComponent<Grid>();
-        tileCoords = new Vector3Int(0, -1, 0);
+        tileCoords = new Vector3Int(0, 0, 0);
 
         setCursorPos();
     }
