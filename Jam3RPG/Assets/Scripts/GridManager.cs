@@ -17,7 +17,7 @@ public class GridManager : MonoBehaviour
     {
         cursor = GameObject.Find("Cursor");
         tmap = GameObject.Find("Grid").GetComponent<Grid>();
-        tileCoords = new Vector3Int(0, -1, 0);
+        tileCoords = new Vector3Int(0, 0, 0);
 
         setCursorPos(tileCoords);
     }
@@ -49,10 +49,12 @@ public class GridManager : MonoBehaviour
         //Debug.Log($"Movement {context.phase} {context.ReadValue<Vector2>()}");
         Vector2Int curr_val = Vector2Int.CeilToInt(context.ReadValue<Vector2>());
         Vector3 dest = Camera.main.ScreenToWorldPoint(new Vector3(curr_val.x, curr_val.y, Camera.main.nearClipPlane));
-        Debug.Log(dest);
+        Vector3Int tile = tmap.LocalToCell(dest);
+        //Debug.Log(dest);
+        Debug.Log(tile);
         
-        dest.z = 0;
-        //cursor.transform.position = dest;
+        tile.z = 0;
+        setCursorPos(tile);
         switch (context.phase){
             case InputActionPhase.Started:
                 break;
@@ -80,7 +82,7 @@ public class GridManager : MonoBehaviour
     
     private void setCursorPos(Vector3Int pos){
         Vector3 dest = tmap.GetCellCenterLocal(pos);
-        //Debug.Log(dest);
+        Debug.Log(pos);
         dest.z = 0;
         cursor.transform.position = dest;
     }
