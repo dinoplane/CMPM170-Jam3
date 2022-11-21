@@ -44,6 +44,15 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""CursorMove"",
+                    ""type"": ""Value"",
+                    ""id"": ""c69ae62f-ad12-4fe6-96b0-2afd7ed1e40e"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -112,6 +121,17 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                     ""action"": ""Select"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""7d7fae21-0344-433a-afc6-82c05ff31492"",
+                    ""path"": ""<Pointer>/position"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""CursorMove"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -122,6 +142,7 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
         m_Grid = asset.FindActionMap("Grid", throwIfNotFound: true);
         m_Grid_Movement = m_Grid.FindAction("Movement", throwIfNotFound: true);
         m_Grid_Select = m_Grid.FindAction("Select", throwIfNotFound: true);
+        m_Grid_CursorMove = m_Grid.FindAction("CursorMove", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -183,12 +204,14 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
     private IGridActions m_GridActionsCallbackInterface;
     private readonly InputAction m_Grid_Movement;
     private readonly InputAction m_Grid_Select;
+    private readonly InputAction m_Grid_CursorMove;
     public struct GridActions
     {
         private @PlayerControls m_Wrapper;
         public GridActions(@PlayerControls wrapper) { m_Wrapper = wrapper; }
         public InputAction @Movement => m_Wrapper.m_Grid_Movement;
         public InputAction @Select => m_Wrapper.m_Grid_Select;
+        public InputAction @CursorMove => m_Wrapper.m_Grid_CursorMove;
         public InputActionMap Get() { return m_Wrapper.m_Grid; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -204,6 +227,9 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                 @Select.started -= m_Wrapper.m_GridActionsCallbackInterface.OnSelect;
                 @Select.performed -= m_Wrapper.m_GridActionsCallbackInterface.OnSelect;
                 @Select.canceled -= m_Wrapper.m_GridActionsCallbackInterface.OnSelect;
+                @CursorMove.started -= m_Wrapper.m_GridActionsCallbackInterface.OnCursorMove;
+                @CursorMove.performed -= m_Wrapper.m_GridActionsCallbackInterface.OnCursorMove;
+                @CursorMove.canceled -= m_Wrapper.m_GridActionsCallbackInterface.OnCursorMove;
             }
             m_Wrapper.m_GridActionsCallbackInterface = instance;
             if (instance != null)
@@ -214,6 +240,9 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                 @Select.started += instance.OnSelect;
                 @Select.performed += instance.OnSelect;
                 @Select.canceled += instance.OnSelect;
+                @CursorMove.started += instance.OnCursorMove;
+                @CursorMove.performed += instance.OnCursorMove;
+                @CursorMove.canceled += instance.OnCursorMove;
             }
         }
     }
@@ -222,5 +251,6 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
     {
         void OnMovement(InputAction.CallbackContext context);
         void OnSelect(InputAction.CallbackContext context);
+        void OnCursorMove(InputAction.CallbackContext context);
     }
 }
