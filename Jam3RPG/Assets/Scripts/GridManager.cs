@@ -11,6 +11,9 @@ public class GridManager : MonoBehaviour
     private Grid tmap;
 
     private Vector3Int tileCoords;
+    private GameObject selected = null;
+
+    // private (i think we should make a grid???)
 
     // Start is called before the first frame update
     void Start()
@@ -70,6 +73,25 @@ public class GridManager : MonoBehaviour
 
     public void OnSelect(InputAction.CallbackContext context){
         //Debug.Log($"Movement {context.phase} {context.ReadValue<Vector2>()}");
+        Debug.Log("Click");
+        RaycastHit hit;
+        // Does the ray intersect any objects excluding the player layer
+        if (Physics.Raycast(Camera.main.transform.position, cursor.transform.position - Camera.main.transform.position, out hit))
+        {
+            Debug.DrawRay(Camera.main.transform.position, cursor.transform.position - Camera.main.transform.position, Color.yellow);
+            Debug.Log("Did Hit");
+            selected = hit.collider.gameObject;
+        }
+        else
+        {
+            Debug.DrawRay(Camera.main.transform.position, cursor.transform.position - Camera.main.transform.position , Color.white);
+            Debug.Log("Did not Hit");
+            if (selected != null){
+                selected.transform.position = cursor.transform.position;
+                selected = null;
+            }
+
+        }
 
     }
 
