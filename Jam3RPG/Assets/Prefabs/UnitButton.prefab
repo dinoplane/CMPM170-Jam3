@@ -282,3 +282,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5571e843e21d095459b9930017e01614, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  buttonComponent: {fileID: 3118523337528661924}
+  imageComponent: {fileID: 3118523337528661927}

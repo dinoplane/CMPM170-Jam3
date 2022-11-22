@@ -6,15 +6,13 @@ using UnityEngine.UI;
 public class UnitPlaceholder : MonoBehaviour
 {
     bool turnOver = false;
-    Button buttonComponent;
+    public Button buttonComponent;
     public Image imageComponent;
     PhaseManager phaseManager;
 
     // Start is called before the first frame update
     void Start()
     {
-        buttonComponent = this.GetComponent<Button>();
-        imageComponent = this.GetComponent<Image>();
         phaseManager = FindObjectOfType<PhaseManager>();
     }
 

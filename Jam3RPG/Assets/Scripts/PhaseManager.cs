@@ -19,6 +19,8 @@ public class PhaseManager : MonoBehaviour
     int currentCycle = 0; /*A cycle conists of both a player phase and an enemy phase. 
                            * New cycle begins at start of each player phase. Will become important later*/
 
+    public CanvasUI canvasUI;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -32,6 +34,7 @@ public class PhaseManager : MonoBehaviour
         foreach( UnitPlaceholder unit in unitList)
         {
             unit.MakeInactive();
+            Debug.Log("Made unit inactive");
         }
     }
 
@@ -46,6 +49,9 @@ public class PhaseManager : MonoBehaviour
         playerPhase = true;
         Debug.Log("Started Player Phase");
         currentCycle++;
+
+        if(canvasUI != null)
+            canvasUI.StartPlayerPhase();
     }
 
     void StartAiPhase()
@@ -58,6 +64,9 @@ public class PhaseManager : MonoBehaviour
         aiUnitsThatCanAct = aiUnits.Count;
         playerPhase = false;
         Debug.Log("Started AI Phase");
+
+        if (canvasUI != null)
+            canvasUI.StartAiPhase();
     }
 
     //Called whenever a unit finishes a turn
