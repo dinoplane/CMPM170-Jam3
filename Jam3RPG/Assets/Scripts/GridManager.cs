@@ -47,6 +47,8 @@ public class GridManager : MonoBehaviour
 
     public void OnCursorMove(InputAction.CallbackContext context){
         //Debug.Log($"Movement {context.phase} {context.ReadValue<Vector2>()}");
+        //Gets the tile that the mouse cursor (not the in-game one) is pointing at
+        //Then, sets the in-game cursor to be hovering over that tile
         Vector2Int curr_val = Vector2Int.CeilToInt(context.ReadValue<Vector2>());
         Vector3 dest = Camera.main.ScreenToWorldPoint(new Vector3(curr_val.x, curr_val.y, Camera.main.nearClipPlane));
         Vector3Int tile = tmap.LocalToCell(dest);
