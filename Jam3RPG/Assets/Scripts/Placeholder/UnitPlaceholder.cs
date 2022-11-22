@@ -7,12 +7,14 @@ public class UnitPlaceholder : MonoBehaviour
 {
     bool turnOver = false;
     Button buttonComponent;
+    public Image imageComponent;
     PhaseManager phaseManager;
 
     // Start is called before the first frame update
     void Start()
     {
         buttonComponent = this.GetComponent<Button>();
+        imageComponent = this.GetComponent<Image>();
         phaseManager = FindObjectOfType<PhaseManager>();
     }
 
@@ -21,6 +23,7 @@ public class UnitPlaceholder : MonoBehaviour
         if(phaseManager != null)
         {
             MakeInactive();
+            imageComponent.color = Color.blue;
             phaseManager.UnitFinishedTurn();
         }
     }
@@ -29,13 +32,11 @@ public class UnitPlaceholder : MonoBehaviour
     {
         turnOver = false;
         buttonComponent.interactable = true;
-        this.GetComponent<Image>().color = Color.white;
     }
 
     public void MakeInactive()
     {
         turnOver = true;
         buttonComponent.interactable = false;
-        this.GetComponent<Image>().color = Color.blue;
     }
 }
