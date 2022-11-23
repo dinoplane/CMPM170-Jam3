@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "UnitBase", menuName = "Jam3RPG/New Unit Base Class")]
-public class UnitBaseClass : ScriptableObject {
+public class UnitBaseClass : MonoBehaviour {
     
     [Header("Faction")]
     public bool isEnemy = false;
