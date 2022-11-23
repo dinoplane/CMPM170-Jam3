@@ -22,11 +22,10 @@ public class GridManager : MonoBehaviour
         tmap = GameObject.Find("Grid").GetComponent<Grid>();
         tileCoords = new Vector3Int(0, 0, 0);
 
-        setCursorPos(tileCoords);
+        SetCursorPos(tileCoords);
     }
 
-    public void OnGridMovement(InputAction.CallbackContext context){
-
+    public void OnGridMovement(InputAction.CallbackContext context){ // Called when WASD is pressed... kinda useless
         //Debug.Log($"Movement {context.phase} {context.ReadValue<Vector2>()}");
         Vector2Int curr_val = Vector2Int.CeilToInt(context.ReadValue<Vector2>());
         
@@ -39,7 +38,7 @@ public class GridManager : MonoBehaviour
                 newval.x = +curr_val.y;
                 newval.y = -curr_val.x;
                 //Debug.Log(newval);
-                updateCursorPos(newval);
+                UpdateCursorPos(newval);
                 break;
             
             case InputActionPhase.Canceled:
@@ -55,56 +54,50 @@ public class GridManager : MonoBehaviour
         Vector2Int curr_val = Vector2Int.CeilToInt(context.ReadValue<Vector2>());
         Vector3 dest = Camera.main.ScreenToWorldPoint(new Vector3(curr_val.x, curr_val.y, Camera.main.nearClipPlane));
         Vector3Int tile = tmap.LocalToCell(dest);
-        //Debug.Log(dest);
-        Debug.Log(tile);
-        
-        tile.z = 0;
-        setCursorPos(tile);
+        tile.z = 0; // 
+        SetCursorPos(tile);
+    }
+
+    public void OnSelect(InputAction.CallbackContext context){ // Called when left mouse button is selected
+        //Debug.Log($"Movement {context.phase} {context.ReadValue<Vector2>()}");
+        Debug.Log("Click");
+
         switch (context.phase){
             case InputActionPhase.Started:
+                RaycastHit hit;
+
+                // Cast a raycast 
+                if (Physics.Raycast(Camera.main.transform.position, cursor.transform.position - Camera.main.transform.position, out hit)) {
+                    // select collided object
+                    Debug.DrawRay(Camera.main.transform.position, cursor.transform.position - Camera.main.transform.position, Color.yellow);
+                    Debug.Log("Did Hit");
+                    selected = hit.collider.gameObject;
+                } else { // place selected object if exists
+                    Debug.DrawRay(Camera.main.transform.position, cursor.transform.position - Camera.main.transform.position , Color.white);
+                    Debug.Log("Did not Hit");
+                    if (selected != null){
+                        selected.transform.position = cursor.transform.position;
+                        selected = null;
+                    }
+                }
                 break;
             
             case InputActionPhase.Performed:
                 break;
             
             case InputActionPhase.Canceled:
-
                 break;
         }
     }
 
-    public void OnSelect(InputAction.CallbackContext context){
-        //Debug.Log($"Movement {context.phase} {context.ReadValue<Vector2>()}");
-        Debug.Log("Click");
-        RaycastHit hit;
-        // Does the ray intersect any objects excluding the player layer
-        if (Physics.Raycast(Camera.main.transform.position, cursor.transform.position - Camera.main.transform.position, out hit))
-        {
-            Debug.DrawRay(Camera.main.transform.position, cursor.transform.position - Camera.main.transform.position, Color.yellow);
-            Debug.Log("Did Hit");
-            selected = hit.collider.gameObject;
-        }
-        else
-        {
-            Debug.DrawRay(Camera.main.transform.position, cursor.transform.position - Camera.main.transform.position , Color.white);
-            Debug.Log("Did not Hit");
-            if (selected != null){
-                selected.transform.position = cursor.transform.position;
-                selected = null;
-            }
 
-        }
-
-    }
-
-
-    private void updateCursorPos(Vector3Int vIn){
+    private void UpdateCursorPos(Vector3Int vIn){
         //tileCoords
         tileCoords += vIn;
-        setCursorPos(tileCoords);
+        SetCursorPos(tileCoords);
     }
     
-    private void setCursorPos(Vector3Int pos){
+    private void SetCursorPos(Vector3Int pos){
         Vector3 dest = tmap.GetCellCenterLocal(pos);
         Debug.Log(pos);
         dest.z = 0;
