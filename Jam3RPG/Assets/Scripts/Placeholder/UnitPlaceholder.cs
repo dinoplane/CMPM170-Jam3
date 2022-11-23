@@ -22,7 +22,7 @@ public class UnitPlaceholder : MonoBehaviour
         {
             MakeInactive();
             imageComponent.color = Color.blue;
-            phaseManager.UnitFinishedTurn();
+            //phaseManager.UnitFinishedTurn();
         }
     }
 

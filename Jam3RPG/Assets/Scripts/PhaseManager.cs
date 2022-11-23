@@ -6,14 +6,14 @@ using UnityEngine;
  Written by Santiago
 - Can later automate the lists by looking for all unit objects in the scene with tags 'playerUnit'
   or 'aiUnit', instead of having to add them all to the lists manually.
-- Once we actually have a unit class, replace the UnitPlaceholder class used here with that new class
+- Once we actually have a unit class, replace the UnitBaseClass class used here with that new class
  */
 
 public class PhaseManager : MonoBehaviour
 {
-    public List<UnitPlaceholder> playerUnits;
+    public List<UnitBaseClass> playerUnits;
     int playerUnitsThatCanAct = 0;
-    public List<UnitPlaceholder> aiUnits;
+    public List<UnitBaseClass> aiUnits;
     int aiUnitsThatCanAct = 0;
     bool playerPhase;
     int currentCycle = 0; /*A cycle conists of both a player phase and an enemy phase. 
@@ -24,14 +24,30 @@ public class PhaseManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        MakeUnitsInactive(aiUnits);
-        StartPlayerPhase();
+        UnitBaseClass[] units = FindObjectsOfType<UnitBaseClass>();
+        foreach(UnitBaseClass unit in units)
+        {
+            if (unit.isEnemy)
+            {
+                aiUnits.Add(unit);
+            }
+            else
+            {
+                playerUnits.Add(unit);
+            }
+        }
+
+        Debug.Log("Player units " + playerUnits.Count);
+        Debug.Log("Enemy units " + aiUnits.Count);
+        //MakeUnitsInactive(aiUnits);
+        //StartPlayerPhase();
     }
 
+    /*
     //Makes list of units unable to be given commands
-    void MakeUnitsInactive(List<UnitPlaceholder> unitList)
+    void MakeUnitsInactive(List<UnitBaseClass> unitList)
     {
-        foreach( UnitPlaceholder unit in unitList)
+        foreach( UnitBaseClass unit in unitList)
         {
             unit.MakeInactive();
             Debug.Log("Made unit inactive");
@@ -41,7 +57,7 @@ public class PhaseManager : MonoBehaviour
     void StartPlayerPhase()
     {
         //Make all player uints able to be given commands
-        foreach (UnitPlaceholder unit in playerUnits)
+        foreach (UnitBaseClass unit in playerUnits)
         {
             unit.MakeActive();
         }
@@ -57,7 +73,7 @@ public class PhaseManager : MonoBehaviour
     void StartAiPhase()
     {
         //Make all AI uints able to be given commands
-        foreach ( UnitPlaceholder unit in aiUnits)
+        foreach ( UnitBaseClass unit in aiUnits)
         {
             unit.MakeActive();
         }
@@ -77,7 +93,7 @@ public class PhaseManager : MonoBehaviour
             playerUnitsThatCanAct -= 1;
             if(playerUnitsThatCanAct <= 0) //All player units have finished turn
             {
-                foreach(UnitPlaceholder unit in playerUnits)
+                foreach(UnitBaseClass unit in playerUnits)
                 {
                     unit.imageComponent.color = Color.white; //Un-greys-out the units
                 }
@@ -89,12 +105,12 @@ public class PhaseManager : MonoBehaviour
             aiUnitsThatCanAct -= 1;
             if(aiUnitsThatCanAct <= 0)
             {
-                foreach (UnitPlaceholder unit in aiUnits) //All AI units have finished turn
+                foreach (UnitBaseClass unit in aiUnits) //All AI units have finished turn
                 {
                     unit.imageComponent.color = Color.white; //Un-greys-out the units
                 }
                 StartPlayerPhase();
             }
         }
-    }
+    }*/
 }

@@ -99,7 +99,7 @@ public class GridManager : MonoBehaviour
     
     private void SetCursorPos(Vector3Int pos){
         Vector3 dest = tmap.GetCellCenterLocal(pos);
-        Debug.Log(pos);
+        //Debug.Log(pos);
         dest.z = 0;
         cursor.transform.position = dest;
     }
