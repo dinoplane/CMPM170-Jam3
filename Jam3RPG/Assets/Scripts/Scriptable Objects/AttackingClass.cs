@@ -20,6 +20,7 @@ using UnityEngine;
 //     Death();
 
 
+// How does player check if character is in range?
 
 [CreateAssetMenu(fileName = "Attacking", menuName = "Jam3RPG/New Attacking Class")]
 public class AttackingClass : UnitBaseClass
@@ -42,8 +43,9 @@ public class AttackingClass : UnitBaseClass
     // Possible Returns:
     //    Int Total: Positive integer that represents new health total of enemy
     //
-    private void Attack(){  
-
+    private void Attack(UnitBaseClass target){  
+        target.ChangeHealth(attackDamage-target.armorCurrent);
+        Debug.Log("Attacked target!");
     }
 
 
@@ -59,7 +61,7 @@ public class AttackingClass : UnitBaseClass
     // Possible Returns:
     //    Int Total: Positive integer that represents new health total of enemy
     //
-    private void CounterAttack(){  
-
+    private void CounterAttack(UnitBaseClass attacker){  
+        attacker.ChangeHealth(attackDamage-attacker.armorCurrent);
     }
 }

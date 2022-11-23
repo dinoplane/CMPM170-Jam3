@@ -14,9 +14,10 @@ public class UnitBaseClass : ScriptableObject {
     public int armorMax;
     private int armorCurrent;
     public int moveRange;
+    public VectorInt2 tileCoords; // Tile coordinates
     // public ??? position; Unit should know where it is on the grid
     // Could probably add sprites and sfx here too
-
+    public bool isSacrificed;
 
     // ChangeHealth
     //
@@ -28,8 +29,8 @@ public class UnitBaseClass : ScriptableObject {
     // Possible Returns:
     //    Int Total: Positive integer that represents new health total
     //
-    private void ChangeHealth(){  
-
+    private void ChangeHealth(int healthDamage){  
+        healthCurrent += healthDamage;
     }
 
 
@@ -43,8 +44,8 @@ public class UnitBaseClass : ScriptableObject {
     // Possible Returns:
     //    Int Total: Positive integer that represents new armor total
     //
-    private void ChangeArmor(){
-
+    private void ChangeArmor(int chipDamage){
+        armorCurrent -= chipDamage;
     }
 
 
@@ -58,8 +59,9 @@ public class UnitBaseClass : ScriptableObject {
     // Possible Returns:
     //    None? 
     //
-    private void MoveToSpace(){
-
+    private void MoveToSpace(Vector2Int coords){
+        // we may need tile coords...
+        tileCoords = coords;
     }
 
 
@@ -74,7 +76,8 @@ public class UnitBaseClass : ScriptableObject {
     //    None?
     //
     private void ActionSacrifice() { // Only usable if team == playerTeam and class != Cult Leader
-        
+        Debug.Log("Define sacrifice in calsses!");
+        isSacrificed = true; // the phase switcher could check if any units are sacrificed and kill them. 
     }
 
 
@@ -90,7 +93,17 @@ public class UnitBaseClass : ScriptableObject {
     //    None?
     //
     private void Death() { 
-        
+        // Not sure how this will work... but ok...
+        if (isSacrificed){
+            // Do special Animation
+        }
+
+        else if (healthCurrent <= 0){ // Got killed...
+            // Do something 
+            // play animation
+        }
+        // delete self...
+        Object.Destroy(this.gameObject);
     }
     
 }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 using UnityEngine.InputSystem;
-
+// Todo change tile coords to vector2int
 
 public class GridManager : MonoBehaviour
 {
