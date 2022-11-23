@@ -14,7 +14,7 @@ public class UnitBaseClass : ScriptableObject {
     public int armorMax;
     private int armorCurrent;
     public int moveRange;
-    public VectorInt2 tileCoords; // Tile coordinates
+    public Vector2 tileCoords; // Tile coordinates
     // public ??? position; Unit should know where it is on the grid
     // Could probably add sprites and sfx here too
     public bool isSacrificed;
@@ -59,7 +59,7 @@ public class UnitBaseClass : ScriptableObject {
     // Possible Returns:
     //    None? 
     //
-    private void MoveToSpace(Vector2Int coords){
+    private void MoveToSpace(Vector2 coords){
         // we may need tile coords...
         tileCoords = coords;
     }
