@@ -28,7 +28,7 @@ using UnityEngine;
 //     CounterAttack();
 
 
-[CreateAssetMenu(fileName = "CultLeader", menuName = "Jam3RPG/New Cult Leader")]
+//[CreateAssetMenu(fileName = "CultLeader", menuName = "Jam3RPG/New Cult Leader")]
 public class CultLeaderClass : AttackingClass
 {
 

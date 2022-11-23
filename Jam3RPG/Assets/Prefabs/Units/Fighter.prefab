@@ -9,7 +9,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3868493778953013892, guid: d848ebde8bc915747b2260baab0bb184, type: 3}
       propertyPath: m_Name
-      value: Unit Variant
+      value: Fighter
       objectReference: {fileID: 0}
     - target: {fileID: 3868493778953013945, guid: d848ebde8bc915747b2260baab0bb184, type: 3}
       propertyPath: m_RootOrder
@@ -79,5 +79,12 @@ MonoBehaviour:
   healthMax: 0
   armorMax: 0
   moveRange: 0
+  turnOver: 0
+  sprite: {fileID: 5805468987322200810}
   attackDamage: 0
   attackRange: 0
+--- !u!212 &5805468987322200810 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 3868493778953013894, guid: d848ebde8bc915747b2260baab0bb184, type: 3}
+  m_PrefabInstance: {fileID: 7295424377350223980}
+  m_PrefabAsset: {fileID: 0}

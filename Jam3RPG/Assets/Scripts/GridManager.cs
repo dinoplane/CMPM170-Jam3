@@ -71,12 +71,32 @@ public class GridManager : MonoBehaviour
                     // select collided object
                     Debug.DrawRay(Camera.main.transform.position, cursor.transform.position - Camera.main.transform.position, Color.yellow);
                     Debug.Log("Did Hit");
-                    selected = hit.collider.gameObject;
+
+                    /*Add a check here to determine if selected the same square that the unit was just in (as in selected same unit)
+                      In which case, go into action selection
+                      This allows a unit to act without moving*/
+
+                    UnitBaseClass hitUnit = hit.collider.gameObject.GetComponent<UnitBaseClass>();
+                    if (hitUnit && !hitUnit.turnOver) //Selected a unit class? Unit class's turn is NOT over?
+                    {
+                        selected = hit.collider.gameObject;
+                    }
                 } else { // place selected object if exists
                     Debug.DrawRay(Camera.main.transform.position, cursor.transform.position - Camera.main.transform.position , Color.white);
                     Debug.Log("Did not Hit");
                     if (selected != null){
+                        //Arrian can get the unit's movement range here to see if the selected tile is within that range or not.
+
+                        /*Also having moved the selected unit, can tell the grid manager to go into an action selection right now,
+                        instead of ending the unit's turn
+                        After action select is finished (maybe attacked a target, maybe just waited), then end the units turn and
+                        go back into click-and-move mode
+                         */
+
                         selected.transform.position = cursor.transform.position;
+                        //(Below) Unit has moved, set turn as over (Later, turn will be set as finished via a different method)
+                        //
+                        selected.GetComponent<UnitBaseClass>().FinishTurn(); 
                         selected = null;
                     }
                 }

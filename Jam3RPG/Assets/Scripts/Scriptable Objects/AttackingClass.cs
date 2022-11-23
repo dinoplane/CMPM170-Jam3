@@ -21,7 +21,7 @@ using UnityEngine;
 
 
 
-[CreateAssetMenu(fileName = "Attacking", menuName = "Jam3RPG/New Attacking Class")]
+//[CreateAssetMenu(fileName = "Attacking", menuName = "Jam3RPG/New Attacking Class")]
 public class AttackingClass : UnitBaseClass
 {
 

@@ -28,7 +28,7 @@ using UnityEngine;
 //     CounterAttack();
 
 
-[CreateAssetMenu(fileName = "Archer", menuName = "Jam3RPG/New Archer")]
+//[CreateAssetMenu(fileName = "Archer", menuName = "Jam3RPG/New Archer")]
 public class ArcherClass : AttackingClass
 {
 

@@ -5,7 +5,6 @@ using UnityEngine.UI;
 
 public class UnitPlaceholder : MonoBehaviour
 {
-    bool turnOver = false;
     public Button buttonComponent;
     public Image imageComponent;
     PhaseManager phaseManager;
@@ -22,19 +21,17 @@ public class UnitPlaceholder : MonoBehaviour
         {
             MakeInactive();
             imageComponent.color = Color.blue;
-            //phaseManager.UnitFinishedTurn();
+            phaseManager.UnitFinishedTurn();
         }
     }
 
     public void MakeActive()
     {
-        turnOver = false;
         buttonComponent.interactable = true;
     }
 
     public void MakeInactive()
     {
-        turnOver = true;
         buttonComponent.interactable = false;
     }
 }

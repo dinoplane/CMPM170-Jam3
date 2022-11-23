@@ -39,18 +39,17 @@ public class PhaseManager : MonoBehaviour
 
         Debug.Log("Player units " + playerUnits.Count);
         Debug.Log("Enemy units " + aiUnits.Count);
-        //MakeUnitsInactive(aiUnits);
-        //StartPlayerPhase();
+        MakeUnitsInactive(aiUnits);
+        StartPlayerPhase();
     }
 
-    /*
+    
     //Makes list of units unable to be given commands
     void MakeUnitsInactive(List<UnitBaseClass> unitList)
     {
         foreach( UnitBaseClass unit in unitList)
         {
             unit.MakeInactive();
-            Debug.Log("Made unit inactive");
         }
     }
 
@@ -95,7 +94,7 @@ public class PhaseManager : MonoBehaviour
             {
                 foreach(UnitBaseClass unit in playerUnits)
                 {
-                    unit.imageComponent.color = Color.white; //Un-greys-out the units
+                    unit.sprite.color = Color.white; //Un-greys-out the units
                 }
                 StartAiPhase();
             }
@@ -107,10 +106,10 @@ public class PhaseManager : MonoBehaviour
             {
                 foreach (UnitBaseClass unit in aiUnits) //All AI units have finished turn
                 {
-                    unit.imageComponent.color = Color.white; //Un-greys-out the units
+                    unit.sprite.color = Color.white; //Un-greys-out the units
                 }
                 StartPlayerPhase();
             }
         }
-    }*/
+    }
 }

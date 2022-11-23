@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "UnitBase", menuName = "Jam3RPG/New Unit Base Class")]
+//[CreateAssetMenu(fileName = "UnitBase", menuName = "Jam3RPG/New Unit Base Class")]
 public class UnitBaseClass : MonoBehaviour {
     
     [Header("Faction")]
@@ -17,6 +17,34 @@ public class UnitBaseClass : MonoBehaviour {
     // public ??? position; Unit should know where it is on the grid
     // Could probably add sprites and sfx here too
 
+    public bool turnOver = false;
+    public SpriteRenderer sprite;
+    private PhaseManager phaseManager;
+
+    public void Start()
+    {
+        phaseManager = FindObjectOfType<PhaseManager>();
+    }
+
+    public void MakeActive()
+    {
+        turnOver = false;
+    }
+
+    public void MakeInactive()
+    {
+        turnOver = true;
+    }
+
+    public void FinishTurn()
+    {
+        if (phaseManager != null)
+        {
+            MakeInactive();
+            sprite.color = Color.grey;
+            phaseManager.UnitFinishedTurn();
+        }
+    }
 
     // ChangeHealth
     //

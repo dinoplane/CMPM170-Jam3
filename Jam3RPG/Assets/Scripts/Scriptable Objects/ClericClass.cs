@@ -21,7 +21,7 @@ using UnityEngine;
 
 
 
-[CreateAssetMenu(fileName = "Cleric", menuName = "Jam3RPG/New Cleric")]
+//[CreateAssetMenu(fileName = "Cleric", menuName = "Jam3RPG/New Cleric")]
 public class ClericClass : UnitBaseClass
 {
 

@@ -28,7 +28,8 @@ using UnityEngine;
 //     CounterAttack();
 
 
-[CreateAssetMenu(fileName = "PaladinLeader", menuName = "Jam3RPG/New Paladin Leader")]
+
+//[CreateAssetMenu(fileName = "PaladinLeader", menuName = "Jam3RPG/New Paladin Leader")]
 public class PaladinLeaderClass : AttackingClass
 {
 
