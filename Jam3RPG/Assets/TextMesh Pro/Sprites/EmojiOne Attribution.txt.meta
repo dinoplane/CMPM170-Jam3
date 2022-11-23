@@ -1,6 +1,11 @@
 fileFormatVersion: 2
+<<<<<<<< HEAD:Jam3RPG/Assets/TextMesh Pro/Sprites/EmojiOne Attribution.txt.meta
 guid: 381dcb09d5029d14897e55f98031fca5
 TextScriptImporter:
+========
+guid: 52b63e5d7734fe74caec2ec6a2a3b4f0
+PrefabImporter:
+>>>>>>>> alien:Jam3RPG/Assets/Prefabs/GridManager.prefab.meta
   externalObjects: {}
   userData: 
   assetBundleName: 

@@ -11,6 +11,9 @@ public class GridManager : MonoBehaviour
     private Grid tmap;
 
     private Vector3Int tileCoords;
+    private GameObject selected = null;
+
+    // private (i think we should make a grid???)
 
     // Start is called before the first frame update
     void Start()
@@ -19,15 +22,12 @@ public class GridManager : MonoBehaviour
         tmap = GameObject.Find("Grid").GetComponent<Grid>();
         tileCoords = new Vector3Int(0, 0, 0);
 
-        setCursorPos();
+        SetCursorPos(tileCoords);
     }
 
-    public void OnGridMovement(InputAction.CallbackContext context){
-
+    public void OnGridMovement(InputAction.CallbackContext context){ // Called when WASD is pressed... kinda useless
         //Debug.Log($"Movement {context.phase} {context.ReadValue<Vector2>()}");
         Vector2Int curr_val = Vector2Int.CeilToInt(context.ReadValue<Vector2>());
-
-        
         
         switch (context.phase){
             case InputActionPhase.Started:
@@ -37,8 +37,8 @@ public class GridManager : MonoBehaviour
                 Vector3Int newval = new Vector3Int();
                 newval.x = +curr_val.y;
                 newval.y = -curr_val.x;
-                Debug.Log(newval);
-                updateCursorPos(newval);
+                //Debug.Log(newval);
+                UpdateCursorPos(newval);
                 break;
             
             case InputActionPhase.Canceled:
@@ -47,14 +47,59 @@ public class GridManager : MonoBehaviour
         }
     }
 
-    private void updateCursorPos(Vector3Int vIn){
+    public void OnCursorMove(InputAction.CallbackContext context){
+        //Debug.Log($"Movement {context.phase} {context.ReadValue<Vector2>()}");
+        //Gets the tile that the mouse cursor (not the in-game one) is pointing at
+        //Then, sets the in-game cursor to be hovering over that tile
+        Vector2Int curr_val = Vector2Int.CeilToInt(context.ReadValue<Vector2>());
+        Vector3 dest = Camera.main.ScreenToWorldPoint(new Vector3(curr_val.x, curr_val.y, Camera.main.nearClipPlane));
+        Vector3Int tile = tmap.LocalToCell(dest);
+        tile.z = 0; // 
+        SetCursorPos(tile);
+    }
+
+    public void OnSelect(InputAction.CallbackContext context){ // Called when left mouse button is selected
+        //Debug.Log($"Movement {context.phase} {context.ReadValue<Vector2>()}");
+        Debug.Log("Click");
+
+        switch (context.phase){
+            case InputActionPhase.Started:
+                RaycastHit hit;
+
+                // Cast a raycast 
+                if (Physics.Raycast(Camera.main.transform.position, cursor.transform.position - Camera.main.transform.position, out hit)) {
+                    // select collided object
+                    Debug.DrawRay(Camera.main.transform.position, cursor.transform.position - Camera.main.transform.position, Color.yellow);
+                    Debug.Log("Did Hit");
+                    selected = hit.collider.gameObject;
+                } else { // place selected object if exists
+                    Debug.DrawRay(Camera.main.transform.position, cursor.transform.position - Camera.main.transform.position , Color.white);
+                    Debug.Log("Did not Hit");
+                    if (selected != null){
+                        selected.transform.position = cursor.transform.position;
+                        selected = null;
+                    }
+                }
+                break;
+            
+            case InputActionPhase.Performed:
+                break;
+            
+            case InputActionPhase.Canceled:
+                break;
+        }
+    }
+
+
+    private void UpdateCursorPos(Vector3Int vIn){
         //tileCoords
         tileCoords += vIn;
-        setCursorPos();
+        SetCursorPos(tileCoords);
     }
     
-    private void setCursorPos(){
-        Vector3 dest = tmap.GetCellCenterLocal(tileCoords);
+    private void SetCursorPos(Vector3Int pos){
+        Vector3 dest = tmap.GetCellCenterLocal(pos);
+        Debug.Log(pos);
         dest.z = 0;
         cursor.transform.position = dest;
     }
