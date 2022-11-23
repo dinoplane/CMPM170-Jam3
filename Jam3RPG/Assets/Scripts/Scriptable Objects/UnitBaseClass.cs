@@ -76,7 +76,7 @@ public class UnitBaseClass : ScriptableObject {
     //    None?
     //
     private void ActionSacrifice() { // Only usable if team == playerTeam and class != Cult Leader
-        Debug.Log("Define sacrifice in calsses!");
+        Debug.Log("Define sacrifice in classes!");
         isSacrificed = true; // the phase switcher could check if any units are sacrificed and kill them. 
     }
 
