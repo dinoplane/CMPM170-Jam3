@@ -15,6 +15,7 @@ public class UnitBaseClass : MonoBehaviour {
     [HideInInspector] public int armorCurrent;
     public int moveRange;
     // public ??? position; Unit should know where it is on the grid
+    public Vector2Int tilePosition;
     // Could probably add sprites and sfx here too
 
     [Header("Other")]
@@ -116,8 +117,8 @@ public class UnitBaseClass : MonoBehaviour {
     // Possible Returns:
     //    None? 
     //
-    public void MoveToSpace(){
-
+    public void MoveToSpace(Vector2Int tile){ // This function doesn't modify the transform
+        tilePosition = tile;
     }
 
 

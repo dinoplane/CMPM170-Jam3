@@ -16,10 +16,16 @@ public class GridManager : MonoBehaviour
 {
 
     private GameObject cursor;
+    public Sprite valid;
+    public Sprite invalid;
+
     private Grid tmap;
 
-    private Vector3Int tileCoords;
+    private Vector2Int cursorTileCoords;// of cursor
+
     private GameObject selectedUnit = null;
+
+    private Vector2Int pastTile;// of units
     private Vector3 pastPosition;
 
     // private (i think we should make a grid???)
@@ -30,31 +36,38 @@ public class GridManager : MonoBehaviour
     {
         cursor = GameObject.Find("Cursor");
         tmap = GameObject.Find("Grid").GetComponent<Grid>();
-        tileCoords = new Vector3Int(0, 0, 0);
+        cursorTileCoords = new Vector2Int(0, 0);
 
-        SetCursorPos(tileCoords);
+        SetCursorPos(cursorTileCoords);
+
+        // Snap all units to grid
+        UnitBaseClass[] units = FindObjectsOfType<UnitBaseClass>();
+        foreach(UnitBaseClass unit in units)
+        {
+            SnapUnitToGrid(unit);
+        }
     }
 
     public void OnGridMovement(InputAction.CallbackContext context){ // Called when WASD is pressed... kinda useless
         //Debug.Log($"Movement {context.phase} {context.ReadValue<Vector2>()}");
-        Vector2Int curr_val = Vector2Int.CeilToInt(context.ReadValue<Vector2>());
+        // Vector2Int curr_val = Vector2Int.CeilToInt(context.ReadValue<Vector2>());
         
-        switch (context.phase){
-            case InputActionPhase.Started:
-                break;
+        // switch (context.phase){
+        //     case InputActionPhase.Started:
+        //         break;
             
-            case InputActionPhase.Performed:
-                Vector3Int newval = new Vector3Int();
-                newval.x = +curr_val.y;
-                newval.y = -curr_val.x;
-                //Debug.Log(newval);
-                UpdateCursorPos(newval);
-                break;
+        //     case InputActionPhase.Performed:
+        //         Vector3Int newval = new Vector3Int();
+        //         newval.x = +curr_val.y;
+        //         newval.y = -curr_val.x;
+        //         //Debug.Log(newval);
+        //         UpdateCursorPos(newval);
+        //         break;
             
-            case InputActionPhase.Canceled:
+        //     case InputActionPhase.Canceled:
 
-                break;
-        }
+        //         break;
+        // }
     }
 
     public void OnCursorMove(InputAction.CallbackContext context){
@@ -64,8 +77,24 @@ public class GridManager : MonoBehaviour
         Vector2Int curr_val = Vector2Int.CeilToInt(context.ReadValue<Vector2>());
         Vector3 dest = Camera.main.ScreenToWorldPoint(new Vector3(curr_val.x, curr_val.y, Camera.main.nearClipPlane));
         Vector3Int tile = tmap.LocalToCell(dest);
-        tile.z = 0; // 
-        SetCursorPos(tile);
+        cursorTileCoords.x = tile.x;
+        cursorTileCoords.y = tile.y;
+
+        SetCursorPos(cursorTileCoords);
+        //
+
+        if (gridMode == SelectMode.MoveMode){
+            Debug.Log(cursorTileCoords);
+            UnitBaseClass unit = selectedUnit.GetComponent<UnitBaseClass>();
+            if (!checkTileInRange(unit.tilePosition, cursorTileCoords, unit.moveRange))
+                cursor.GetComponent<SpriteRenderer>().sprite = invalid;
+            else cursor.GetComponent<SpriteRenderer>().sprite = valid;
+        } else if (gridMode == SelectMode.ChooseTargetMode){
+            AttackingClass unit = selectedUnit.GetComponent<AttackingClass>();
+            if (!checkTileInRange(unit.tilePosition, cursorTileCoords, unit.attackRange))
+                cursor.GetComponent<SpriteRenderer>().sprite = invalid;
+            else cursor.GetComponent<SpriteRenderer>().sprite = valid;
+        }
     }
 
     public void OnClickBoard(InputAction.CallbackContext context){ // Called when left mouse button is selected
@@ -91,6 +120,7 @@ public class GridManager : MonoBehaviour
 
                 case SelectMode.MoveMode: // We have something selected
                 {
+                    UnitBaseClass unit = selectedUnit.GetComponent<UnitBaseClass>();
                     if (hitUnit){ // If we have touched another unit
                         if (selectedUnit == hit.collider.gameObject){ // It is self
                             gridMode = SelectMode.PickActionMode; // Don't move. Just pick action.
@@ -98,9 +128,12 @@ public class GridManager : MonoBehaviour
                         if (!hitUnit.turnOver) // And they are friendly
                             SetSelUnit(hit.collider.gameObject);
                     } else { // If empty tile selected
-                        selectedUnit.transform.position = cursor.transform.position;
-                        gridMode = SelectMode.PickActionMode;
-                        Debug.Log("Picking Action Mode!");
+                        if (checkTileInRange(unit.tilePosition, cursorTileCoords, unit.moveRange)){
+                            unit.MoveToSpace(cursorTileCoords);
+                            selectedUnit.transform.position = cursor.transform.position;
+                            gridMode = SelectMode.PickActionMode;
+                            Debug.Log("Picking Action Mode!");
+                        }
                     }
                 } break;
                 
@@ -111,11 +144,12 @@ public class GridManager : MonoBehaviour
 
                 case SelectMode.ChooseTargetMode: // We are choosing a target
                 {
-                    Debug.Log("MOOO");
                     // Assume actions only hit enemies...
-                    if (hitUnit && hitUnit.turnOver){
-                        hitUnit.ChangeHealth(-5);
-                        EndSelUnitTurn();
+                    AttackingClass unit = selectedUnit.GetComponent<AttackingClass>();
+                    if (checkTileInRange(unit.tilePosition, cursorTileCoords, unit.attackRange) && 
+                            hitUnit && hitUnit.turnOver){ // check if target is in attack range and if target is valid
+                                hitUnit.ChangeHealth(-5);
+                                EndSelUnitTurn();
                     }
                 } break;
                     
@@ -128,7 +162,6 @@ public class GridManager : MonoBehaviour
             switch(context.control.name){
                 case "1": // Action
                     gridMode = SelectMode.ChooseTargetMode;
-                    Debug.Log("MOOOOOOO");
                     break;
                 
                 case "2": // Wait
@@ -154,8 +187,14 @@ public class GridManager : MonoBehaviour
                 case SelectMode.PickActionMode:{
                     // Unit goes back to past position
                     // Set to MoveMode (there is a possibility Idle mode makes more sense but...)
+                    UnitBaseClass unit = selectedUnit.GetComponent<UnitBaseClass>();
                     selectedUnit.transform.position = pastPosition;
+                    unit.MoveToSpace(pastTile);
                     gridMode = SelectMode.MoveMode;
+
+                    if (!checkTileInRange(unit.tilePosition, cursorTileCoords, unit.moveRange))
+                        cursor.GetComponent<SpriteRenderer>().sprite = invalid;
+                    else cursor.GetComponent<SpriteRenderer>().sprite = valid;
                     Debug.Log("Back to Move");
                 } break;
 
@@ -169,8 +208,37 @@ public class GridManager : MonoBehaviour
         }
     }
 
+    public void SnapUnitToGrid(UnitBaseClass unit){
+        // You have unit WORLD coordinates so use WorldToCell
+        Vector3Int tile = tmap.LocalToCell(unit.transform.position);
+        unit.tilePosition = new Vector2Int(tile.x, tile.y);
+        tile.z = 0;
+
+        // Then snap the unit to the tile!
+        Vector3 dest = tmap.GetCellCenterLocal(tile);
+        //Debug.Log(pos);
+        dest.z = 0;
+        unit.transform.position = dest;
+    }
+
+    private bool checkTileInRange(Vector2Int src, Vector2Int dst, int range){ // checks if given tile coordinate is in range
+        // Get the relative tile position from the source
+        Vector2Int diff = src - dst; 
+        
+        // Get abs val
+        diff.x = Mathf.Abs(diff.x);
+        diff.y = Mathf.Abs(diff.y);
+
+        // get length of path
+        int length = diff.x + diff.y;        
+        Debug.Log(length <= range);
+
+        return length <= range;
+    }
+
     private void SetSelUnit(GameObject unit){
         selectedUnit = unit;
+        pastTile = selectedUnit.GetComponent<UnitBaseClass>().tilePosition;
         pastPosition = selectedUnit.transform.position;
     }
 
@@ -180,14 +248,14 @@ public class GridManager : MonoBehaviour
         gridMode = SelectMode.IdleMode;
     }
 
-    private void UpdateCursorPos(Vector3Int vIn){
-        //tileCoords
-        tileCoords += vIn;
-        SetCursorPos(tileCoords);
+    private void UpdateCursorPos(Vector2Int vIn){
+        //cursorTileCoords
+        cursorTileCoords += vIn;
+        SetCursorPos(cursorTileCoords);
     }
     
-    private void SetCursorPos(Vector3Int pos){
-        Vector3 dest = tmap.GetCellCenterLocal(pos);
+    private void SetCursorPos(Vector2Int pos){
+        Vector3 dest = tmap.GetCellCenterLocal(new Vector3Int(pos.x, pos.y, 0));
         //Debug.Log(pos);
         dest.z = 0;
         cursor.transform.position = dest;
