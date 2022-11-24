@@ -17,9 +17,14 @@ public class UnitBaseClass : MonoBehaviour {
     // public ??? position; Unit should know where it is on the grid
     // Could probably add sprites and sfx here too
 
+    [Header("Attack Stats")]
+    public int attackDamage;
+    public int attackRange;
+
     [Header("Other")]
-    [HideInInspector] public bool wasSacrificed = false;
     public bool turnOver = false;
+    [HideInInspector] public bool wasSacrificed = false;
+    
     public SpriteRenderer sprite;
 
     private PhaseManager phaseManager;
@@ -118,6 +123,41 @@ public class UnitBaseClass : MonoBehaviour {
     //
     public void MoveToSpace(){
 
+    }
+
+
+    // Attack
+    //
+    // Called to deal damage to enemy unit. 
+    // Calls the enemy’s ChangeHealth() function which reduces the damage by their armor before actually changing the enemy’s health.
+    //
+    // Possible Parameters: 
+    //    Type? Enemy: Passes target enemy to damage. Checks their armor and calls their ChangeHealth() function.
+    //
+    // Possible Returns:
+    //    Int Total: Positive integer that represents new health total of enemy
+    //
+    public void Attack(UnitBaseClass enemy){  
+        enemy.ChangeHealth(-attackDamage);
+    }
+
+
+    // CounterAttack
+    //
+    // Called to deal damage to opposing attacking unit if unit in range. 
+    // Checks to see if unit is within range of attacker. Fail if not, otherwise attack back.
+    // Calls the attacking unit's ChangeHealth() function which reduces the damage by their armor before actually changing their health.
+    //
+    // Possible Parameters: 
+    //    Type? Enemy: Passes target enemy to damage. Checks if in range, then calls Attack().
+    //
+    // Possible Returns:
+    //    Int Total: Positive integer that represents new health total of enemy
+    //
+    public void CounterAttack(UnitBaseClass enemy){  
+        // if(In range of attacking enemy){
+        //     Attack(enemy);
+        // }
     }
 
 

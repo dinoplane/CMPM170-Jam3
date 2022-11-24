@@ -22,7 +22,7 @@ using UnityEngine;
 
 
 //[CreateAssetMenu(fileName = "Attacking", menuName = "Jam3RPG/New Attacking Class")]
-public class AttackingClass : UnitBaseClass
+public class AttackingClass : MonoBehaviour//UnitBaseClass
 {
 
 

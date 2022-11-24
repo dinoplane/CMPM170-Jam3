@@ -79,10 +79,7 @@ public class GridManager : MonoBehaviour
                     UnitBaseClass hitUnit = hit.collider.gameObject.GetComponent<UnitBaseClass>();
 
                     // TESTING ATTACKING
-                    // Should be:
-                    // hitUnit.Attack(hitUnit);
-                    // Says Attack() does not exist in UnitBaseClass. Its in Attacking Class, not UnitBaseClass
-                    hitUnit.ChangeHealth(-5);
+                    hitUnit.Attack(hitUnit);
                     // TESTING OVER
 
                     if (hitUnit && !hitUnit.turnOver) //Selected a unit class? Unit class's turn is NOT over?

@@ -4,32 +4,29 @@ using UnityEngine;
 
 
 // UnitBaseClass Variables:
-//     public bool isEnemy;
-//     public int healthMax;
-//     public int healthCurrent; 
-//     public int armorMax;
-//     public int armorCurrent;
-//     public int moveRange;
-//     public ??? position;
-//
-// AttackingClass Variables:
+//     bool isEnemy;
+//     int healthMax;
+//     int healthCurrent; 
+//     int armorMax;
+//     int armorCurrent;
+//     int moveRange;
+//     ??? position;
 //     int attackDamage;
 //     int attackRange;
+//     bool wasSacrificed;
 //
 // UnitBaseClass Functions:
-//     ChangeHealth();
-//     ChangeArmor();
+//     ChangeHealth(int amount);
+//     ChangeArmor(int amount);
 //     MoveToSpace();
+//     Attack(UnitBaseClass enemy);
+//     CounterAttack(UnitBaseClass enemy);
 //     ActionSacrifice();
 //     Death();
-//
-// AttackingClass Functions:
-//     Attack();
-//     CounterAttack();
 
 
 //[CreateAssetMenu(fileName = "Archer", menuName = "Jam3RPG/New Archer")]
-public class ArcherClass : AttackingClass
+public class ArcherClass : UnitBaseClass
 {
 
     // Volley
