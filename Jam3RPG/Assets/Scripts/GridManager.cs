@@ -20,6 +20,8 @@ public class GridManager : MonoBehaviour
 
     private Vector3Int tileCoords;
     private GameObject selectedUnit = null;
+    private List<KeyValuePair<string, bool>> selectedUnitActions = null;
+
     private Vector3 pastPosition;
 
     // private (i think we should make a grid???)
@@ -77,7 +79,7 @@ public class GridManager : MonoBehaviour
             bool hasSelectedUnit = Physics.Raycast(Camera.main.transform.position, cursor.transform.position - Camera.main.transform.position, out hit);
             UnitBaseClass hitUnit = (!hasSelectedUnit) ? null : hit.collider.gameObject.GetComponent<UnitBaseClass>();
             
-            Debug.Log("Click");
+            //Debug.Log("Click");
             switch (gridMode){
                 case SelectMode.IdleMode: // We don't have anything selected
                 {
@@ -100,7 +102,13 @@ public class GridManager : MonoBehaviour
                     } else { // If empty tile selected
                         selectedUnit.transform.position = cursor.transform.position;
                         gridMode = SelectMode.PickActionMode;
-                        Debug.Log("Picking Action Mode!");
+                            selectedUnitActions = selectedUnit.GetComponent<UnitBaseClass>().actions;
+                            selectedUnitActions.Add(new KeyValuePair<string, bool>("Wait", false));
+                            Debug.Log("Picking Action Mode!");
+                            foreach(KeyValuePair<string, bool> actionPair in selectedUnitActions)
+                            {
+                                Debug.Log("Available action: " + actionPair.Key);
+                            }
                     }
                 } break;
                 
@@ -125,19 +133,56 @@ public class GridManager : MonoBehaviour
 
     public void OnSelectOption(InputAction.CallbackContext context){
         if (context.phase == InputActionPhase.Started && gridMode == SelectMode.PickActionMode)
-            switch(context.control.name){
-                case "1": // Action
-                    gridMode = SelectMode.ChooseTargetMode;
-                    Debug.Log("MOOOOOOO");
+        {
+            string action = "";
+            bool requiresTarget = false;
+            switch (context.control.name)
+            {
+                case "1":
+                    if(selectedUnitActions.Count > 0)
+                    {
+                        action = selectedUnitActions[0].Key;
+                        requiresTarget = selectedUnitActions[0].Value;
+                    }
                     break;
-                
-                case "2": // Wait
-                    EndSelUnitTurn();
+                case "2":
+                    if (selectedUnitActions.Count > 1)
+                    {
+                        action = selectedUnitActions[1].Key;
+                        requiresTarget = selectedUnitActions[1].Value;
+                    }
                     break;
-
-                case "3": // Sacrifice but i dunno what do...
+                case "3":
+                    if (selectedUnitActions.Count > 2)
+                    {
+                        action = selectedUnitActions[2].Key;
+                        requiresTarget = selectedUnitActions[2].Value;
+                    }
+                    break;
+                case "4":
+                    if (selectedUnitActions.Count > 3)
+                    {
+                        action = selectedUnitActions[3].Key;
+                        requiresTarget = selectedUnitActions[3].Value;
+                    }
                     break;
             };
+
+            if(action != "") //Do not end action select if there is no action for the chosen value
+            {
+                Debug.Log("Doing action " + action);
+                //Note that wait action is always last (for user friendliness)
+                if (requiresTarget)
+                {
+                    Debug.Log("Choose target mode!");
+                    gridMode = SelectMode.ChooseTargetMode;
+                }
+                else
+                    EndSelUnitTurn();
+            }
+            //After selecting target, we execute the action
+            //Can be done by seeing what the action was, then getting component of the class that action is defined in, and doing it.
+        }
     }
     
     public void OnUndoMove(InputAction.CallbackContext context){

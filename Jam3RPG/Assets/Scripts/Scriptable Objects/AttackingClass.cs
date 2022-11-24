@@ -24,12 +24,16 @@ using UnityEngine;
 //[CreateAssetMenu(fileName = "Attacking", menuName = "Jam3RPG/New Attacking Class")]
 public class AttackingClass : UnitBaseClass
 {
-
-
     [Header("Attack Stats")]
     public int attackDamage;
     public int attackRange;
 
+    override public void ExtraAwake()
+    {
+        base.ExtraAwake();
+        Debug.Log("Attacking class");
+        actions.Add(new KeyValuePair<string, bool>("Attack", true));
+    }
 
     // Attack
     //
