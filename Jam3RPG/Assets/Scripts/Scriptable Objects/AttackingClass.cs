@@ -6,9 +6,9 @@ using UnityEngine;
 // UnitBaseClass Variables:
 //     public bool isEnemy;
 //     public int healthMax;
-//     private int healthCurrent; 
+//     public int healthCurrent; 
 //     public int armorMax;
-//     private int armorCurrent;
+//     public int armorCurrent;
 //     public int moveRange;
 //     public ??? position;
 //
@@ -42,8 +42,8 @@ public class AttackingClass : UnitBaseClass
     // Possible Returns:
     //    Int Total: Positive integer that represents new health total of enemy
     //
-    private void Attack(){  
-
+    private void Attack(UnitBaseClass enemy){  
+        enemy.ChangeHealth(-attackDamage);
     }
 
 
@@ -59,7 +59,9 @@ public class AttackingClass : UnitBaseClass
     // Possible Returns:
     //    Int Total: Positive integer that represents new health total of enemy
     //
-    private void CounterAttack(){  
-
+    private void CounterAttack(UnitBaseClass enemy){  
+        // if(In range of attacking enemy){
+        //     Attack(enemy);
+        // }
     }
 }
