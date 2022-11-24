@@ -11,11 +11,16 @@ using UnityEngine;
 //     int armorCurrent;
 //     int moveRange;
 //     ??? position;
+//     int attackDamage;
+//     int attackRange;
+//     bool wasSacrificed;
 //
 // UnitBaseClass Functions:
-//     ChangeHealth();
-//     ChangeArmor();
+//     ChangeHealth(int amount);
+//     ChangeArmor(int amount);
 //     MoveToSpace();
+//     Attack(UnitBaseClass enemy);
+//     CounterAttack(UnitBaseClass enemy);
 //     ActionSacrifice();
 //     Death();
 

@@ -11,25 +11,22 @@ using UnityEngine;
 //     int armorCurrent;
 //     int moveRange;
 //     ??? position;
-//
-// AttackingClass Variables:
 //     int attackDamage;
 //     int attackRange;
+//     bool wasSacrificed;
 //
 // UnitBaseClass Functions:
-//     ChangeHealth();
-//     ChangeArmor();
+//     ChangeHealth(int amount);
+//     ChangeArmor(int amount);
 //     MoveToSpace();
+//     Attack(UnitBaseClass enemy);
+//     CounterAttack(UnitBaseClass enemy);
 //     ActionSacrifice();
 //     Death();
-//
-// AttackingClass Functions:
-//     Attack();
-//     CounterAttack();
 
 
 //[CreateAssetMenu(fileName = "CultLeader", menuName = "Jam3RPG/New Cult Leader")]
-public class CultLeaderClass : AttackingClass
+public class CultLeaderClass : UnitBaseClass
 {
 
     // Convert

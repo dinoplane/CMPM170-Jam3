@@ -11,25 +11,22 @@ using UnityEngine;
 //     int armorCurrent;
 //     int moveRange;
 //     ??? position;
-//
-// AttackingClass Variables:
 //     int attackDamage;
 //     int attackRange;
+//     bool wasSacrificed;
 //
 // UnitBaseClass Functions:
-//     ChangeHealth();
-//     ChangeArmor();
+//     ChangeHealth(int amount);
+//     ChangeArmor(int amount);
 //     MoveToSpace();
+//     Attack(UnitBaseClass enemy);
+//     CounterAttack(UnitBaseClass enemy);
 //     ActionSacrifice();
 //     Death();
-//
-// AttackingClass Functions:
-//     Attack();
-//     CounterAttack();
 
 
 //[CreateAssetMenu(fileName = "Fighter", menuName = "Jam3RPG/New Fighter")]
-public class FighterClass : AttackingClass
+public class FighterClass : UnitBaseClass
 {
 
     // ChipArmor
