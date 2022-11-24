@@ -31,6 +31,11 @@ using UnityEngine;
 //[CreateAssetMenu(fileName = "Fighter", menuName = "Jam3RPG/New Fighter")]
 public class FighterClass : AttackingClass
 {
+    override public void ExtraAwake()
+    {
+        base.ExtraAwake();
+        actions.Add(new KeyValuePair<string, bool>("ChipArmor", true));
+    }
 
     // ChipArmor
     //
