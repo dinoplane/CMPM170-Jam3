@@ -15,7 +15,7 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "Select",
+                    "name": "ClickBoard",
                     "type": "Button",
                     "id": "7f8edb07-ae5d-4749-aa30-78b4b6973085",
                     "expectedControlType": "Button",
@@ -96,7 +96,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Select",
+                    "action": "ClickBoard",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },

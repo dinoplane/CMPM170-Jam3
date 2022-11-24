@@ -37,7 +37,7 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                     ""initialStateCheck"": true
                 },
                 {
-                    ""name"": ""Select"",
+                    ""name"": ""ClickBoard"",
                     ""type"": ""Button"",
                     ""id"": ""7f8edb07-ae5d-4749-aa30-78b4b6973085"",
                     ""expectedControlType"": ""Button"",
@@ -118,7 +118,7 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Select"",
+                    ""action"": ""ClickBoard"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -141,7 +141,7 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
         // Grid
         m_Grid = asset.FindActionMap("Grid", throwIfNotFound: true);
         m_Grid_Movement = m_Grid.FindAction("Movement", throwIfNotFound: true);
-        m_Grid_Select = m_Grid.FindAction("Select", throwIfNotFound: true);
+        m_Grid_ClickBoard = m_Grid.FindAction("ClickBoard", throwIfNotFound: true);
         m_Grid_CursorMove = m_Grid.FindAction("CursorMove", throwIfNotFound: true);
     }
 
@@ -203,14 +203,14 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
     private readonly InputActionMap m_Grid;
     private IGridActions m_GridActionsCallbackInterface;
     private readonly InputAction m_Grid_Movement;
-    private readonly InputAction m_Grid_Select;
+    private readonly InputAction m_Grid_ClickBoard;
     private readonly InputAction m_Grid_CursorMove;
     public struct GridActions
     {
         private @PlayerControls m_Wrapper;
         public GridActions(@PlayerControls wrapper) { m_Wrapper = wrapper; }
         public InputAction @Movement => m_Wrapper.m_Grid_Movement;
-        public InputAction @Select => m_Wrapper.m_Grid_Select;
+        public InputAction @ClickBoard => m_Wrapper.m_Grid_ClickBoard;
         public InputAction @CursorMove => m_Wrapper.m_Grid_CursorMove;
         public InputActionMap Get() { return m_Wrapper.m_Grid; }
         public void Enable() { Get().Enable(); }
@@ -224,9 +224,9 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                 @Movement.started -= m_Wrapper.m_GridActionsCallbackInterface.OnMovement;
                 @Movement.performed -= m_Wrapper.m_GridActionsCallbackInterface.OnMovement;
                 @Movement.canceled -= m_Wrapper.m_GridActionsCallbackInterface.OnMovement;
-                @Select.started -= m_Wrapper.m_GridActionsCallbackInterface.OnSelect;
-                @Select.performed -= m_Wrapper.m_GridActionsCallbackInterface.OnSelect;
-                @Select.canceled -= m_Wrapper.m_GridActionsCallbackInterface.OnSelect;
+                @ClickBoard.started -= m_Wrapper.m_GridActionsCallbackInterface.OnClickBoard;
+                @ClickBoard.performed -= m_Wrapper.m_GridActionsCallbackInterface.OnClickBoard;
+                @ClickBoard.canceled -= m_Wrapper.m_GridActionsCallbackInterface.OnClickBoard;
                 @CursorMove.started -= m_Wrapper.m_GridActionsCallbackInterface.OnCursorMove;
                 @CursorMove.performed -= m_Wrapper.m_GridActionsCallbackInterface.OnCursorMove;
                 @CursorMove.canceled -= m_Wrapper.m_GridActionsCallbackInterface.OnCursorMove;
@@ -237,9 +237,9 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                 @Movement.started += instance.OnMovement;
                 @Movement.performed += instance.OnMovement;
                 @Movement.canceled += instance.OnMovement;
-                @Select.started += instance.OnSelect;
-                @Select.performed += instance.OnSelect;
-                @Select.canceled += instance.OnSelect;
+                @ClickBoard.started += instance.OnClickBoard;
+                @ClickBoard.performed += instance.OnClickBoard;
+                @ClickBoard.canceled += instance.OnClickBoard;
                 @CursorMove.started += instance.OnCursorMove;
                 @CursorMove.performed += instance.OnCursorMove;
                 @CursorMove.canceled += instance.OnCursorMove;
@@ -250,7 +250,7 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
     public interface IGridActions
     {
         void OnMovement(InputAction.CallbackContext context);
-        void OnSelect(InputAction.CallbackContext context);
+        void OnClickBoard(InputAction.CallbackContext context);
         void OnCursorMove(InputAction.CallbackContext context);
     }
 }

@@ -104,7 +104,7 @@ public class GridManager : MonoBehaviour
     }
 
     public void OnClickBoard(InputAction.CallbackContext context){ // Called when left mouse button is selected
-        //Debug.Log($"Movement {context.phase} {context.ReadValue<Vector2>()}");
+        Debug.Log("Click");
         
         if (context.phase == InputActionPhase.Started){
             // Cast a raycast
@@ -121,6 +121,9 @@ public class GridManager : MonoBehaviour
                         SetSelUnit(hit.collider.gameObject);
                         gridMode = SelectMode.MoveMode; // Moving units now...
                         Debug.Log("Moving to Move Mode!");
+                    }
+                    else {
+                        Debug.Log("Selected nothing");
                     }
                 } break;
 
