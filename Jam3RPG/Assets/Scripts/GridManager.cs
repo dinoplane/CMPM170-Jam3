@@ -31,10 +31,14 @@ public class GridManager : MonoBehaviour
     private GameObject selectedUnit = null;
 
     private Vector2Int pastTile;// of units
+    private List<KeyValuePair<string, bool>> selectedUnitActions = null;
+
     private Vector3 pastPosition;
 
     // private (i think we should make a grid???)
     private SelectMode gridMode =  SelectMode.IdleMode;
+
+    private string selectedUnitAction = "";
 
     // Start is called before the first frame update
     void Start()
@@ -131,12 +135,21 @@ public class GridManager : MonoBehaviour
                         else if (!hitUnit.turnOver) // And they are friendly
                             SetSelUnit(hit.collider.gameObject);
 
-                    } else { // If empty tile selected
+                    } else { // If empty tile selected that is within range
                         if (checkTileInRange(unit.tilePosition, cursorTileCoords, unit.moveRange)){
+                            //Move selected unit and update position
                             unit.MoveToSpace(cursorTileCoords);
                             selectedUnit.transform.position = cursor.transform.position;
-                            gridMode = SelectMode.PickActionMode;
+                            
+                            //Get unit's action list
+                            selectedUnitActions = selectedUnit.GetComponent<UnitBaseClass>().actions;
                             Debug.Log("Picking Action Mode!");
+                            foreach(KeyValuePair<string, bool> actionPair in selectedUnitActions)
+                            {
+                                Debug.Log("Available action: " + actionPair.Key);
+                            }
+
+                            gridMode = SelectMode.PickActionMode;
                         }
                     }
                 } break;
@@ -149,36 +162,102 @@ public class GridManager : MonoBehaviour
                 case SelectMode.ChooseTargetMode: // We are choosing a target
                 {
                     // Assume actions only hit enemies...
+                    /*We can add a special case later for the healer - Santi
+                    Later we might need cases for unit actions that require a target that are also not attacking units*/
                     AttackingClass unit = selectedUnit.GetComponent<AttackingClass>();
                     if (checkTileInRange(unit.tilePosition, cursorTileCoords, unit.attackRange) && 
                             hitUnit && hitUnit.turnOver){ // check if target is in attack range and if target is valid
-                                hitUnit.ChangeHealth(-5);
+                                UnitExecuteAction(hitUnit);
                                 EndSelUnitTurn();
                     }
-                } break;
-                    
+                } break;  
             }
         }
     }
 
     public void OnSelectOption(InputAction.CallbackContext context){
         if (context.phase == InputActionPhase.Started && gridMode == SelectMode.PickActionMode)
-            switch(context.control.name){
+
+            /*switch(context.control.name){
                 case "1": // Action
                     gridMode = SelectMode.ChooseTargetMode;
                     AttackingClass unit = selectedUnit.GetComponent<AttackingClass>();
-                    UpdateCursorSprite(unit.tilePosition, unit.attackRange);
+                    UpdateCursorSprite(unit.tilePosition, unit.attackRange);*/
+                    
+        {
+            string action = "";
+            bool requiresTarget = false;
+            switch (context.control.name)
+            {
+                case "1":
+                    if(selectedUnitActions.Count > 0)
+                    {
+                        action = selectedUnitActions[0].Key;
+                        requiresTarget = selectedUnitActions[0].Value;
+                    }
                     break;
-                
-                case "2": // Wait
-                    EndSelUnitTurn();
+                case "2":
+                    if (selectedUnitActions.Count > 1)
+                    {
+                        action = selectedUnitActions[1].Key;
+                        requiresTarget = selectedUnitActions[1].Value;
+                    }
                     break;
-
-                case "3": // Sacrifice but i dunno what do...
+                case "3":
+                    if (selectedUnitActions.Count > 2)
+                    {
+                        action = selectedUnitActions[2].Key;
+                        requiresTarget = selectedUnitActions[2].Value;
+                    }
+                    break;
+                case "4":
+                    if (selectedUnitActions.Count > 3)
+                    {
+                        action = selectedUnitActions[3].Key;
+                        requiresTarget = selectedUnitActions[3].Value;
+                    }
                     break;
             };
+
+            if(action != "") //Do not end action select if there is no action for the chosen value
+            {
+                Debug.Log("Doing action " + action);
+                selectedUnitAction = action;
+                //Note that wait action is always last (for user friendliness)
+                if (requiresTarget)
+                {
+                    Debug.Log("Choose target mode!");
+                    gridMode = SelectMode.ChooseTargetMode;
+                    AttackingClass unit = selectedUnit.GetComponent<AttackingClass>();
+                    UpdateCursorSprite(unit.tilePosition, unit.attackRange);
+                }
+                else
+                {
+                    UnitExecuteAction();
+                    EndSelUnitTurn();
+                }
+            }
+            //After selecting target, we execute the action
+            //Can be done by seeing what the action was, then getting component of the class that action is defined in, and doing it.
+        }
     }
     
+    //After choosing an action in PickActionMode, executes that action
+    private void UnitExecuteAction(UnitBaseClass target = null)
+    {
+        switch (selectedUnitAction)
+        {
+            case "Attack":
+                //Get the AttackingClass component of selectedUnit (because it must have one in this case)
+                target.ChangeHealth(-5); //<- Replace selectedUnit.GetComponent<AttackingClass>().Attack(target)
+                break;
+            case "Wait":
+                break;
+            default:
+                break;
+        }
+    }
+
     public void OnUndoMove(InputAction.CallbackContext context){
         if (context.phase == InputActionPhase.Started){
             switch (gridMode){
@@ -198,6 +277,7 @@ public class GridManager : MonoBehaviour
                     UnitBaseClass unit = selectedUnit.GetComponent<UnitBaseClass>();
                     selectedUnit.transform.position = pastPosition;
                     unit.MoveToSpace(pastTile);
+                    selectedUnitActions = null;
                     gridMode = SelectMode.MoveMode;
 
                     UpdateCursorSprite(unit.tilePosition, unit.moveRange);

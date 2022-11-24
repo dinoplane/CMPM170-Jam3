@@ -25,10 +25,20 @@ public class UnitBaseClass : MonoBehaviour {
 
     private PhaseManager phaseManager;
 
+    [HideInInspector] public List<KeyValuePair<string, bool>> actions = new List<KeyValuePair<string, bool>>(); //The bool is whether or not it requires a target.
+
     // Set health and armor to their max value
     private void Awake() {
         healthCurrent = healthMax;
         armorCurrent = armorMax;
+        actions.Add(new KeyValuePair<string, bool>("Wait", false));
+        ExtraAwake();
+    }
+
+    //Designed to be overwritten by subclasses, adding on more stuff.
+    virtual public void ExtraAwake()
+    {
+
     }
 
     public void Start()
@@ -78,7 +88,7 @@ public class UnitBaseClass : MonoBehaviour {
         int change;
         // Check if incoming amount is damage or healing. 
         if(amount < 0){ // -ints are damage, +ints are healing
-            change = amount  + armorCurrent; // Reduce damage by current armor. Weird bacuse of negatives
+            change = Mathf.Min(amount  + armorCurrent, 0); // Reduce damage by current armor. Returns 0 if armor > damage
         }
         else{
             change = amount; // Healing
