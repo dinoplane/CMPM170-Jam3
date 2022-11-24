@@ -27,6 +27,8 @@ public class GridManager : MonoBehaviour
     // private (i think we should make a grid???)
     private SelectMode gridMode =  SelectMode.IdleMode;
 
+    private string selectedUnitAction = "";
+
     // Start is called before the first frame update
     void Start()
     {
@@ -103,7 +105,6 @@ public class GridManager : MonoBehaviour
                         selectedUnit.transform.position = cursor.transform.position;
                         gridMode = SelectMode.PickActionMode;
                             selectedUnitActions = selectedUnit.GetComponent<UnitBaseClass>().actions;
-                            selectedUnitActions.Add(new KeyValuePair<string, bool>("Wait", false));
                             Debug.Log("Picking Action Mode!");
                             foreach(KeyValuePair<string, bool> actionPair in selectedUnitActions)
                             {
@@ -119,11 +120,11 @@ public class GridManager : MonoBehaviour
 
                 case SelectMode.ChooseTargetMode: // We are choosing a target
                 {
-                    Debug.Log("MOOO");
                     // Assume actions only hit enemies...
+                    /*We can add a special case later for the healer*/
                     if (hitUnit && hitUnit.turnOver){
-                        hitUnit.ChangeHealth(-5);
-                        EndSelUnitTurn();
+                            UnitExecuteAction(hitUnit);
+                            EndSelUnitTurn();
                     }
                 } break;
                     
@@ -171,6 +172,7 @@ public class GridManager : MonoBehaviour
             if(action != "") //Do not end action select if there is no action for the chosen value
             {
                 Debug.Log("Doing action " + action);
+                selectedUnitAction = action;
                 //Note that wait action is always last (for user friendliness)
                 if (requiresTarget)
                 {
@@ -178,13 +180,32 @@ public class GridManager : MonoBehaviour
                     gridMode = SelectMode.ChooseTargetMode;
                 }
                 else
+                {
+                    UnitExecuteAction();
                     EndSelUnitTurn();
+                }
             }
             //After selecting target, we execute the action
             //Can be done by seeing what the action was, then getting component of the class that action is defined in, and doing it.
         }
     }
     
+    //After choosing an action in PickActionMode, executes that action
+    private void UnitExecuteAction(UnitBaseClass target = null)
+    {
+        switch (selectedUnitAction)
+        {
+            case "Attack":
+                //Get the AttackingClass component of selectedUnit (because it must have one in this case)
+                target.ChangeHealth(-5); //<- Replace selectedUnit.GetComponent<AttackingClass>().Attack(target)
+                break;
+            case "Wait":
+                break;
+            default:
+                break;
+        }
+    }
+
     public void OnUndoMove(InputAction.CallbackContext context){
         if (context.phase == InputActionPhase.Started){
             switch (gridMode){
@@ -200,6 +221,7 @@ public class GridManager : MonoBehaviour
                     // Unit goes back to past position
                     // Set to MoveMode (there is a possibility Idle mode makes more sense but...)
                     selectedUnit.transform.position = pastPosition;
+                    selectedUnitActions = null;
                     gridMode = SelectMode.MoveMode;
                     Debug.Log("Back to Move");
                 } break;

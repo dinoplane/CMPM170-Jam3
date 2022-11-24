@@ -30,7 +30,7 @@ public class UnitBaseClass : MonoBehaviour {
     private void Awake() {
         healthCurrent = healthMax;
         armorCurrent = armorMax;
-        //actions.Add(new KeyValuePair<string, bool>("Wait", false)); We add this action in GridManager instead.
+        actions.Add(new KeyValuePair<string, bool>("Wait", false));
         ExtraAwake();
     }
 
