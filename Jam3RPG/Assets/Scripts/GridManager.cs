@@ -4,6 +4,10 @@ using UnityEngine;
 
 using UnityEngine.InputSystem;
 
+// Clean up code tasks
+// selected could be of type unit base!
+// 
+
 enum SelectMode{
     IdleMode, // Nothing selected
     MoveMode, // Moving selected unit
@@ -81,19 +85,15 @@ public class GridManager : MonoBehaviour
         cursorTileCoords.y = tile.y;
 
         SetCursorPos(cursorTileCoords);
-        //
 
         if (gridMode == SelectMode.MoveMode){
             Debug.Log(cursorTileCoords);
             UnitBaseClass unit = selectedUnit.GetComponent<UnitBaseClass>();
-            if (!checkTileInRange(unit.tilePosition, cursorTileCoords, unit.moveRange))
-                cursor.GetComponent<SpriteRenderer>().sprite = invalid;
-            else cursor.GetComponent<SpriteRenderer>().sprite = valid;
+            UpdateCursorSprite(unit.tilePosition, unit.moveRange);
+
         } else if (gridMode == SelectMode.ChooseTargetMode){
             AttackingClass unit = selectedUnit.GetComponent<AttackingClass>();
-            if (!checkTileInRange(unit.tilePosition, cursorTileCoords, unit.attackRange))
-                cursor.GetComponent<SpriteRenderer>().sprite = invalid;
-            else cursor.GetComponent<SpriteRenderer>().sprite = valid;
+            UpdateCursorSprite(unit.tilePosition, unit.attackRange);
         }
     }
 
@@ -122,11 +122,12 @@ public class GridManager : MonoBehaviour
                 {
                     UnitBaseClass unit = selectedUnit.GetComponent<UnitBaseClass>();
                     if (hitUnit){ // If we have touched another unit
-                        if (selectedUnit == hit.collider.gameObject){ // It is self
+                        if (selectedUnit == hit.collider.gameObject) // And it is self
                             gridMode = SelectMode.PickActionMode; // Don't move. Just pick action.
-                        }
-                        if (!hitUnit.turnOver) // And they are friendly
+
+                        else if (!hitUnit.turnOver) // And they are friendly
                             SetSelUnit(hit.collider.gameObject);
+
                     } else { // If empty tile selected
                         if (checkTileInRange(unit.tilePosition, cursorTileCoords, unit.moveRange)){
                             unit.MoveToSpace(cursorTileCoords);
@@ -162,6 +163,8 @@ public class GridManager : MonoBehaviour
             switch(context.control.name){
                 case "1": // Action
                     gridMode = SelectMode.ChooseTargetMode;
+                    AttackingClass unit = selectedUnit.GetComponent<AttackingClass>();
+                    UpdateCursorSprite(unit.tilePosition, unit.attackRange);
                     break;
                 
                 case "2": // Wait
@@ -181,6 +184,7 @@ public class GridManager : MonoBehaviour
                     selectedUnit  = null;
                     // Back to IdleMode
                     gridMode = SelectMode.IdleMode;
+                    UpdateCursorSprite(cursorTileCoords, 0);
                     Debug.Log("Back to Idle");
                 } break;
 
@@ -192,15 +196,15 @@ public class GridManager : MonoBehaviour
                     unit.MoveToSpace(pastTile);
                     gridMode = SelectMode.MoveMode;
 
-                    if (!checkTileInRange(unit.tilePosition, cursorTileCoords, unit.moveRange))
-                        cursor.GetComponent<SpriteRenderer>().sprite = invalid;
-                    else cursor.GetComponent<SpriteRenderer>().sprite = valid;
+                    UpdateCursorSprite(unit.tilePosition, unit.moveRange);
+
                     Debug.Log("Back to Move");
                 } break;
 
                 case SelectMode.ChooseTargetMode:{
                     // Unit Goes back to picking action
                     gridMode = SelectMode.PickActionMode;
+                    UpdateCursorSprite(cursorTileCoords, 0);
                     Debug.Log("Back to PickAction");
                 } break;
 
@@ -220,6 +224,8 @@ public class GridManager : MonoBehaviour
         dest.z = 0;
         unit.transform.position = dest;
     }
+
+
 
     private bool checkTileInRange(Vector2Int src, Vector2Int dst, int range){ // checks if given tile coordinate is in range
         // Get the relative tile position from the source
@@ -246,6 +252,12 @@ public class GridManager : MonoBehaviour
         selectedUnit.GetComponent<UnitBaseClass>().FinishTurn(); 
         selectedUnit = null;
         gridMode = SelectMode.IdleMode;
+    }
+
+    private void UpdateCursorSprite(Vector2Int tilePosition, int range){ // updates cursor state based on cursor position
+        if (!checkTileInRange(tilePosition, cursorTileCoords, range))
+            cursor.GetComponent<SpriteRenderer>().sprite = invalid;
+        else cursor.GetComponent<SpriteRenderer>().sprite = valid;
     }
 
     private void UpdateCursorPos(Vector2Int vIn){
