@@ -4,16 +4,25 @@ using UnityEngine;
 
 using UnityEngine.InputSystem;
 
+enum SelectMode{
+    IdleMode, // Nothing selected
+    MoveMode, // Moving selected unit
+    PickActionMode, // Picking action from UI
+    ChooseTargetMode, // Choosing target for action
+    SacrificeMode // Sacrificing??? Not sure if we need.
+};
 
 public class GridManager : MonoBehaviour
 {
+
     private GameObject cursor;
     private Grid tmap;
 
     private Vector3Int tileCoords;
-    private GameObject selected = null;
+    private GameObject selectedUnit = null;
 
     // private (i think we should make a grid???)
+    private SelectMode gridMode =  SelectMode.IdleMode;
 
     // Start is called before the first frame update
     void Start()
@@ -60,64 +69,82 @@ public class GridManager : MonoBehaviour
 
     public void OnSelect(InputAction.CallbackContext context){ // Called when left mouse button is selected
         //Debug.Log($"Movement {context.phase} {context.ReadValue<Vector2>()}");
-        Debug.Log("Click");
-
-        switch (context.phase){
-            case InputActionPhase.Started:
-                RaycastHit hit;
-
-                // Cast a raycast 
-                if (Physics.Raycast(Camera.main.transform.position, cursor.transform.position - Camera.main.transform.position, out hit)) {
-                    // select collided object
-                    Debug.DrawRay(Camera.main.transform.position, cursor.transform.position - Camera.main.transform.position, Color.yellow);
-                    Debug.Log("Did Hit");
-
-                    /*Add a check here to determine if selected the same square that the unit was just in (as in selected same unit)
-                      In which case, go into action selection
-                      This allows a unit to act without moving*/
-
-                    UnitBaseClass hitUnit = hit.collider.gameObject.GetComponent<UnitBaseClass>();
-
-                    // TESTING ATTACKING
-                    // Should be:
-                    // hitUnit.Attack(hitUnit);
-                    // Says Attack() does not exist in UnitBaseClass. Its in Attacking Class, not UnitBaseClass
-                    hitUnit.ChangeHealth(-5);
-                    // TESTING OVER
-
-                    if (hitUnit && !hitUnit.turnOver) //Selected a unit class? Unit class's turn is NOT over?
-                    {
-                            selected = hit.collider.gameObject;
+        
+        if (context.phase == InputActionPhase.Started){
+            // Cast a raycast
+            RaycastHit hit;
+            bool hasSelectedUnit = Physics.Raycast(Camera.main.transform.position, cursor.transform.position - Camera.main.transform.position, out hit);
+            UnitBaseClass hitUnit = (!hasSelectedUnit) ? null : hit.collider.gameObject.GetComponent<UnitBaseClass>();
+            Debug.Log("Click");
+            switch (gridMode){
+                case SelectMode.IdleMode: // We don't have anything selected
+                {
+                    
+                    // If we selected a unit 
+                    if (hitUnit && !hitUnit.turnOver){ //Selected a unit class? 
+                        selectedUnit = hit.collider.gameObject; // CH1
+                        gridMode = SelectMode.MoveMode; // Moving units now...
+                        Debug.Log("Moving to Move Mode!");
                     }
-                } else { // place selected object if exists
-                    Debug.DrawRay(Camera.main.transform.position, cursor.transform.position - Camera.main.transform.position , Color.white);
-                    Debug.Log("Did not Hit");
-                    if (selected != null){
-                        //Arrian can get the unit's movement range here to see if the selected tile is within that range or not.
+                } break;
 
-                        /*Also having moved the selected unit, can tell the grid manager to go into an action selection right now,
-                        instead of ending the unit's turn
-                        After action select is finished (maybe attacked a target, maybe just waited), then end the units turn and
-                        go back into click-and-move mode
-                         */
-
-                        selected.transform.position = cursor.transform.position;
-                        //(Below) Unit has moved, set turn as over (Later, turn will be set as finished via a different method)
-                        //
-                        selected.GetComponent<UnitBaseClass>().FinishTurn(); 
-                        selected = null;
+                case SelectMode.MoveMode: // We have something selected
+                {
+                    if (hitUnit){ // If we have touched another unit
+                        if (selectedUnit == hit.collider.gameObject){ // It is self
+                            gridMode = SelectMode.PickActionMode; // Don't move. Just pick action.
+                        }
+                        if (!hitUnit.turnOver) // And they are friendly
+                            selectedUnit = hit.collider.gameObject; // CH1
+                    } else { // If empty tile selected
+                        selectedUnit.transform.position = cursor.transform.position;
+                        gridMode = SelectMode.PickActionMode;
+                        Debug.Log("Picking Action Mode!");
                     }
-                }
-                break;
-            
-            case InputActionPhase.Performed:
-                break;
-            
-            case InputActionPhase.Canceled:
-                break;
+                } break;
+                
+                //Case: Pick action mode!
+                // 1 -> Action -> ChooseTargetMode -> IdleMode
+                // 2 -> Wait -> IdleMode
+                // 3 -> Sacrifice
+
+                case SelectMode.ChooseTargetMode: // We are choosing a target
+                {
+                    Debug.Log("MOOO");
+                    // Assume actions only hit enemies...
+                    if (hitUnit && hitUnit.turnOver){
+                        hitUnit.ChangeHealth(-5);
+                        EndSelUnitTurn();
+                    }
+                } break;
+                    
+            }
         }
     }
 
+    public void SelectOption(InputAction.CallbackContext context){
+        if (gridMode == SelectMode.PickActionMode)
+        switch(context.control.name){
+            case "1": // Action
+                gridMode = SelectMode.ChooseTargetMode;
+                Debug.Log("MOOOOOOO");
+                break;
+            
+            case "2": // Wait
+                EndSelUnitTurn();
+                break;
+
+            case "3": // Sacrifice but i dunno what do...
+                break;
+        };
+    }
+    
+
+    private void EndSelUnitTurn(){
+        selectedUnit.GetComponent<UnitBaseClass>().FinishTurn(); 
+        selectedUnit = null;
+        gridMode = SelectMode.IdleMode;
+    }
 
     private void UpdateCursorPos(Vector3Int vIn){
         //tileCoords
