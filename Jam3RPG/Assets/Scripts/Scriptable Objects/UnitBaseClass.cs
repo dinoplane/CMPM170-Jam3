@@ -46,6 +46,14 @@ public class UnitBaseClass : MonoBehaviour {
         turnOver = true;
     }
 
+    public void SpriteSelect(){
+        sprite.color = Color.yellow;
+    }
+
+    public void SpriteUnselect(){
+        sprite.color = Color.white;
+    }
+
     public void FinishTurn()
     {
         if (phaseManager != null)

@@ -6,7 +6,8 @@ using UnityEngine.InputSystem;
 
 // Clean up code tasks
 // selected could be of type unit base!
-// 
+// Some how we need to render from up to right
+
 
 enum SelectMode{
     IdleMode, // Nothing selected
@@ -87,9 +88,11 @@ public class GridManager : MonoBehaviour
         SetCursorPos(cursorTileCoords);
 
         if (gridMode == SelectMode.MoveMode){
-            Debug.Log(cursorTileCoords);
+            //Debug.Log(cursorTileCoords);
             UnitBaseClass unit = selectedUnit.GetComponent<UnitBaseClass>();
             UpdateCursorSprite(unit.tilePosition, unit.moveRange);
+
+            // Check if the cursor is on a friendly sprite??? a small collision check
 
         } else if (gridMode == SelectMode.ChooseTargetMode){
             AttackingClass unit = selectedUnit.GetComponent<AttackingClass>();
@@ -106,7 +109,7 @@ public class GridManager : MonoBehaviour
             bool hasSelectedUnit = Physics.Raycast(Camera.main.transform.position, cursor.transform.position - Camera.main.transform.position, out hit);
             UnitBaseClass hitUnit = (!hasSelectedUnit) ? null : hit.collider.gameObject.GetComponent<UnitBaseClass>();
             
-            Debug.Log("Click");
+            //Debug.Log("Click");
             switch (gridMode){
                 case SelectMode.IdleMode: // We don't have anything selected
                 {
@@ -181,7 +184,8 @@ public class GridManager : MonoBehaviour
             switch (gridMode){
                 case SelectMode.MoveMode:{
                     // Unselect unit
-                    selectedUnit  = null;
+                    selectedUnit.GetComponent<UnitBaseClass>().SpriteUnselect();
+                    selectedUnit = null;
                     // Back to IdleMode
                     gridMode = SelectMode.IdleMode;
                     UpdateCursorSprite(cursorTileCoords, 0);
@@ -243,7 +247,11 @@ public class GridManager : MonoBehaviour
     }
 
     private void SetSelUnit(GameObject unit){
+        if (selectedUnit){
+            selectedUnit.GetComponent<UnitBaseClass>().SpriteUnselect();
+        }
         selectedUnit = unit;
+        selectedUnit.GetComponent<UnitBaseClass>().SpriteSelect();
         pastTile = selectedUnit.GetComponent<UnitBaseClass>().tilePosition;
         pastPosition = selectedUnit.transform.position;
     }
@@ -255,6 +263,16 @@ public class GridManager : MonoBehaviour
     }
 
     private void UpdateCursorSprite(Vector2Int tilePosition, int range){ // updates cursor state based on cursor position
+        if (gridMode == SelectMode.MoveMode){
+            Collider[] hitColliders = new Collider[10];
+            int numColliders = Physics.OverlapSphereNonAlloc(cursor.transform.position, 0.1f, hitColliders);
+            Debug.Log(numColliders);
+            if (numColliders > 0 && !hitColliders[0].gameObject.GetComponent<UnitBaseClass>().turnOver){
+                cursor.GetComponent<SpriteRenderer>().sprite = valid;
+                return;
+            }
+        }
+            
         if (!checkTileInRange(tilePosition, cursorTileCoords, range))
             cursor.GetComponent<SpriteRenderer>().sprite = invalid;
         else cursor.GetComponent<SpriteRenderer>().sprite = valid;
