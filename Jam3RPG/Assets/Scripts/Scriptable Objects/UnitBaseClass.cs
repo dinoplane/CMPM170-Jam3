@@ -14,6 +14,7 @@ public class UnitBaseClass : MonoBehaviour {
     public int armorMax;
     [HideInInspector] public int armorCurrent;
     public int moveRange;
+    public string unitClass = "Fighter";
     // public ??? position; Unit should know where it is on the grid
     // Could probably add sprites and sfx here too
 
@@ -132,7 +133,9 @@ public class UnitBaseClass : MonoBehaviour {
     //    None?
     //
     public void ActionSacrifice() { // Only usable if team == playerTeam and class != Cult Leader
-        
+        if(!isEnemy && unitClass != "Cult Leader"){
+            wasSacrificed = true;
+        }
     }
 
 
