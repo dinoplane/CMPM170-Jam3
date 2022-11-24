@@ -20,7 +20,6 @@ public class GridManager : MonoBehaviour
 
     private Vector3Int tileCoords;
     private GameObject selectedUnit = null;
-    private Vector3 pastPosition;
 
     // private (i think we should make a grid???)
     private SelectMode gridMode =  SelectMode.IdleMode;
@@ -68,7 +67,7 @@ public class GridManager : MonoBehaviour
         SetCursorPos(tile);
     }
 
-    public void OnClickBoard(InputAction.CallbackContext context){ // Called when left mouse button is selected
+    public void OnSelect(InputAction.CallbackContext context){ // Called when left mouse button is selected
         //Debug.Log($"Movement {context.phase} {context.ReadValue<Vector2>()}");
         
         if (context.phase == InputActionPhase.Started){
@@ -76,14 +75,14 @@ public class GridManager : MonoBehaviour
             RaycastHit hit;
             bool hasSelectedUnit = Physics.Raycast(Camera.main.transform.position, cursor.transform.position - Camera.main.transform.position, out hit);
             UnitBaseClass hitUnit = (!hasSelectedUnit) ? null : hit.collider.gameObject.GetComponent<UnitBaseClass>();
-            
             Debug.Log("Click");
             switch (gridMode){
                 case SelectMode.IdleMode: // We don't have anything selected
                 {
+                    
                     // If we selected a unit 
                     if (hitUnit && !hitUnit.turnOver){ //Selected a unit class? 
-                        SetSelUnit(hit.collider.gameObject);
+                        selectedUnit = hit.collider.gameObject; // CH1
                         gridMode = SelectMode.MoveMode; // Moving units now...
                         Debug.Log("Moving to Move Mode!");
                     }
@@ -96,7 +95,7 @@ public class GridManager : MonoBehaviour
                             gridMode = SelectMode.PickActionMode; // Don't move. Just pick action.
                         }
                         if (!hitUnit.turnOver) // And they are friendly
-                            SetSelUnit(hit.collider.gameObject);
+                            selectedUnit = hit.collider.gameObject; // CH1
                     } else { // If empty tile selected
                         selectedUnit.transform.position = cursor.transform.position;
                         gridMode = SelectMode.PickActionMode;
@@ -123,56 +122,23 @@ public class GridManager : MonoBehaviour
         }
     }
 
-    public void OnSelectOption(InputAction.CallbackContext context){
-        if (context.phase == InputActionPhase.Started && gridMode == SelectMode.PickActionMode)
-            switch(context.control.name){
-                case "1": // Action
-                    gridMode = SelectMode.ChooseTargetMode;
-                    Debug.Log("MOOOOOOO");
-                    break;
-                
-                case "2": // Wait
-                    EndSelUnitTurn();
-                    break;
+    public void SelectOption(InputAction.CallbackContext context){
+        if (gridMode == SelectMode.PickActionMode)
+        switch(context.control.name){
+            case "1": // Action
+                gridMode = SelectMode.ChooseTargetMode;
+                Debug.Log("MOOOOOOO");
+                break;
+            
+            case "2": // Wait
+                EndSelUnitTurn();
+                break;
 
-                case "3": // Sacrifice but i dunno what do...
-                    break;
-            };
+            case "3": // Sacrifice but i dunno what do...
+                break;
+        };
     }
     
-    public void OnUndoMove(InputAction.CallbackContext context){
-        if (context.phase == InputActionPhase.Started){
-            switch (gridMode){
-                case SelectMode.MoveMode:{
-                    // Unselect unit
-                    selectedUnit  = null;
-                    // Back to IdleMode
-                    gridMode = SelectMode.IdleMode;
-                    Debug.Log("Back to Idle");
-                } break;
-
-                case SelectMode.PickActionMode:{
-                    // Unit goes back to past position
-                    // Set to MoveMode (there is a possibility Idle mode makes more sense but...)
-                    selectedUnit.transform.position = pastPosition;
-                    gridMode = SelectMode.MoveMode;
-                    Debug.Log("Back to Move");
-                } break;
-
-                case SelectMode.ChooseTargetMode:{
-                    // Unit Goes back to picking action
-                    gridMode = SelectMode.PickActionMode;
-                    Debug.Log("Back to PickAction");
-                } break;
-
-            }
-        }
-    }
-
-    private void SetSelUnit(GameObject unit){
-        selectedUnit = unit;
-        pastPosition = selectedUnit.transform.position;
-    }
 
     private void EndSelUnitTurn(){
         selectedUnit.GetComponent<UnitBaseClass>().FinishTurn(); 
