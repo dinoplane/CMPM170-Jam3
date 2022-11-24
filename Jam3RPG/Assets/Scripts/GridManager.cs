@@ -29,10 +29,9 @@ public class GridManager : MonoBehaviour
     private Vector2Int cursorTileCoords;// of cursor
 
     private GameObject selectedUnit = null;
-
-    private Vector2Int pastTile;// of units
     private List<KeyValuePair<string, bool>> selectedUnitActions = null;
 
+    private Vector2Int pastTile;// of units
     private Vector3 pastPosition;
 
     // private (i think we should make a grid???)
@@ -130,7 +129,7 @@ public class GridManager : MonoBehaviour
                     UnitBaseClass unit = selectedUnit.GetComponent<UnitBaseClass>();
                     if (hitUnit){ // If we have touched another unit
                         if (selectedUnit == hit.collider.gameObject) // And it is self
-                            gridMode = SelectMode.PickActionMode; // Don't move. Just pick action.
+                            ChangeToPickActionMode(); // Don't move. Just pick action.
 
                         else if (!hitUnit.turnOver) // And they are friendly
                             SetSelUnit(hit.collider.gameObject);
@@ -140,16 +139,7 @@ public class GridManager : MonoBehaviour
                             //Move selected unit and update position
                             unit.MoveToSpace(cursorTileCoords);
                             selectedUnit.transform.position = cursor.transform.position;
-                            
-                            //Get unit's action list
-                            selectedUnitActions = selectedUnit.GetComponent<UnitBaseClass>().actions;
-                            Debug.Log("Picking Action Mode!");
-                            foreach(KeyValuePair<string, bool> actionPair in selectedUnitActions)
-                            {
-                                Debug.Log("Available action: " + actionPair.Key);
-                            }
-
-                            gridMode = SelectMode.PickActionMode;
+                            ChangeToPickActionMode();
                         }
                     }
                 } break;
@@ -166,13 +156,29 @@ public class GridManager : MonoBehaviour
                     Later we might need cases for unit actions that require a target that are also not attacking units*/
                     AttackingClass unit = selectedUnit.GetComponent<AttackingClass>();
                     if (checkTileInRange(unit.tilePosition, cursorTileCoords, unit.attackRange) && 
-                            hitUnit && hitUnit.turnOver){ // check if target is in attack range and if target is valid
+                            hitUnit && hitUnit.isEnemy != unit.isEnemy){ // check if target is in attack range and if target is on opposite team
                                 UnitExecuteAction(hitUnit);
                                 EndSelUnitTurn();
                     }
                 } break;  
             }
         }
+    }
+
+    void ChangeToPickActionMode()
+    {
+        //Get unit's action list
+        selectedUnitActions = selectedUnit.GetComponent<UnitBaseClass>().actions;
+        Debug.Log("Picking Action Mode!");
+        /*Because this is delared when MoveMode is ended, it doesn't show the action list again
+         when canceling the target select.
+        The list will not be deleted when going from PickTarget to PickAction, 
+        but will when going from PickAction to Move*/
+        foreach (KeyValuePair<string, bool> actionPair in selectedUnitActions)
+        {
+            Debug.Log("Available action: " + actionPair.Key);
+        }
+        gridMode = SelectMode.PickActionMode;
     }
 
     public void OnSelectOption(InputAction.CallbackContext context){
@@ -290,7 +296,11 @@ public class GridManager : MonoBehaviour
                     gridMode = SelectMode.PickActionMode;
                     UpdateCursorSprite(cursorTileCoords, 0);
                     Debug.Log("Back to PickAction");
-                } break;
+                    foreach (KeyValuePair<string, bool> actionPair in selectedUnitActions)
+                    {
+                        Debug.Log("Available action: " + actionPair.Key);
+                    }
+                    } break;
 
             }
         }
@@ -321,7 +331,7 @@ public class GridManager : MonoBehaviour
 
         // get length of path
         int length = diff.x + diff.y;        
-        Debug.Log(length <= range);
+        //Debug.Log(length <= range);
 
         return length <= range;
     }
@@ -346,7 +356,7 @@ public class GridManager : MonoBehaviour
         if (gridMode == SelectMode.MoveMode){
             Collider[] hitColliders = new Collider[10];
             int numColliders = Physics.OverlapSphereNonAlloc(cursor.transform.position, 0.1f, hitColliders);
-            Debug.Log(numColliders);
+            //Debug.Log(numColliders);
             if (numColliders > 0 && !hitColliders[0].gameObject.GetComponent<UnitBaseClass>().turnOver){
                 cursor.GetComponent<SpriteRenderer>().sprite = valid;
                 return;
