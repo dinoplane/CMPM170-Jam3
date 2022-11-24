@@ -53,15 +53,6 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
-                },
-                {
-                    ""name"": ""SelectOption"",
-                    ""type"": ""Button"",
-                    ""id"": ""4c3c641c-8d87-411f-8c56-0d184e25efa8"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -141,39 +132,6 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                     ""action"": ""CursorMove"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""9bd40755-8457-4b42-81df-d43b3077395f"",
-                    ""path"": ""<Keyboard>/1"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""SelectOption"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""bd6e60d4-2d9a-4f44-a77c-b2133f5e042e"",
-                    ""path"": ""<Keyboard>/2"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""SelectOption"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""6850bd7b-9b25-466e-bb9e-f13013120b56"",
-                    ""path"": ""<Keyboard>/3"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""SelectOption"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -185,7 +143,6 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
         m_Grid_Movement = m_Grid.FindAction("Movement", throwIfNotFound: true);
         m_Grid_Select = m_Grid.FindAction("Select", throwIfNotFound: true);
         m_Grid_CursorMove = m_Grid.FindAction("CursorMove", throwIfNotFound: true);
-        m_Grid_SelectOption = m_Grid.FindAction("SelectOption", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -248,7 +205,6 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
     private readonly InputAction m_Grid_Movement;
     private readonly InputAction m_Grid_Select;
     private readonly InputAction m_Grid_CursorMove;
-    private readonly InputAction m_Grid_SelectOption;
     public struct GridActions
     {
         private @PlayerControls m_Wrapper;
@@ -256,7 +212,6 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
         public InputAction @Movement => m_Wrapper.m_Grid_Movement;
         public InputAction @Select => m_Wrapper.m_Grid_Select;
         public InputAction @CursorMove => m_Wrapper.m_Grid_CursorMove;
-        public InputAction @SelectOption => m_Wrapper.m_Grid_SelectOption;
         public InputActionMap Get() { return m_Wrapper.m_Grid; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -275,9 +230,6 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                 @CursorMove.started -= m_Wrapper.m_GridActionsCallbackInterface.OnCursorMove;
                 @CursorMove.performed -= m_Wrapper.m_GridActionsCallbackInterface.OnCursorMove;
                 @CursorMove.canceled -= m_Wrapper.m_GridActionsCallbackInterface.OnCursorMove;
-                @SelectOption.started -= m_Wrapper.m_GridActionsCallbackInterface.OnSelectOption;
-                @SelectOption.performed -= m_Wrapper.m_GridActionsCallbackInterface.OnSelectOption;
-                @SelectOption.canceled -= m_Wrapper.m_GridActionsCallbackInterface.OnSelectOption;
             }
             m_Wrapper.m_GridActionsCallbackInterface = instance;
             if (instance != null)
@@ -291,9 +243,6 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                 @CursorMove.started += instance.OnCursorMove;
                 @CursorMove.performed += instance.OnCursorMove;
                 @CursorMove.canceled += instance.OnCursorMove;
-                @SelectOption.started += instance.OnSelectOption;
-                @SelectOption.performed += instance.OnSelectOption;
-                @SelectOption.canceled += instance.OnSelectOption;
             }
         }
     }
@@ -303,6 +252,5 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
         void OnMovement(InputAction.CallbackContext context);
         void OnSelect(InputAction.CallbackContext context);
         void OnCursorMove(InputAction.CallbackContext context);
-        void OnSelectOption(InputAction.CallbackContext context);
     }
 }
