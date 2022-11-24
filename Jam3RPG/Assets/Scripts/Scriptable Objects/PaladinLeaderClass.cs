@@ -11,22 +11,26 @@ using UnityEngine;
 //     int armorCurrent;
 //     int moveRange;
 //     ??? position;
+//
+// AttackingClass Variables:
 //     int attackDamage;
 //     int attackRange;
-//     bool wasSacrificed;
 //
 // UnitBaseClass Functions:
-//     ChangeHealth(int amount);
-//     ChangeArmor(int amount);
+//     ChangeHealth();
+//     ChangeArmor();
 //     MoveToSpace();
-//     Attack(UnitBaseClass enemy);
-//     CounterAttack(UnitBaseClass enemy);
 //     ActionSacrifice();
 //     Death();
+//
+// AttackingClass Functions:
+//     Attack();
+//     CounterAttack();
 
 
-//[CreateAssetMenu(fileName = "Paladin", menuName = "Jam3RPG/New Paladin")]
-public class PaladinClass : UnitBaseClass
+
+//[CreateAssetMenu(fileName = "PaladinLeader", menuName = "Jam3RPG/New Paladin Leader")]
+public class PaladinLeaderClass : AttackingClass
 {
 
 
