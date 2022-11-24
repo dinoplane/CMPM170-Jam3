@@ -6,9 +6,9 @@ using UnityEngine;
 // UnitBaseClass Variables:
 //     public bool isEnemy;
 //     public int healthMax;
-//     private int healthCurrent; 
+//     public int healthCurrent; 
 //     public int armorMax;
-//     private int armorCurrent;
+//     public int armorCurrent;
 //     public int moveRange;
 //     public ??? position;
 //

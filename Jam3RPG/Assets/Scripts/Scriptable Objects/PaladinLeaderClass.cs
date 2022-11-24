@@ -4,13 +4,13 @@ using UnityEngine;
 
 
 // UnitBaseClass Variables:
-//     public bool isEnemy;
-//     public int healthMax;
-//     private int healthCurrent; 
-//     public int armorMax;
-//     private int armorCurrent;
-//     public int moveRange;
-//     public ??? position;
+//     bool isEnemy;
+//     int healthMax;
+//     int healthCurrent; 
+//     int armorMax;
+//     int armorCurrent;
+//     int moveRange;
+//     ??? position;
 //
 // AttackingClass Variables:
 //     int attackDamage;

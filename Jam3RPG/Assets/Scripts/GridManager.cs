@@ -77,9 +77,17 @@ public class GridManager : MonoBehaviour
                       This allows a unit to act without moving*/
 
                     UnitBaseClass hitUnit = hit.collider.gameObject.GetComponent<UnitBaseClass>();
+
+                    // TESTING ATTACKING
+                    // Should be:
+                    // hitUnit.Attack(hitUnit);
+                    // Says Attack() does not exist in UnitBaseClass. Its in Attacking Class, not UnitBaseClass
+                    hitUnit.ChangeHealth(-5);
+                    // TESTING OVER
+
                     if (hitUnit && !hitUnit.turnOver) //Selected a unit class? Unit class's turn is NOT over?
                     {
-                        selected = hit.collider.gameObject;
+                            selected = hit.collider.gameObject;
                     }
                 } else { // place selected object if exists
                     Debug.DrawRay(Camera.main.transform.position, cursor.transform.position - Camera.main.transform.position , Color.white);

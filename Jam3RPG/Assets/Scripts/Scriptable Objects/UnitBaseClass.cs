@@ -10,16 +10,25 @@ public class UnitBaseClass : MonoBehaviour {
 
     [Header("Basic Stats")]
     public int healthMax;
-    private int healthCurrent; 
+    [HideInInspector] public int healthCurrent;
     public int armorMax;
-    private int armorCurrent;
+    [HideInInspector] public int armorCurrent;
     public int moveRange;
     // public ??? position; Unit should know where it is on the grid
     // Could probably add sprites and sfx here too
 
+    [Header("Other")]
+    [HideInInspector] public bool wasSacrificed = false;
     public bool turnOver = false;
     public SpriteRenderer sprite;
+
     private PhaseManager phaseManager;
+
+    // Set health and armor to their max value
+    private void Awake() {
+        healthCurrent = healthMax;
+        armorCurrent = armorMax;
+    }
 
     public void Start()
     {
@@ -56,8 +65,26 @@ public class UnitBaseClass : MonoBehaviour {
     // Possible Returns:
     //    Int Total: Positive integer that represents new health total
     //
-    private void ChangeHealth(){  
+    public void ChangeHealth(int amount){  
+        int change;
+        // Check if incoming amount is damage or healing. 
+        if(amount < 0){ // -ints are damage, +ints are healing
+            change = amount  + armorCurrent; // Reduce damage by current armor. Weird bacuse of negatives
+        }
+        else{
+            change = amount; // Healing
+        }
 
+        healthCurrent += change; // Change health to show damage or healing
+        if (healthCurrent > healthMax) {
+            healthCurrent = healthMax;
+        }
+        else if(healthCurrent <= 0){
+            healthCurrent = 0;
+            Death(wasSacrificed);
+        }
+
+        Debug.Log(string.Format("Damage: {0} Armor: {1} Change: {2} Health: {3}", amount, armorCurrent, change, healthCurrent));
     }
 
 
@@ -71,8 +98,11 @@ public class UnitBaseClass : MonoBehaviour {
     // Possible Returns:
     //    Int Total: Positive integer that represents new armor total
     //
-    private void ChangeArmor(){
-
+    public void ChangeArmor(int amount){
+        armorCurrent -= amount;
+        if(armorCurrent < 0){
+            armorCurrent = 0;
+        }
     }
 
 
@@ -86,7 +116,7 @@ public class UnitBaseClass : MonoBehaviour {
     // Possible Returns:
     //    None? 
     //
-    private void MoveToSpace(){
+    public void MoveToSpace(){
 
     }
 
@@ -101,7 +131,7 @@ public class UnitBaseClass : MonoBehaviour {
     // Possible Returns:
     //    None?
     //
-    private void ActionSacrifice() { // Only usable if team == playerTeam and class != Cult Leader
+    public void ActionSacrifice() { // Only usable if team == playerTeam and class != Cult Leader
         
     }
 
@@ -117,8 +147,13 @@ public class UnitBaseClass : MonoBehaviour {
     // Possible Returns:
     //    None?
     //
-    private void Death() { 
-        
+    public void Death(bool wasSacrificed) { 
+        if(wasSacrificed){
+            //Do cool sacrifice death
+        }
+        else{
+            //Do regular death
+        }
     }
     
 }
