@@ -50,7 +50,7 @@ public class FighterClass : AttackingClass
     // Possible Returns:
     //    Int Total: A string with the new armor total of the damaged enemy.
     //
-    private void ChipArmor(UnitBaseClass enemy){  
+    public void ChipArmor(UnitBaseClass enemy){  
         enemy.ChangeArmor(chipDmg);
     }
 
@@ -67,7 +67,7 @@ public class FighterClass : AttackingClass
     // Possible Returns:
     //    None?
     //
-    private void DestroyArmor(UnitBaseClass enemy){  
+    public void DestroyArmor(UnitBaseClass enemy){  
         enemy.ChangeArmor(-1);
     }
 

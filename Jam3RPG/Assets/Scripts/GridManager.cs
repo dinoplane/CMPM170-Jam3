@@ -259,11 +259,21 @@ public class GridManager : MonoBehaviour
         {
             case "Attack":
                 //Get the AttackingClass component of selectedUnit (because it must have one in this case)
-                target.ChangeHealth(-5); //<- Replace selectedUnit.GetComponent<AttackingClass>().Attack(target)
+                selectedUnit.GetComponent<AttackingClass>().Attack(target);
                 break;
             case "Wait":
                 break;
+            case "ChipArmor":
+                selectedUnit.GetComponent<FighterClass>().ChipArmor(target);
+                break;
+            case "DestroyArmor":
+                Debug.LogError("Destroy armor has not been implemented in GridManager.UnitExecuteAction()");
+                break;
+            case "Hypnotize":
+                Debug.LogError("Hypnotize has not been implemented in GridManager.UnitExecuteAction()");
+                break;
             default:
+                Debug.LogError("Referenced an action with an unknown name. Check GridManager.UnitExecuteAction()");
                 break;
         }
     }
