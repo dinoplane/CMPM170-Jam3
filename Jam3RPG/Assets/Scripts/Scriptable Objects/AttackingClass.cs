@@ -46,7 +46,7 @@ public class AttackingClass : UnitBaseClass
     // Possible Returns:
     //    Int Total: Positive integer that represents new health total of enemy
     //
-    private void Attack(UnitBaseClass enemy){  
+    public void Attack(UnitBaseClass enemy){  
         enemy.ChangeHealth(-attackDamage);
     }
 
@@ -63,7 +63,7 @@ public class AttackingClass : UnitBaseClass
     // Possible Returns:
     //    Int Total: Positive integer that represents new health total of enemy
     //
-    private void CounterAttack(UnitBaseClass enemy){  
+    public void CounterAttack(UnitBaseClass enemy){  
         // if(In range of attacking enemy){
         //     Attack(enemy);
         // }
