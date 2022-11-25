@@ -31,6 +31,10 @@ using UnityEngine;
 //[CreateAssetMenu(fileName = "Paladin", menuName = "Jam3RPG/New Paladin")]
 public class PaladinClass : AttackingClass
 {
-
+    override public void ExtraAwake()
+    {
+        base.ExtraAwake();
+        //actions.Add(new KeyValuePair<string, bool>("", true));
+    }
 
 }

@@ -31,6 +31,8 @@ using UnityEngine;
 //[CreateAssetMenu(fileName = "Fighter", menuName = "Jam3RPG/New Fighter")]
 public class FighterClass : AttackingClass
 {
+    public int chipDmg;
+
     override public void ExtraAwake()
     {
         base.ExtraAwake();
@@ -48,8 +50,8 @@ public class FighterClass : AttackingClass
     // Possible Returns:
     //    Int Total: A string with the new armor total of the damaged enemy.
     //
-    private void ChipArmor(){  
-
+    private void ChipArmor(UnitBaseClass enemy){  
+        enemy.ChangeArmor(chipDmg);
     }
 
 
@@ -65,8 +67,8 @@ public class FighterClass : AttackingClass
     // Possible Returns:
     //    None?
     //
-    private void DestoryArmor(){  
-
+    private void DestroyArmor(UnitBaseClass enemy){  
+        enemy.ChangeArmor(-1);
     }
 
 }
