@@ -184,6 +184,7 @@ public class GridManager : MonoBehaviour
         gridMode = SelectMode.PickActionMode;
     }
 
+    //Called when player presses a key on the keyboard. Used to select an action
     public void OnSelectOption(InputAction.CallbackContext context){
         if (context.phase == InputActionPhase.Started && gridMode == SelectMode.PickActionMode)
 
