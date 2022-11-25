@@ -84,6 +84,11 @@ MonoBehaviour:
   tilePosition: {x: 0, y: 0}
   wasSacrificed: 0
   turnOver: 0
-  sprite: {fileID: 0}
+  sprite: {fileID: 4933821673509002747}
   attackDamage: 0
   attackRange: 0
+--- !u!212 &4933821673509002747 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 3868493778953013894, guid: d848ebde8bc915747b2260baab0bb184, type: 3}
+  m_PrefabInstance: {fileID: 8203256364591290237}
+  m_PrefabAsset: {fileID: 0}

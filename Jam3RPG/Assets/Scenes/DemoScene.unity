@@ -337,6 +337,18 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 229996068}
     m_Modifications:
+    - target: {fileID: 3562165130445676614, guid: 310dfb1ef2325424bba8d0c32afc5b86, type: 3}
+      propertyPath: armorMax
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 3562165130445676614, guid: 310dfb1ef2325424bba8d0c32afc5b86, type: 3}
+      propertyPath: healthMax
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 3562165130445676614, guid: 310dfb1ef2325424bba8d0c32afc5b86, type: 3}
+      propertyPath: moveRange
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 4933821673509002692, guid: 310dfb1ef2325424bba8d0c32afc5b86, type: 3}
       propertyPath: m_RootOrder
       value: 5
