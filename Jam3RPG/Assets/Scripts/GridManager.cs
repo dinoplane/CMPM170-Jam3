@@ -104,7 +104,7 @@ public class GridManager : MonoBehaviour
     }
 
     public void OnClickBoard(InputAction.CallbackContext context){ // Called when left mouse button is selected
-        Debug.Log("Click");
+        //Debug.Log("Click");
         
         if (context.phase == InputActionPhase.Started){
             // Cast a raycast
