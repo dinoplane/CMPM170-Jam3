@@ -118,10 +118,18 @@ public class UnitBaseClass : MonoBehaviour {
     //    Int Total: Positive integer that represents new armor total
     //
     public void ChangeArmor(int amount){
-        armorCurrent -= amount;
-        if(armorCurrent < 0){
+        //in the case of DestroyArmor()
+        if(amount < 0){
             armorCurrent = 0;
         }
+        //ChipArmor();
+        else{
+            armorCurrent -= amount;
+            if(armorCurrent < 0){
+                armorCurrent = 0;
+            }
+        }
+        Debug.Log(string.Format("Chip Damage: {0} Armor: {1} Health: {2}", amount, armorCurrent, healthCurrent));
     }
 
 
