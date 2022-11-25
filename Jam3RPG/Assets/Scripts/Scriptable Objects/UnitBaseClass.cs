@@ -158,8 +158,11 @@ public class UnitBaseClass : MonoBehaviour {
     // Possible Returns:
     //    None?
     //
-    public void ActionSacrifice() { // Only usable if team == playerTeam and class != Cult Leader
-        
+    public virtual void ActionSacrifice(UnitBaseClass enemy) { // Only usable if team == playerTeam and class != Cult Leader
+        if(!isEnemy){ //add check for cult leader later
+            wasSacrificed = true;
+        }
+        Debug.Log("Sacrificed");
     }
 
 
@@ -175,6 +178,7 @@ public class UnitBaseClass : MonoBehaviour {
     //    None?
     //
     public void Death(bool wasSacrificed) { 
+        Debug.Log("Unit has died");
         if(wasSacrificed){
             //Do cool sacrifice death
         }

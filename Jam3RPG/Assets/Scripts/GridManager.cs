@@ -263,6 +263,9 @@ public class GridManager : MonoBehaviour
                 break;
             case "Wait":
                 break;
+            case "Sacrifice":
+                selectedUnit.GetComponent<UnitBaseClass>().ActionSacrifice(target);
+                break;
             default:
                 break;
         }

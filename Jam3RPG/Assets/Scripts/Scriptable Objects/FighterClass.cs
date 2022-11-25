@@ -68,7 +68,14 @@ public class FighterClass : AttackingClass
     //    None?
     //
     private void DestroyArmor(UnitBaseClass enemy){  
-        enemy.ChangeArmor(-1);
+        enemy.ChangeArmor(enemy.armorCurrent*(-1));
     }
 
+    public override void ActionSacrifice(UnitBaseClass enemy){
+        Debug.Log("destroy");
+        DestroyArmor(enemy);
+        ChangeHealth((-1)*(healthCurrent+armorCurrent));
+        Debug.Log(string.Format("This unit:   Armor: {0} Health: {1}", armorCurrent, healthCurrent));
+        //Debug.Log(string.Format("This unit:   Armor: {0} Health: {1}", armorCurrent, healthCurrent));
+    }
 }
