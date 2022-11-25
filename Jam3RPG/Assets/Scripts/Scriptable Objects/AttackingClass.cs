@@ -33,6 +33,7 @@ public class AttackingClass : UnitBaseClass
         base.ExtraAwake();
         Debug.Log("Attacking class");
         actions.Add(new KeyValuePair<string, bool>("Attack", true));
+        actions.Add(new KeyValuePair<string, bool>("ClassAbility", true));
         actions.Add(new KeyValuePair<string, bool>("Sacrifice", true));
     }
 

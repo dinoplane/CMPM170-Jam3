@@ -36,7 +36,7 @@ public class FighterClass : AttackingClass
     override public void ExtraAwake()
     {
         base.ExtraAwake();
-        actions.Add(new KeyValuePair<string, bool>("ChipArmor", true));
+        //actions.Add(new KeyValuePair<string, bool>("ChipArmor", true));
     }
 
     // ChipArmor
@@ -77,5 +77,9 @@ public class FighterClass : AttackingClass
         ChangeHealth((-1)*(healthCurrent+armorCurrent));
         Debug.Log(string.Format("This unit:   Armor: {0} Health: {1}", armorCurrent, healthCurrent));
         //Debug.Log(string.Format("This unit:   Armor: {0} Health: {1}", armorCurrent, healthCurrent));
+    }
+
+    public override void ClassAbility(UnitBaseClass target){
+        ChipArmor(target);
     }
 }

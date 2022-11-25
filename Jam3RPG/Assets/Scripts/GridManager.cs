@@ -266,6 +266,9 @@ public class GridManager : MonoBehaviour
             case "Sacrifice":
                 selectedUnit.GetComponent<UnitBaseClass>().ActionSacrifice(target);
                 break;
+            case "ClassAbility":
+                selectedUnit.GetComponent<UnitBaseClass>().ClassAbility(target);
+                break;
             default:
                 break;
         }

@@ -165,6 +165,10 @@ public class UnitBaseClass : MonoBehaviour {
         Debug.Log("Sacrificed");
     }
 
+    public virtual void ClassAbility(UnitBaseClass target){
+        
+    }
+
 
     // Death
     //
