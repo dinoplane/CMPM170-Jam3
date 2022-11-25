@@ -31,7 +31,11 @@ using UnityEngine;
 //[CreateAssetMenu(fileName = "CultLeader", menuName = "Jam3RPG/New Cult Leader")]
 public class CultLeaderClass : AttackingClass
 {
-
+    override public void ExtraAwake()
+    {
+        base.ExtraAwake();
+        actions.Add(new KeyValuePair<string, bool>("Convert", true));
+    }
     // Convert
     //
     // Called to a convert enemy unit to join the player's army.
