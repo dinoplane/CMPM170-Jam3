@@ -26,6 +26,7 @@ public class GridManager : MonoBehaviour
 
     private Grid tmap;
 
+    [SerializeField]
     private Vector2Int cursorTileCoords;// of cursor
 
     private GameObject selectedUnit = null;
