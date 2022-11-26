@@ -2,6 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+using KeyActionPair = System.Collections.Generic.KeyValuePair<string, (UnitBaseClass.UnitAction action, bool needsTarget)>;
+
+
 
 // UnitBaseClass Variables:
 //     bool isEnemy;
@@ -36,7 +39,7 @@ public class FighterClass : AttackingClass
     override public void ExtraAwake()
     {
         base.ExtraAwake();
-        actions.Add(new KeyValuePair<string, bool>("ChipArmor", true));
+        actions.Add(new KeyActionPair("ChipArmor", (ChipArmor, true)));
     }
 
     // ChipArmor
