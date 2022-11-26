@@ -21,6 +21,7 @@ public class TileManager : MonoBehaviour
     private List<Vector2Int> reachedTiles; // In tile coordinates
     private List<GameObject> createdTiles; // In tile coordinates
     
+    private GameObject tileContainer;
     
     [SerializeField]
     private GameObject highlightTile;
@@ -43,6 +44,7 @@ public class TileManager : MonoBehaviour
         minCoord = new Vector2Int(-m.m_Width/2, -m.m_Height/2);
         maxCoord = new Vector2Int(m.m_Width/2 - 1, m.m_Height/2 - 1);
         
+        tileContainer = gameObject.transform.Find("RangeContainer").gameObject;
         //CreateRangeTiles(new Vector2Int(0,0), 5);
     }
 
@@ -71,7 +73,7 @@ public class TileManager : MonoBehaviour
         foreach(Vector2Int tilePos in reachedTiles) { // this is in tile coordinates...
             Vector3 position = tmap.GetCellCenterLocal(new Vector3Int(tilePos.x, tilePos.y, 0));
             position.z = 0;
-            GameObject tile = Instantiate(highlightTile, position, Quaternion.identity, gameObject.transform);
+            GameObject tile = Instantiate(highlightTile, position, Quaternion.identity, tileContainer.transform);
             tile.GetComponent<SpriteRenderer>().color = c;
             createdTiles.Add(tile);
         }
