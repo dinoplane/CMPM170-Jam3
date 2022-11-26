@@ -3,6 +3,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using SuperTiled2Unity;
 
 
 public struct TileInfo{
@@ -25,6 +26,11 @@ public class TileManager : MonoBehaviour
     private GameObject highlightTile;
 
     private Grid tmap;
+
+    [SerializeField]
+    private Vector2Int minCoord;
+    [SerializeField]
+    private Vector2Int maxCoord;
     
     // Start is called before the first frame update
     void Start()
@@ -32,6 +38,11 @@ public class TileManager : MonoBehaviour
         reachedTiles = new List<Vector2Int>();
         createdTiles = new List<GameObject>();
         tmap = GameObject.Find("Grid").GetComponent<Grid>();
+
+        SuperMap m = GameObject.Find("DebugTilemap").GetComponent<SuperMap>();
+        minCoord = new Vector2Int(-m.m_Width/2, -m.m_Height/2);
+        maxCoord = new Vector2Int(m.m_Width/2 - 1, m.m_Height/2 - 1);
+        
         //CreateRangeTiles(new Vector2Int(0,0), 5);
     }
 
@@ -68,10 +79,14 @@ public class TileManager : MonoBehaviour
 
     private List<TileInfo> GetNeighboringTiles(TileInfo tileTuple){
         List<TileInfo> ret = new List<TileInfo>();
-        ret.Add(new TileInfo(new Vector2Int(tileTuple.Tile.x + 1, tileTuple.Tile.y     ), tileTuple.Cost + 1));
-        ret.Add(new TileInfo(new Vector2Int(tileTuple.Tile.x - 1, tileTuple.Tile.y     ), tileTuple.Cost + 1));
-        ret.Add(new TileInfo(new Vector2Int(tileTuple.Tile.x,     tileTuple.Tile.y + 1 ), tileTuple.Cost + 1));
-        ret.Add(new TileInfo(new Vector2Int(tileTuple.Tile.x,     tileTuple.Tile.y - 1 ), tileTuple.Cost + 1));
+        if (tileTuple.Tile.x + 1 <= maxCoord.x)
+            ret.Add(new TileInfo(new Vector2Int(tileTuple.Tile.x + 1, tileTuple.Tile.y     ), tileTuple.Cost + 1));
+        if (tileTuple.Tile.x - 1 >= minCoord.x)
+            ret.Add(new TileInfo(new Vector2Int(tileTuple.Tile.x - 1, tileTuple.Tile.y     ), tileTuple.Cost + 1));
+        if (tileTuple.Tile.y + 1 <= maxCoord.y)
+            ret.Add(new TileInfo(new Vector2Int(tileTuple.Tile.x,     tileTuple.Tile.y + 1 ), tileTuple.Cost + 1));
+        if (tileTuple.Tile.y - 1 >= minCoord.y)
+            ret.Add(new TileInfo(new Vector2Int(tileTuple.Tile.x,     tileTuple.Tile.y - 1 ), tileTuple.Cost + 1));
         return ret;
     }
 
