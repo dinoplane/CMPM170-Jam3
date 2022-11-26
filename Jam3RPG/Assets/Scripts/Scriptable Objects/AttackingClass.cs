@@ -2,6 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+using KeyActionPair = System.Collections.Generic.KeyValuePair<string, (UnitBaseClass.UnitAction action, bool needsTarget)>;
+
+
 
 // UnitBaseClass Variables:
 //     public bool isEnemy;
@@ -32,7 +35,7 @@ public class AttackingClass : UnitBaseClass
     {
         base.ExtraAwake();
         Debug.Log("Attacking class");
-        actions.Add(new KeyValuePair<string, bool>("Attack", true));
+        actions.Add(new KeyActionPair("Attack", (Attack, true)));
     }
 
     // Attack

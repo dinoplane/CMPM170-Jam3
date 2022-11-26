@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 using UnityEngine.InputSystem;
+using KeyActionPair = System.Collections.Generic.KeyValuePair<string, (UnitBaseClass.UnitAction action, bool needsTarget)>;
+
+
 
 // Clean up code tasks
 // selected could be of type unit base!
@@ -29,7 +32,7 @@ public class GridManager : MonoBehaviour
     private Vector2Int cursorTileCoords;// of cursor
 
     private GameObject selectedUnit = null;
-    private List<KeyValuePair<string, bool>> selectedUnitActions = null;
+    private List<KeyActionPair> selectedUnitActions = null;
 
     private Vector2Int pastTile;// of units
     private Vector3 pastPosition;
@@ -37,7 +40,10 @@ public class GridManager : MonoBehaviour
     // private (i think we should make a grid???)
     private SelectMode gridMode =  SelectMode.IdleMode;
 
+    [SerializeField]
     private string selectedUnitAction = "";
+    [SerializeField]
+    private int selectedOptionNum = -1;
 
     // Start is called before the first frame update
     void Start()
@@ -54,6 +60,7 @@ public class GridManager : MonoBehaviour
         {
             SnapUnitToGrid(unit);
         }
+
     }
 
     public void OnGridMovement(InputAction.CallbackContext context){ // Called when WASD is pressed... kinda useless
@@ -177,7 +184,7 @@ public class GridManager : MonoBehaviour
          when canceling the target select.
         The list will not be deleted when going from PickTarget to PickAction, 
         but will when going from PickAction to Move*/
-        foreach (KeyValuePair<string, bool> actionPair in selectedUnitActions)
+        foreach (KeyActionPair actionPair in selectedUnitActions)
         {
             Debug.Log("Available action: " + actionPair.Key);
         }
@@ -197,37 +204,44 @@ public class GridManager : MonoBehaviour
         {
             string action = "";
             bool requiresTarget = false;
-            switch (context.control.name)
-            {
-                case "1":
-                    if(selectedUnitActions.Count > 0)
-                    {
-                        action = selectedUnitActions[0].Key;
-                        requiresTarget = selectedUnitActions[0].Value;
-                    }
-                    break;
-                case "2":
-                    if (selectedUnitActions.Count > 1)
-                    {
-                        action = selectedUnitActions[1].Key;
-                        requiresTarget = selectedUnitActions[1].Value;
-                    }
-                    break;
-                case "3":
-                    if (selectedUnitActions.Count > 2)
-                    {
-                        action = selectedUnitActions[2].Key;
-                        requiresTarget = selectedUnitActions[2].Value;
-                    }
-                    break;
-                case "4":
-                    if (selectedUnitActions.Count > 3)
-                    {
-                        action = selectedUnitActions[3].Key;
-                        requiresTarget = selectedUnitActions[3].Value;
-                    }
-                    break;
-            };
+            int optionNum = int.Parse(context.control.name);
+            selectedOptionNum = optionNum - 1;
+            Debug.Log(optionNum);
+            if (selectedUnitActions.Count > selectedOptionNum){
+                action = selectedUnitActions[selectedOptionNum].Key;
+                requiresTarget = selectedUnitActions[selectedOptionNum].Value.needsTarget;
+            }
+            // switch (context.control.name)
+            // {
+            //     case "1":
+            //         if(selectedUnitActions.Count > 0)
+            //         {
+            //             action = selectedUnitActions[0].Key;
+            //             requiresTarget = selectedUnitActions[0].Value;
+            //         }
+            //         break;
+            //     case "2":
+            //         if (selectedUnitActions.Count > 1)
+            //         {
+            //             action = selectedUnitActions[1].Key;
+            //             requiresTarget = selectedUnitActions[1].Value;
+            //         }
+            //         break;
+            //     case "3":
+            //         if (selectedUnitActions.Count > 2)
+            //         {
+            //             action = selectedUnitActions[2].Key;
+            //             requiresTarget = selectedUnitActions[2].Value;
+            //         }
+            //         break;
+            //     case "4":
+            //         if (selectedUnitActions.Count > 3)
+            //         {
+            //             action = selectedUnitActions[3].Key;
+            //             requiresTarget = selectedUnitActions[3].Value;
+            //         }
+            //         break;
+            // };
 
             if(action != "") //Do not end action select if there is no action for the chosen value
             {
@@ -255,27 +269,29 @@ public class GridManager : MonoBehaviour
     //After choosing an action in PickActionMode, executes that action
     private void UnitExecuteAction(UnitBaseClass target = null)
     {
-        switch (selectedUnitAction)
-        {
-            case "Attack":
-                //Get the AttackingClass component of selectedUnit (because it must have one in this case)
-                selectedUnit.GetComponent<AttackingClass>().Attack(target);
-                break;
-            case "Wait":
-                break;
-            case "ChipArmor":
-                selectedUnit.GetComponent<FighterClass>().ChipArmor(target);
-                break;
-            case "DestroyArmor":
-                Debug.LogError("Destroy armor has not been implemented in GridManager.UnitExecuteAction()");
-                break;
-            case "Hypnotize":
-                Debug.LogError("Hypnotize has not been implemented in GridManager.UnitExecuteAction()");
-                break;
-            default:
-                Debug.LogError("Referenced an action with an unknown name. Check GridManager.UnitExecuteAction()");
-                break;
-        }
+        // BEAUTY
+        selectedUnitActions[selectedOptionNum].Value.action(target);
+        // switch (selectedUnitAction)
+        // {
+        //     case "Attack":
+        //         //Get the AttackingClass component of selectedUnit (because it must have one in this case)
+        //         selectedUnit.GetComponent<AttackingClass>().Attack(target);
+        //         break;
+        //     case "Wait":
+        //         break;
+        //     case "ChipArmor":
+        //         selectedUnit.GetComponent<FighterClass>().ChipArmor(target);
+        //         break;
+        //     case "DestroyArmor":
+        //         Debug.LogError("Destroy armor has not been implemented in GridManager.UnitExecuteAction()");
+        //         break;
+        //     case "Hypnotize":
+        //         Debug.LogError("Hypnotize has not been implemented in GridManager.UnitExecuteAction()");
+        //         break;
+        //     default:
+        //         Debug.LogError("Referenced an action with an unknown name. Check GridManager.UnitExecuteAction()");
+        //         break;
+        // }
     }
 
     public void OnUndoMove(InputAction.CallbackContext context){
@@ -310,7 +326,7 @@ public class GridManager : MonoBehaviour
                     gridMode = SelectMode.PickActionMode;
                     UpdateCursorSprite(cursorTileCoords, 0);
                     Debug.Log("Back to PickAction");
-                    foreach (KeyValuePair<string, bool> actionPair in selectedUnitActions)
+                    foreach (KeyActionPair actionPair in selectedUnitActions)
                     {
                         Debug.Log("Available action: " + actionPair.Key);
                     }
