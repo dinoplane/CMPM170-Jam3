@@ -2,6 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+using KeyActionPair = System.Collections.Generic.KeyValuePair<string, (UnitBaseClass.UnitAction action, bool needsTarget)>;
+
+
 
 // UnitBaseClass Variables:
 //     bool isEnemy;
@@ -36,7 +39,7 @@ public class FighterClass : AttackingClass
     override public void ExtraAwake()
     {
         base.ExtraAwake();
-        actions.Add(new KeyValuePair<string, bool>("ChipArmor", true));
+        actions.Add(new KeyActionPair("ChipArmor", (ChipArmor, true)));
     }
 
     // ChipArmor
@@ -50,7 +53,7 @@ public class FighterClass : AttackingClass
     // Possible Returns:
     //    Int Total: A string with the new armor total of the damaged enemy.
     //
-    private void ChipArmor(UnitBaseClass enemy){  
+    public void ChipArmor(UnitBaseClass enemy){  
         enemy.ChangeArmor(chipDmg);
     }
 
@@ -67,7 +70,7 @@ public class FighterClass : AttackingClass
     // Possible Returns:
     //    None?
     //
-    private void DestroyArmor(UnitBaseClass enemy){  
+    public void DestroyArmor(UnitBaseClass enemy){  
         enemy.ChangeArmor(-1);
     }
 

@@ -2,6 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
+using KeyActionPair = System.Collections.Generic.KeyValuePair<string, (UnitBaseClass.UnitAction action, bool needsTarget)>;
+
+
 //[CreateAssetMenu(fileName = "UnitBase", menuName = "Jam3RPG/New Unit Base Class")]
 public class UnitBaseClass : MonoBehaviour {
     
@@ -25,13 +29,17 @@ public class UnitBaseClass : MonoBehaviour {
 
     private PhaseManager phaseManager;
 
-    [HideInInspector] public List<KeyValuePair<string, bool>> actions = new List<KeyValuePair<string, bool>>(); //The bool is whether or not it requires a target.
+    // Declare a delegate type for actions:
+    public delegate void UnitAction(UnitBaseClass target);
+    
+    [HideInInspector] public List<KeyActionPair> actions = new List<KeyActionPair>(); //The bool is whether or not it requires a target.
 
+    
     // Set health and armor to their max value
     private void Awake() {
         healthCurrent = healthMax;
         armorCurrent = armorMax;
-        actions.Add(new KeyValuePair<string, bool>("Wait", false));
+        actions.Add(new KeyActionPair("Wait", (Wait, false)));
         ExtraAwake();
     }
 
@@ -62,6 +70,9 @@ public class UnitBaseClass : MonoBehaviour {
 
     public void SpriteUnselect(){
         sprite.color = Color.white;
+    }
+
+    public void Wait(UnitBaseClass unit = null){
     }
 
     public void FinishTurn()

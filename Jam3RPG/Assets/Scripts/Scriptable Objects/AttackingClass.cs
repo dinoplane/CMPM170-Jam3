@@ -2,6 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+using KeyActionPair = System.Collections.Generic.KeyValuePair<string, (UnitBaseClass.UnitAction action, bool needsTarget)>;
+
+
 
 // UnitBaseClass Variables:
 //     public bool isEnemy;
@@ -32,7 +35,7 @@ public class AttackingClass : UnitBaseClass
     {
         base.ExtraAwake();
         Debug.Log("Attacking class");
-        actions.Add(new KeyValuePair<string, bool>("Attack", true));
+        actions.Add(new KeyActionPair("Attack", (Attack, true)));
     }
 
     // Attack
@@ -46,7 +49,7 @@ public class AttackingClass : UnitBaseClass
     // Possible Returns:
     //    Int Total: Positive integer that represents new health total of enemy
     //
-    private void Attack(UnitBaseClass enemy){  
+    public void Attack(UnitBaseClass enemy){  
         enemy.ChangeHealth(-attackDamage);
     }
 
@@ -63,7 +66,7 @@ public class AttackingClass : UnitBaseClass
     // Possible Returns:
     //    Int Total: Positive integer that represents new health total of enemy
     //
-    private void CounterAttack(UnitBaseClass enemy){  
+    public void CounterAttack(UnitBaseClass enemy){  
         // if(In range of attacking enemy){
         //     Attack(enemy);
         // }
