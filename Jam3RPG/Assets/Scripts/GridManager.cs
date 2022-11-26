@@ -46,6 +46,11 @@ public class GridManager : MonoBehaviour
     [SerializeField]
     private int selectedOptionNum = -1;
 
+    [SerializeField]
+    private Color moveColor;
+    [SerializeField]
+    private Color attackColor;
+    
     // Start is called before the first frame update
     void Start()
     {
@@ -178,6 +183,7 @@ public class GridManager : MonoBehaviour
 
     void ChangeToPickActionMode()
     {
+        GetComponent<TileManager>().RemoveRangeTiles();
         //Get unit's action list
         selectedUnitActions = selectedUnit.GetComponent<UnitBaseClass>().actions;
         Debug.Log("Picking Action Mode!");
@@ -255,6 +261,7 @@ public class GridManager : MonoBehaviour
                     gridMode = SelectMode.ChooseTargetMode;
                     AttackingClass unit = selectedUnit.GetComponent<AttackingClass>();
                     UpdateCursorSprite(unit.tilePosition, unit.attackRange);
+                    GetComponent<TileManager>().CreateRangeTiles(unit.tilePosition, unit.attackRange, attackColor);
                 }
                 else
                 {
@@ -300,8 +307,7 @@ public class GridManager : MonoBehaviour
             switch (gridMode){
                 case SelectMode.MoveMode:{
                     // Unselect unit
-                    selectedUnit.GetComponent<UnitBaseClass>().SpriteUnselect();
-                    selectedUnit = null;
+                    UnSelUnit();
                     // Back to IdleMode
                     gridMode = SelectMode.IdleMode;
                     UpdateCursorSprite(cursorTileCoords, 0);
@@ -313,11 +319,13 @@ public class GridManager : MonoBehaviour
                     // Set to MoveMode (there is a possibility Idle mode makes more sense but...)
                     UnitBaseClass unit = selectedUnit.GetComponent<UnitBaseClass>();
                     selectedUnit.transform.position = pastPosition;
+                    
                     unit.MoveToSpace(pastTile);
                     selectedUnitActions = null;
                     gridMode = SelectMode.MoveMode;
 
                     UpdateCursorSprite(unit.tilePosition, unit.moveRange);
+                    GetComponent<TileManager>().CreateRangeTiles(unit.tilePosition, unit.moveRange, moveColor);
 
                     Debug.Log("Back to Move");
                 } break;
@@ -325,6 +333,7 @@ public class GridManager : MonoBehaviour
                 case SelectMode.ChooseTargetMode:{
                     // Unit Goes back to picking action
                     gridMode = SelectMode.PickActionMode;
+                    GetComponent<TileManager>().RemoveRangeTiles();
                     UpdateCursorSprite(cursorTileCoords, 0);
                     Debug.Log("Back to PickAction");
                     foreach (KeyActionPair actionPair in selectedUnitActions)
@@ -368,17 +377,26 @@ public class GridManager : MonoBehaviour
     }
 
     private void SetSelUnit(GameObject unit){
+        UnSelUnit();
+        selectedUnit = unit;
+        UnitBaseClass s = selectedUnit.GetComponent<UnitBaseClass>();
+        s.SpriteSelect();
+        pastTile = s.tilePosition;
+        pastPosition = selectedUnit.transform.position;
+        GetComponent<TileManager>().CreateRangeTiles(s.tilePosition, s.moveRange, moveColor);
+    }
+    
+    private void UnSelUnit(){
         if (selectedUnit){
             selectedUnit.GetComponent<UnitBaseClass>().SpriteUnselect();
+            GetComponent<TileManager>().RemoveRangeTiles();
+            selectedUnit = null;
         }
-        selectedUnit = unit;
-        selectedUnit.GetComponent<UnitBaseClass>().SpriteSelect();
-        pastTile = selectedUnit.GetComponent<UnitBaseClass>().tilePosition;
-        pastPosition = selectedUnit.transform.position;
     }
 
     private void EndSelUnitTurn(){
         selectedUnit.GetComponent<UnitBaseClass>().FinishTurn(); 
+        GetComponent<TileManager>().RemoveRangeTiles();
         selectedUnit = null;
         gridMode = SelectMode.IdleMode;
     }
