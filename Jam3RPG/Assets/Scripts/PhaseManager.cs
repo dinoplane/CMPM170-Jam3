@@ -12,9 +12,9 @@ using UnityEngine;
 public class PhaseManager : MonoBehaviour
 {
     public List<UnitBaseClass> playerUnits;
-    int playerUnitsThatCanAct = 0;
+    [HideInInspector] public int playerUnitsThatCanAct = 0;
     public List<UnitBaseClass> aiUnits;
-    int aiUnitsThatCanAct = 0;
+    [HideInInspector] public int aiUnitsThatCanAct = 0;
     bool playerPhase;
     int currentCycle = 0; /*A cycle conists of both a player phase and an enemy phase. 
                            * New cycle begins at start of each player phase. Will become important later*/
@@ -67,6 +67,7 @@ public class PhaseManager : MonoBehaviour
 
         if(canvasUI != null)
             canvasUI.StartPlayerPhase();
+        
     }
 
     void StartAiPhase()
