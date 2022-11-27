@@ -40,6 +40,7 @@ public class FighterClass : AttackingClass
     {
         base.ExtraAwake();
         actions.Add(new KeyActionPair("ChipArmor", (ChipArmor, true)));
+        actions.Add(new KeyActionPair("DestroyArmor", (DestroyArmor, true)));
     }
 
     // ChipArmor
@@ -71,7 +72,7 @@ public class FighterClass : AttackingClass
     //    None?
     //
     public void DestroyArmor(UnitBaseClass enemy){  
-        enemy.ChangeArmor(-1);
+        enemy.ChangeArmor(-enemy.armorCurrent);
     }
 
 }
