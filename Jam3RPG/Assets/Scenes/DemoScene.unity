@@ -502,7 +502,7 @@ MonoBehaviour:
   sprite: {fileID: 453961343}
   attackDamage: 0
   attackRange: 2
-  phaseManager: {fileID: 2136853559}
+  phaseManagerRef: {fileID: 2136853559}
 --- !u!1001 &574407969
 PrefabInstance:
   m_ObjectHideFlags: 0
