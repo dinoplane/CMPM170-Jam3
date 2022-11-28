@@ -34,7 +34,6 @@ public class AttackingClass : UnitBaseClass
     override public void ExtraAwake()
     {
         base.ExtraAwake();
-        Debug.Log("Attacking class");
         actions.Add(new KeyActionPair("Attack", (Attack, true)));
     }
 
