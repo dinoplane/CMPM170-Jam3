@@ -179,6 +179,7 @@ public class GridManager : MonoBehaviour
                                 EndSelUnitTurn();
                                 menuUI.ShowSelectedPlayer();
                                 menuUI.ShowActions();
+                                
                     }
                 } break;  
             }
@@ -229,6 +230,7 @@ public class GridManager : MonoBehaviour
 
 
     //Called when player presses a key on the keyboard. Used to select an action
+    //Not used anymore
     public void OnSelectOption(InputAction.CallbackContext context){
         if (context.phase == InputActionPhase.Started && gridMode == SelectMode.PickActionMode)
 
@@ -248,13 +250,6 @@ public class GridManager : MonoBehaviour
                 action = selectedUnitActions[selectedOptionNum].Key;
                 requiresTarget = selectedUnitActions[selectedOptionNum].Value.needsTarget;
             }
-            Debug.Log("Starting Tests");
-            Debug.Log(selectedOptionNum);
-            Debug.Log(optionNum);
-            Debug.Log(action);
-            Debug.Log(requiresTarget);
-            Debug.Log("Ending tests");
-
             // switch (context.control.name)
             // {
             //     case "1":
@@ -318,6 +313,7 @@ public class GridManager : MonoBehaviour
         selectedOptionNum = num;
         string action = "";
         bool requiresTarget = false;
+        menuUI.ShowActions();
 
         if (selectedUnitActions.Count > selectedOptionNum){
             action = selectedUnitActions[selectedOptionNum].Key;
@@ -340,7 +336,6 @@ public class GridManager : MonoBehaviour
                 UnitExecuteAction();
                 EndSelUnitTurn();
                 menuUI.ShowSelectedPlayer();
-                menuUI.ShowActions();
             }
         }
         //After selecting target, we execute the action
@@ -385,6 +380,8 @@ public class GridManager : MonoBehaviour
                     // Back to IdleMode
                     gridMode = SelectMode.IdleMode;
                     UpdateCursorSprite(cursorTileCoords, 0);
+                    menuUI.ShowSelectedPlayer();
+                    menuUI.ShowActions();
                     Debug.Log("Back to Idle");
                 } break;
 
@@ -396,9 +393,9 @@ public class GridManager : MonoBehaviour
                     unit.MoveToSpace(pastTile);
                     selectedUnitActions = null;
                     gridMode = SelectMode.MoveMode;
-
                     UpdateCursorSprite(unit.tilePosition, unit.moveRange);
 
+                    menuUI.ShowActions();
                     Debug.Log("Back to Move");
                 } break;
 
@@ -410,6 +407,7 @@ public class GridManager : MonoBehaviour
                     foreach (KeyActionPair actionPair in selectedUnitActions)
                     {
                         Debug.Log("Available action: " + actionPair.Key);
+                        menuUI.ShowActions(actionPair.Key);
                     }
                     } break;
 
