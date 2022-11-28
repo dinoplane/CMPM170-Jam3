@@ -50,6 +50,7 @@ public class FighterClass : AttackingClass
     //
     // Possible Parameters: 
     //    Type Enemy1: Passes target enemy to damage. Reduces their armor.
+    //    Int armorDam: damage applied to armor
     //
     // Possible Returns:
     //    Int Total: A string with the new armor total of the damaged enemy.
@@ -72,7 +73,11 @@ public class FighterClass : AttackingClass
     //    None?
     //
     public void DestroyArmor(UnitBaseClass enemy){  
-        enemy.ChangeArmor(-enemy.armorCurrent);
+        ActionSacrifice();
+        if(wasSacrificed){
+            enemy.ChangeArmor(-enemy.armorCurrent);
+        }
+        Death(wasSacrificed);
     }
 
 }
