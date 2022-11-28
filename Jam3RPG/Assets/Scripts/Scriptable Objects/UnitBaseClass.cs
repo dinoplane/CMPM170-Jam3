@@ -14,7 +14,7 @@ public class UnitBaseClass : MonoBehaviour {
 
     [Header("Basic Stats")]
     public int healthMax;
-    [HideInInspector] public int healthCurrent;
+     public int healthCurrent;
     public int armorMax;
     [HideInInspector] public int armorCurrent;
     public int moveRange;
