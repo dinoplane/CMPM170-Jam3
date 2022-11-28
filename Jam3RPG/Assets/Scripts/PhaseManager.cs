@@ -113,4 +113,16 @@ public class PhaseManager : MonoBehaviour
             }
         }
     }
+
+    public void UnitDied(UnitBaseClass unit)
+    {
+        if (unit.isEnemy)
+        {
+            aiUnits.Remove(unit);
+        }
+        else
+        {
+            playerUnits.Remove(unit);
+        }
+    }
 }
