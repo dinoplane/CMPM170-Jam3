@@ -9,7 +9,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3868493778953013892, guid: d848ebde8bc915747b2260baab0bb184, type: 3}
       propertyPath: m_Name
-      value: Paladin
+      value: CultLeader
       objectReference: {fileID: 0}
     - target: {fileID: 3868493778953013945, guid: d848ebde8bc915747b2260baab0bb184, type: 3}
       propertyPath: m_RootOrder
@@ -63,7 +63,7 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 3868493778953013892, guid: d848ebde8bc915747b2260baab0bb184, type: 3}
   m_PrefabInstance: {fileID: 8203256364591290237}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &3562165130445676614
+--- !u!114 &3060732500346084369
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -72,21 +72,23 @@ MonoBehaviour:
   m_GameObject: {fileID: 4933821673509002745}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0bc2ccae050625e4fb6ffe75399569a4, type: 3}
+  m_Script: {fileID: 11500000, guid: a171ca110e9aaab45977d7900a658c71, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   isEnemy: 0
-  healthMax: 0
+  healthMax: 12
   healthCurrent: 0
-  armorMax: 0
+  armorMax: 3
   armorCurrent: 0
-  moveRange: 0
+  moveRange: 7
   tilePosition: {x: 0, y: 0}
   wasSacrificed: 0
   turnOver: 0
   sprite: {fileID: 4933821673509002747}
-  attackDamage: 0
-  attackRange: 0
+  attackDamage: 4
+  attackRange: 1
+  phaseManagerRef: {fileID: 0}
+  garunteedConvertThresh: 2
 --- !u!212 &4933821673509002747 stripped
 SpriteRenderer:
   m_CorrespondingSourceObject: {fileID: 3868493778953013894, guid: d848ebde8bc915747b2260baab0bb184, type: 3}

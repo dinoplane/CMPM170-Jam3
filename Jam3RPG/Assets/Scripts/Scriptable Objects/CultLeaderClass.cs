@@ -37,6 +37,7 @@ public class CultLeaderClass : AttackingClass
     //get component of phase manager as ref 
     //write function in phase manager
     public GameObject phaseManagerRef;
+    public int garunteedConvertThresh = 2;
     bool isExist;
     private int x;
     private int hp;
@@ -61,44 +62,44 @@ public class CultLeaderClass : AttackingClass
     //
     private void Hypnotize(UnitBaseClass enemy){
         //100% convert rate
-        if(enemy.healthCurrent <= 2){
-            enemy.isEnemy = false;  
-            phaseManagerRef.GetComponent<PhaseManager>().playerUnits.Add(enemy);
-            phaseManagerRef.GetComponent<PhaseManager>().aiUnits.Remove(enemy);
-
-            phaseManagerRef.GetComponent<PhaseManager>().playerUnitsThatCanAct++;
-            phaseManagerRef.GetComponent<PhaseManager>().aiUnitsThatCanAct--;
+        if(enemy.healthCurrent <= garunteedConvertThresh){
+            ChangeEnemyToAlly(enemy);
             //send success msg
             Debug.Log("Convert Successful");
-            Debug.Log(string.Format("Enemy Health: {0} Player Chance: {1} Enemy Chance Threshold: {2}", enemy.healthCurrent, x, hp));
+            Debug.Log(string.Format("Enemy Health: {0} Rolled #: {1} Success threshold: {2}", enemy.healthCurrent, x, hp));
         }
         //dependent on enemy hp
         else{
             //gets random percentage
             x = (int)(rand.NextDouble() * 100);
             //conversion chance based on health
-            hp = (10-enemy.healthCurrent) * 100;
-            if(hp<10){
+            hp = (10 - (enemy.healthCurrent - garunteedConvertThresh)) * 10;
+            if(hp < 10){
                 hp = 10;
             }
 
             if(x <= hp){
-                enemy.isEnemy = false;  
-                phaseManagerRef.GetComponent<PhaseManager>().playerUnits.Add(enemy);
-                phaseManagerRef.GetComponent<PhaseManager>().aiUnits.Remove(enemy);
-
-                phaseManagerRef.GetComponent<PhaseManager>().playerUnitsThatCanAct++;
-                phaseManagerRef.GetComponent<PhaseManager>().aiUnitsThatCanAct--;
+                ChangeEnemyToAlly(enemy);
                 //send success msg
                 Debug.Log("Convert Successful");
-                Debug.Log(string.Format("Enemy Health: {0} Player Chance: {1} Enemy Chance Threshold: {2}", enemy.healthCurrent, x, hp));
+                Debug.Log(string.Format("Enemy Health: {0} Rolled #: {1} Success threshold: {2}", enemy.healthCurrent, x, hp));
             }
             else{
                 Debug.Log("Conversion Failed");
-                Debug.Log(string.Format("Enemy Health: {0} Player Chance: {1} Enemy Chance Threshold: {2}", enemy.healthCurrent, x, hp));
-    
+                Debug.Log(string.Format("Enemy Health: {0} Rolled #: {1} Success threshold: {2}", enemy.healthCurrent, x, hp));
             }
         }
+    }
+
+    private void ChangeEnemyToAlly(UnitBaseClass enemy)
+    {
+        enemy.isEnemy = false;
+        enemy.turnOver = false;
+        phaseManagerRef.GetComponent<PhaseManager>().playerUnits.Add(enemy);
+        phaseManagerRef.GetComponent<PhaseManager>().aiUnits.Remove(enemy);
+
+        phaseManagerRef.GetComponent<PhaseManager>().playerUnitsThatCanAct++;
+        phaseManagerRef.GetComponent<PhaseManager>().aiUnitsThatCanAct--;
     }
 
 }

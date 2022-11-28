@@ -76,17 +76,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isEnemy: 0
-  healthMax: 0
+  healthMax: 16
   healthCurrent: 0
-  armorMax: 0
+  armorMax: 6
   armorCurrent: 0
-  moveRange: 0
+  moveRange: 2
   tilePosition: {x: 0, y: 0}
   wasSacrificed: 0
   turnOver: 0
   sprite: {fileID: 4933821673509002747}
-  attackDamage: 0
-  attackRange: 0
+  attackDamage: 8
+  attackRange: 1
 --- !u!212 &4933821673509002747 stripped
 SpriteRenderer:
   m_CorrespondingSourceObject: {fileID: 3868493778953013894, guid: d848ebde8bc915747b2260baab0bb184, type: 3}

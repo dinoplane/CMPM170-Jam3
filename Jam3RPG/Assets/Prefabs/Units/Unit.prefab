@@ -101,7 +101,7 @@ MonoBehaviour:
   isEnemy: 0
   healthMax: 10
   healthCurrent: 0
-  armorMax: 1
+  armorMax: 0
   armorCurrent: 0
   moveRange: 4
   tilePosition: {x: 0, y: 0}
