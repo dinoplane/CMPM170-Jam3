@@ -763,7 +763,7 @@ PrefabInstance:
     - target: {fileID: 3060732500346084369, guid: 5120d9b571b110d4797b434b523fc5e5, type: 3}
       propertyPath: phaseManagerRef
       value: 
-      objectReference: {fileID: 2136853559}
+      objectReference: {fileID: 1876701196}
     - target: {fileID: 4933821673509002692, guid: 5120d9b571b110d4797b434b523fc5e5, type: 3}
       propertyPath: m_RootOrder
       value: 2
@@ -2499,6 +2499,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   CameraSpeed: 1
+--- !u!1 &1876701196 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8513245027307122297, guid: 702c0d09efba67049924eaadb8e8c9d0, type: 3}
+  m_PrefabInstance: {fileID: 1075104959}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1982576589
 PrefabInstance:
   m_ObjectHideFlags: 0
