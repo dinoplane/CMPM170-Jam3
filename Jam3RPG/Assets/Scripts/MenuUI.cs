@@ -17,7 +17,8 @@ public class MenuUI : MonoBehaviour {
     [SerializeField] private GameObject actionButton3;
     [SerializeField] private GameObject actionButton4;
 
-    
+    [Header("Misc")]
+    [SerializeField] private GameObject targetPanel;
 
 
 
@@ -28,6 +29,7 @@ public class MenuUI : MonoBehaviour {
         actionButton2.SetActive(false);
         actionButton3.SetActive(false);
         actionButton4.SetActive(false);
+        targetPanel.SetActive(false);
 
     }
 
@@ -78,5 +80,13 @@ public class MenuUI : MonoBehaviour {
         Debug.Log(actionString);
     }
 
-    
+
+    public void ShowTargetMessage(bool show = false){
+        if(show == false){
+            targetPanel.SetActive(false);
+            return;
+        }
+
+        targetPanel.SetActive(true);
+    }
 }

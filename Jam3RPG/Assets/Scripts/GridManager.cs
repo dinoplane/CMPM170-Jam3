@@ -184,6 +184,7 @@ public class GridManager : MonoBehaviour
                                 EndSelUnitTurn();
                                 menuUI.ShowSelectedPlayer();
                                 menuUI.ShowActions();
+                                menuUI.ShowTargetMessage();
                                 
                     }
                 } break;  
@@ -196,7 +197,6 @@ public class GridManager : MonoBehaviour
         GetComponent<TileManager>().RemoveRangeTiles();
         //Get unit's action list
         selectedUnitActions = selectedUnit.GetComponent<UnitBaseClass>().actions;
-        menuUI.ShowActions();
         Debug.Log("Picking Action Mode!");
         /*Because this is delared when MoveMode is ended, it doesn't show the action list again
          when canceling the target select.
@@ -321,7 +321,7 @@ public class GridManager : MonoBehaviour
         string action = "";
         bool requiresTarget = false;
         menuUI.ShowActions();
-
+        
         if (selectedUnitActions.Count > selectedOptionNum){
             action = selectedUnitActions[selectedOptionNum].Key;
             requiresTarget = selectedUnitActions[selectedOptionNum].Value.needsTarget;
@@ -333,6 +333,7 @@ public class GridManager : MonoBehaviour
             //Note that wait action is always last (for user friendliness)
             if (requiresTarget)
             {
+                menuUI.ShowTargetMessage(true);
                 Debug.Log("Choose target mode!");
                 gridMode = SelectMode.ChooseTargetMode;
                 AttackingClass unit = selectedUnit.GetComponent<AttackingClass>();
@@ -413,6 +414,7 @@ public class GridManager : MonoBehaviour
                     GetComponent<TileManager>().RemoveRangeTiles();
                     UpdateCursorSprite(cursorTileCoords, 0);
                     Debug.Log("Back to PickAction");
+                    menuUI.ShowTargetMessage();
                     foreach (KeyActionPair actionPair in selectedUnitActions)
                     {
                         Debug.Log("Available action: " + actionPair.Key);
