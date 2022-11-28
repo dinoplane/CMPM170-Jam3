@@ -236,83 +236,85 @@ public class GridManager : MonoBehaviour
 
 
     //Called when player presses a key on the keyboard. Used to select an action
+    //
     //Not used anymore
-    public void OnSelectOption(InputAction.CallbackContext context){
-        if (context.phase == InputActionPhase.Started && gridMode == SelectMode.PickActionMode)
+    //
+    // public void OnSelectOption(InputAction.CallbackContext context){
+    //     if (context.phase == InputActionPhase.Started && gridMode == SelectMode.PickActionMode)
 
-            /*switch(context.control.name){
-                case "1": // Action
-                    gridMode = SelectMode.ChooseTargetMode;
-                    AttackingClass unit = selectedUnit.GetComponent<AttackingClass>();
-                    UpdateCursorSprite(unit.tilePosition, unit.attackRange);*/
+    //         /*switch(context.control.name){
+    //             case "1": // Action
+    //                 gridMode = SelectMode.ChooseTargetMode;
+    //                 AttackingClass unit = selectedUnit.GetComponent<AttackingClass>();
+    //                 UpdateCursorSprite(unit.tilePosition, unit.attackRange);*/
                     
-        {
-            string action = "";
-            bool requiresTarget = false;
-            int optionNum = int.Parse(context.control.name);
-            selectedOptionNum = optionNum - 1;
-            Debug.Log(optionNum);
-            if (selectedUnitActions.Count > selectedOptionNum){
-                action = selectedUnitActions[selectedOptionNum].Key;
-                requiresTarget = selectedUnitActions[selectedOptionNum].Value.needsTarget;
-            }
-            // switch (context.control.name)
-            // {
-            //     case "1":
-            //         if(selectedUnitActions.Count > 0)
-            //         {
-            //             action = selectedUnitActions[0].Key;
-            //             requiresTarget = selectedUnitActions[0].Value;
-            //         }
-            //         break;
-            //     case "2":
-            //         if (selectedUnitActions.Count > 1)
-            //         {
-            //             action = selectedUnitActions[1].Key;
-            //             requiresTarget = selectedUnitActions[1].Value;
-            //         }
-            //         break;
-            //     case "3":
-            //         if (selectedUnitActions.Count > 2)
-            //         {
-            //             action = selectedUnitActions[2].Key;
-            //             requiresTarget = selectedUnitActions[2].Value;
-            //         }
-            //         break;
-            //     case "4":
-            //         if (selectedUnitActions.Count > 3)
-            //         {
-            //             action = selectedUnitActions[3].Key;
-            //             requiresTarget = selectedUnitActions[3].Value;
-            //         }
-            //         break;
-            // };
+    //     {
+    //         string action = "";
+    //         bool requiresTarget = false;
+    //         int optionNum = int.Parse(context.control.name);
+    //         selectedOptionNum = optionNum - 1;
+    //         Debug.Log(optionNum);
+    //         if (selectedUnitActions.Count > selectedOptionNum){
+    //             action = selectedUnitActions[selectedOptionNum].Key;
+    //             requiresTarget = selectedUnitActions[selectedOptionNum].Value.needsTarget;
+    //         }
+    //         // switch (context.control.name)
+    //         // {
+    //         //     case "1":
+    //         //         if(selectedUnitActions.Count > 0)
+    //         //         {
+    //         //             action = selectedUnitActions[0].Key;
+    //         //             requiresTarget = selectedUnitActions[0].Value;
+    //         //         }
+    //         //         break;
+    //         //     case "2":
+    //         //         if (selectedUnitActions.Count > 1)
+    //         //         {
+    //         //             action = selectedUnitActions[1].Key;
+    //         //             requiresTarget = selectedUnitActions[1].Value;
+    //         //         }
+    //         //         break;
+    //         //     case "3":
+    //         //         if (selectedUnitActions.Count > 2)
+    //         //         {
+    //         //             action = selectedUnitActions[2].Key;
+    //         //             requiresTarget = selectedUnitActions[2].Value;
+    //         //         }
+    //         //         break;
+    //         //     case "4":
+    //         //         if (selectedUnitActions.Count > 3)
+    //         //         {
+    //         //             action = selectedUnitActions[3].Key;
+    //         //             requiresTarget = selectedUnitActions[3].Value;
+    //         //         }
+    //         //         break;
+    //         // };
 
-            if(action != "") //Do not end action select if there is no action for the chosen value
-            {
-                Debug.Log("Doing action " + action);
-                selectedUnitAction = action;
-                //Note that wait action is always last (for user friendliness)
-                if (requiresTarget)
-                {
-                    Debug.Log("Choose target mode!");
-                    gridMode = SelectMode.ChooseTargetMode;
-                    AttackingClass unit = selectedUnit.GetComponent<AttackingClass>();
-                    UpdateCursorSprite(unit.tilePosition, unit.attackRange);
-                    GetComponent<TileManager>().CreateRangeTiles(unit.tilePosition, unit.attackRange, attackColor);
-                }
-                else
-                {
-                    UnitExecuteAction();
-                    EndSelUnitTurn();
-                    menuUI.ShowSelectedPlayer();
-                    menuUI.ShowActions();
-                }
-            }
-            //After selecting target, we execute the action
-            //Can be done by seeing what the action was, then getting component of the class that action is defined in, and doing it.
-        }
-    }
+    //         if(action != "") //Do not end action select if there is no action for the chosen value
+    //         {
+    //             Debug.Log("Doing action " + action);
+    //             selectedUnitAction = action;
+    //             //Note that wait action is always last (for user friendliness)
+    //             if (requiresTarget)
+    //             {
+    //                 Debug.Log("Choose target mode!");
+    //                 gridMode = SelectMode.ChooseTargetMode;
+    //                 AttackingClass unit = selectedUnit.GetComponent<AttackingClass>();
+    //                 UpdateCursorSprite(unit.tilePosition, unit.attackRange);
+    //                 GetComponent<TileManager>().CreateRangeTiles(unit.tilePosition, unit.attackRange, attackColor);
+    //             }
+    //             else
+    //             {
+    //                 UnitExecuteAction();
+    //                 EndSelUnitTurn();
+    //                 menuUI.ShowSelectedPlayer();
+    //                 menuUI.ShowActions();
+    //             }
+    //         }
+    //         //After selecting target, we execute the action
+    //         //Can be done by seeing what the action was, then getting component of the class that action is defined in, and doing it.
+    //     }
+    // }
 
 
     // Using Action Buttons
@@ -338,6 +340,7 @@ public class GridManager : MonoBehaviour
                 gridMode = SelectMode.ChooseTargetMode;
                 AttackingClass unit = selectedUnit.GetComponent<AttackingClass>();
                 UpdateCursorSprite(unit.tilePosition, unit.attackRange);
+                GetComponent<TileManager>().CreateRangeTiles(unit.tilePosition, unit.attackRange, attackColor);
             }
             else
             {
