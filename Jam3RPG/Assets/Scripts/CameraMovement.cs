@@ -18,10 +18,10 @@ public class CameraMovement : MonoBehaviour
     void Update()
     {
         if(Input.GetKey(KeyCode.W)){
-            CameraPosition.y -= CameraSpeed / speed;
+            CameraPosition.y += CameraSpeed / speed;
         }
         if(Input.GetKey(KeyCode.S)){
-            CameraPosition.y += CameraSpeed / speed;
+            CameraPosition.y -= CameraSpeed / speed;
         }
         if(Input.GetKey(KeyCode.D)){
             CameraPosition.x += CameraSpeed / speed;
