@@ -31,12 +31,6 @@ using UnityEngine;
 //[CreateAssetMenu(fileName = "Fighter", menuName = "Jam3RPG/New Fighter")]
 public class FighterClass : AttackingClass
 {
-    public void ActionSacrifice() { // Only usable if team == playerTeam and class != Cult Leader
-        if(!isEnemy && unitClass != "Cult Leader"){
-            wasSacrificed = true;
-        }
-    }
-
     // ChipArmor
     //
     // Called to deal damage to enemy armor. 
@@ -69,7 +63,7 @@ public class FighterClass : AttackingClass
     private void DestroyArmor(UnitBaseClass enemy){  
         ActionSacrifice();
         if(wasSacrificed){
-            ChipArmor(enemy, -1*enemy.armorCurrent);
+            enemy.ChangeArmor(-enemy.armorCurrent);
         }
         Death(wasSacrificed);
     }
