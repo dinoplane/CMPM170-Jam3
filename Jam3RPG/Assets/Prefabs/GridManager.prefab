@@ -2923,6 +2923,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   highlightTile: {fileID: 5558182977308820050, guid: 105ae3714aa5dd649a2c6e5f16f5c755, type: 3}
+  minCoord: {x: 0, y: 0}
+  maxCoord: {x: 0, y: 0}
 --- !u!1 &8497067950005375061
 GameObject:
   m_ObjectHideFlags: 0
