@@ -191,10 +191,14 @@ public class UnitBaseClass : MonoBehaviour {
     public void Death(bool wasSacrificed) { 
         if(wasSacrificed){
             //Do cool sacrifice death
+            Debug.Log(name.ToString() + " has sacrificed themselves to the Dark God");
         }
         else{
             //Do regular death
+            Debug.Log(name.ToString() + " has died.");
         }
+        phaseManager.UnitDied(this);
+        Destroy(gameObject);
     }
     
 }
