@@ -113,4 +113,25 @@ public class PhaseManager : MonoBehaviour
             }
         }
     }
+
+    public void UnitDied(UnitBaseClass unit)
+    {
+        if (unit.isEnemy)
+        {
+            aiUnits.Remove(unit);
+            if(aiUnits.Count <= 0)
+            {
+                Debug.Log("All enemies defeated. Victory!");
+            }
+        }
+        else
+        {
+            playerUnits.Remove(unit);
+            //Checks if Unit has the Cult Leader script as a component
+            if (unit.GetComponent<CultLeaderClass>()) 
+            {
+                Debug.Log("Cult leader defeated. Game Over");
+            }
+        }
+    }
 }
