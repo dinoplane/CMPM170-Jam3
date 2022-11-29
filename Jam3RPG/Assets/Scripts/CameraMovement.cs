@@ -7,7 +7,6 @@ public class CameraMovement : MonoBehaviour
     private Vector3 CameraPosition;
     [Header("Camera Settings")]
     public float CameraSpeed;
-    float speed = 60.0f;
 
     void Start()
     {
@@ -18,16 +17,16 @@ public class CameraMovement : MonoBehaviour
     void Update()
     {
         if(Input.GetKey(KeyCode.W)){
-            CameraPosition.y += CameraSpeed / speed;
+            CameraPosition.y += CameraSpeed * Time.deltaTime;
         }
         if(Input.GetKey(KeyCode.S)){
-            CameraPosition.y -= CameraSpeed / speed;
+            CameraPosition.y -= CameraSpeed * Time.deltaTime;
         }
         if(Input.GetKey(KeyCode.D)){
-            CameraPosition.x += CameraSpeed / speed;
+            CameraPosition.x += CameraSpeed * Time.deltaTime;
         }
         if(Input.GetKey(KeyCode.A)){
-            CameraPosition.x -= CameraSpeed / speed;
+            CameraPosition.x -= CameraSpeed * Time.deltaTime;
         }
 
         this.transform.position = CameraPosition;
