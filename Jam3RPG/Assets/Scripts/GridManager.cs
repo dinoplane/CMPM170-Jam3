@@ -518,4 +518,10 @@ public class GridManager : MonoBehaviour
     {
         
     }
+
+    //Pressing ESC will close the game
+    public void OnExit()
+    {
+        Application.Quit();
+    }
 }
