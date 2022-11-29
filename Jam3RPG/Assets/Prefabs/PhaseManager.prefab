@@ -45,9 +45,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerUnits: []
-  playerUnitsThatCanAct: 0
   aiUnits: []
-  aiUnitsThatCanAct: 0
   canvasUI: {fileID: 0}
-  gridManager: {fileID: 0}
-  enemyAI: {fileID: 0}

@@ -21,15 +21,9 @@ public class PhaseManager : MonoBehaviour
 
     public CanvasUI canvasUI;
 
-    [SerializeField]
-    private GameObject gridManager;
-
-    public BaselineAI enemyAI;
-
     // Start is called before the first frame update
     void Start()
     {
-
         UnitBaseClass[] units = FindObjectsOfType<UnitBaseClass>();
         foreach(UnitBaseClass unit in units)
         {
@@ -45,13 +39,8 @@ public class PhaseManager : MonoBehaviour
 
         Debug.Log("Player units " + playerUnits.Count);
         Debug.Log("Enemy units " + aiUnits.Count);
-
-        enemyAI = gridManager.GetComponent<BaselineAI>();
-
         MakeUnitsInactive(aiUnits);
         StartPlayerPhase();
-        // MakeUnitsInactive(playerUnits);
-        // StartAiPhase();
     }
 
     
@@ -94,7 +83,6 @@ public class PhaseManager : MonoBehaviour
 
         if (canvasUI != null)
             canvasUI.StartAiPhase();
-        enemyAI.EnemyTurnStart();
     }
 
     //Called whenever a unit finishes a turn
