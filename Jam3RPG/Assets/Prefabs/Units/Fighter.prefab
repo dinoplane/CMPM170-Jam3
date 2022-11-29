@@ -75,12 +75,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c4e4e78bd6b3b4438d8a27352565442, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isEnemy: 0
+  isEnemy: 1
   healthMax: 12
   healthCurrent: 0
   armorMax: 3
   armorCurrent: 0
   moveRange: 4
+  unitClass: Fighter
   tilePosition: {x: 0, y: 0}
   wasSacrificed: 0
   turnOver: 0

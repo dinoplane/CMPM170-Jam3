@@ -80,7 +80,8 @@ MonoBehaviour:
   healthCurrent: 0
   armorMax: 3
   armorCurrent: 0
-  moveRange: 7
+  moveRange: 4
+  unitClass: Fighter
   tilePosition: {x: 0, y: 0}
   wasSacrificed: 0
   turnOver: 0

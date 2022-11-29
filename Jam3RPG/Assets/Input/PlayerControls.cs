@@ -71,6 +71,15 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Exit"",
+                    ""type"": ""Button"",
+                    ""id"": ""ab675f83-ae98-424e-bc01-88ee1de70d04"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -216,6 +225,17 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                     ""action"": ""UndoMove"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""1ad74500-58d2-44cf-9322-3779a3b87aba"",
+                    ""path"": ""<Keyboard>/escape"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Exit"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -229,6 +249,7 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
         m_Grid_CursorMove = m_Grid.FindAction("CursorMove", throwIfNotFound: true);
         m_Grid_SelectOption = m_Grid.FindAction("SelectOption", throwIfNotFound: true);
         m_Grid_UndoMove = m_Grid.FindAction("UndoMove", throwIfNotFound: true);
+        m_Grid_Exit = m_Grid.FindAction("Exit", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -293,6 +314,7 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
     private readonly InputAction m_Grid_CursorMove;
     private readonly InputAction m_Grid_SelectOption;
     private readonly InputAction m_Grid_UndoMove;
+    private readonly InputAction m_Grid_Exit;
     public struct GridActions
     {
         private @PlayerControls m_Wrapper;
@@ -302,6 +324,7 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
         public InputAction @CursorMove => m_Wrapper.m_Grid_CursorMove;
         public InputAction @SelectOption => m_Wrapper.m_Grid_SelectOption;
         public InputAction @UndoMove => m_Wrapper.m_Grid_UndoMove;
+        public InputAction @Exit => m_Wrapper.m_Grid_Exit;
         public InputActionMap Get() { return m_Wrapper.m_Grid; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -326,6 +349,9 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                 @UndoMove.started -= m_Wrapper.m_GridActionsCallbackInterface.OnUndoMove;
                 @UndoMove.performed -= m_Wrapper.m_GridActionsCallbackInterface.OnUndoMove;
                 @UndoMove.canceled -= m_Wrapper.m_GridActionsCallbackInterface.OnUndoMove;
+                @Exit.started -= m_Wrapper.m_GridActionsCallbackInterface.OnExit;
+                @Exit.performed -= m_Wrapper.m_GridActionsCallbackInterface.OnExit;
+                @Exit.canceled -= m_Wrapper.m_GridActionsCallbackInterface.OnExit;
             }
             m_Wrapper.m_GridActionsCallbackInterface = instance;
             if (instance != null)
@@ -345,6 +371,9 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                 @UndoMove.started += instance.OnUndoMove;
                 @UndoMove.performed += instance.OnUndoMove;
                 @UndoMove.canceled += instance.OnUndoMove;
+                @Exit.started += instance.OnExit;
+                @Exit.performed += instance.OnExit;
+                @Exit.canceled += instance.OnExit;
             }
         }
     }
@@ -356,5 +385,6 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
         void OnCursorMove(InputAction.CallbackContext context);
         void OnSelectOption(InputAction.CallbackContext context);
         void OnUndoMove(InputAction.CallbackContext context);
+        void OnExit(InputAction.CallbackContext context);
     }
 }
