@@ -207,15 +207,15 @@ public class UnitBaseClass : MonoBehaviour {
     void OnMouseOver(){
         //UnitBaseClass mouseOverUnit = gameObject.GetComponent<UnitBaseClass>();
         menuUI.ShowOtherUnit(this);
-        Debug.Log(unitClass);
-        Debug.Log("HP: " + healthCurrent + "/" + healthMax);
-        Debug.Log("AP: " + armorCurrent);
+        //Debug.Log(unitClass);
+        //Debug.Log("HP: " + healthCurrent + "/" + healthMax);
+        //Debug.Log("AP: " + armorCurrent);
         AttackingClass tempRef = gameObject.GetComponent<AttackingClass>();
         int dam = 0;
         if(tempRef != null){
             dam = tempRef.attackDamage;
         }
-        Debug.Log("Dmg: " + dam);
+        //Debug.Log("Dmg: " + dam);
     } 
 }
 
