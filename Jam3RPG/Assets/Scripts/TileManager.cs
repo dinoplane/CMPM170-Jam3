@@ -40,7 +40,7 @@ public class TileManager : MonoBehaviour
         createdTiles = new List<GameObject>();
         tmap = GameObject.Find("Grid").GetComponent<Grid>();
 
-        SuperMap m = GameObject.Find("DebugTilemap").GetComponent<SuperMap>();
+        SuperMap m = FindObjectOfType<SuperMap>();
         minCoord = new Vector2Int(-m.m_Width/2, -m.m_Height/2);
         maxCoord = new Vector2Int(m.m_Width/2 - 1, m.m_Height/2 - 1);
         

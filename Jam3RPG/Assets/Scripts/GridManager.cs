@@ -27,7 +27,7 @@ public class GridManager : MonoBehaviour
     public Sprite valid;
     public Sprite invalid;
 
-    private Grid tmap;
+    public Grid tmap;
 
     MenuUI menuUI;
     [SerializeField]
@@ -56,7 +56,6 @@ public class GridManager : MonoBehaviour
     void Start()
     {
         cursor = GameObject.Find("Cursor");
-        tmap = GameObject.Find("Grid").GetComponent<Grid>();
         cursorTileCoords = new Vector2Int(0, 0);
 
         SetCursorPos(cursorTileCoords);
