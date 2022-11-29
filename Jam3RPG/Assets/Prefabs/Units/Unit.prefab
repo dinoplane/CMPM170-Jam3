@@ -104,6 +104,7 @@ MonoBehaviour:
   armorMax: 0
   armorCurrent: 0
   moveRange: 4
+  unitClass: Fighter
   tilePosition: {x: 0, y: 0}
   wasSacrificed: 0
   turnOver: 0
@@ -119,5 +120,5 @@ SphereCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.28
+  m_Radius: 0.16
   m_Center: {x: 0, y: 0.07, z: 0}

@@ -2866,6 +2866,7 @@ GameObject:
   - component: {fileID: 5503542670155493212}
   - component: {fileID: 5503542670155493211}
   - component: {fileID: 5217521042747044891}
+  - component: {fileID: 1756586439380932188}
   m_Layer: 0
   m_Name: GridManager
   m_TagString: Untagged
@@ -2923,8 +2924,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   highlightTile: {fileID: 5558182977308820050, guid: 105ae3714aa5dd649a2c6e5f16f5c755, type: 3}
+  tmap: {fileID: 0}
   minCoord: {x: 0, y: 0}
   maxCoord: {x: 0, y: 0}
+--- !u!114 &1756586439380932188
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5503542670155493210}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a2d6f4cb67f485041b47bb13799b4985, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  highlightTile: {fileID: 5558182977308820050, guid: 105ae3714aa5dd649a2c6e5f16f5c755, type: 3}
 --- !u!1 &8497067950005375061
 GameObject:
   m_ObjectHideFlags: 0
