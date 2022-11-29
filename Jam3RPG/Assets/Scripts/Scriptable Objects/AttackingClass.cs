@@ -37,10 +37,6 @@ public class AttackingClass : UnitBaseClass
         actions.Add(new KeyActionPair("Attack", (Attack, true)));
     }
 
-    public int CheckTileInMoveAttackRange(Vector2Int tile){
-        return CheckTileInRange(tile, moveRange + attackRange);
-    }
-
     // Attack
     //
     // Called to deal damage to enemy unit. 
