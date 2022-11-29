@@ -128,8 +128,7 @@ public class GridManager : MonoBehaviour
             bool hasSelectedUnit = Physics.Raycast(Camera.main.transform.position, cursor.transform.position - Camera.main.transform.position, out hit);
             UnitBaseClass hitUnit = (!hasSelectedUnit) ? null : hit.collider.gameObject.GetComponent<UnitBaseClass>();
             
-            //Debug.Log("Click");                
-            
+            //Debug.Log("Click");
             switch (gridMode){
                 case SelectMode.IdleMode: // We don't have anything selected
                 {
@@ -137,6 +136,9 @@ public class GridManager : MonoBehaviour
                     if (hitUnit && !hitUnit.turnOver){ //Selected a unit class? 
                         SetSelUnit(hit.collider.gameObject);
                         gridMode = SelectMode.MoveMode; // Moving units now...
+
+                        UnitBaseClass unit = selectedUnit.GetComponent<UnitBaseClass>();
+                        menuUI.ShowSelectedPlayer(unit);
                         Debug.Log("Moving to Move Mode!");
                     }
                     else {
@@ -461,7 +463,6 @@ public class GridManager : MonoBehaviour
         UnSelUnit();
         selectedUnit = unit;
         UnitBaseClass s = selectedUnit.GetComponent<UnitBaseClass>();
-        menuUI.ShowSelectedPlayer(s);
         s.SpriteSelect();
         pastTile = s.tilePosition;
         pastPosition = selectedUnit.transform.position;
