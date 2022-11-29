@@ -173,52 +173,99 @@ public class BaselineAI : MonoBehaviour
     }
 
     public void FindMinMaxCostTile(AttackingClass unit, Vector2Int dst){
-        int currCost = -1;
-        currCost = unit.GetDistanceFromTile(dst);
+        int currCost = 0;
+        //currCost = unit.GetDistanceFromTile(dst);
 
         Queue<TileInfo> frontier = new Queue<TileInfo>();
-        frontier.Enqueue(new TileInfo(dst, currCost));
-
-        List<Vector2Int> reachedTiles = new List<Vector2Int>();
-        reachedTiles.Add(dst);
-
-        int range = unit.attackRange + unit.moveRange;
-        
-        Debug.Log(unit.name + " Range: " + range.ToString());
-    
+        List<Vector2Int> reachedTiles = new List<Vector2Int>();    
         TileInfo currTile;
         List<TileInfo> neighbors;
-        List<Vector2Int> availSpaces = new List<Vector2Int>();
+
+        List<Vector2Int> availSpaces = new List<Vector2Int>(); // potential options...
 
         TileInfo currMax;
 
         // We assume the destination isn't in move range
-        while (frontier.Count > 0){
-            currTile = frontier.Dequeue();
-            neighbors = GetNeighboringTiles(currTile);
-            foreach(TileInfo tileInfo in neighbors){
-                if (!reachedTiles.Exists(tile => tile == tileInfo.Tile) && unit.CheckTileInMoveAttackRange(tileInfo.Tile) > 0){ // We search onlly if we need to...
-                    if (unit.CheckTileInMoveRange(tileInfo.Tile) > 0 && CheckTileIsOccupied(tileInfo) == null){ // If we can move to this tile...
-                        // Check if it is the max distance away from tile?
-                        //if (unit.GetDistanceFromTile(tileInfo.Tile) == range){
-                            availSpaces.Add(tileInfo.Tile);
-                        //}
-                    } else if (unit.CheckTileInMoveAttackRange(tileInfo.Tile) > 0 &&
-                            unit.CheckTileInMoveRange(tileInfo.Tile) < 0 && 
-                            GetDistanceBetweenTiles(tileInfo.Tile, dst) <= unit.attackRange){
-                        frontier.Enqueue(tileInfo);
-                        reachedTiles.Add(tileInfo.Tile);
-                    }
-                } 
+        if (unit.CheckTileInMoveRange(dst) < 0 && unit.CheckTileInMoveAttackRange(dst) > 0){
+            frontier.Enqueue(new TileInfo(dst, 0));
+            reachedTiles.Add(dst);
+            while (frontier.Count > 0){
+                currTile = frontier.Dequeue();
+                neighbors = GetNeighboringTiles(currTile);
+                foreach(TileInfo tileInfo in neighbors){
+                    if (!reachedTiles.Exists(tile => tile == tileInfo.Tile) && unit.CheckTileInMoveAttackRange(tileInfo.Tile) > 0){ // We search onlly if we need to...
+                        if (unit.CheckTileInMoveRange(tileInfo.Tile) > 0 && 
+                            tileInfo.Cost == unit.attackRange &&
+                            (CheckTileIsOccupied(tileInfo) == null || CheckTileIsOccupied(tileInfo).tilePosition == unit.tilePosition)
+                            ){ // If we can move to this tile...
+                            // Check if it is the max distance away from tile?
+                            //if (unit.GetDistanceFromTile(tileInfo.Tile) == range){
+                                availSpaces.Add(tileInfo.Tile);
+                            //}
+                        } else if (unit.CheckTileInMoveAttackRange(tileInfo.Tile) > 0 &&
+                                tileInfo.Cost <= unit.attackRange){
+                            frontier.Enqueue(tileInfo);
+                            reachedTiles.Add(tileInfo.Tile);
+                        }
+                        
+                    } 
+                }
             }
-        } 
+        } else if (unit.CheckTileInMoveRange(dst) > 0){ // Assume dst are in move range
 
-        foreach(Vector2Int tilePos in reachedTiles) { // this is in tile coordinates...
-            Vector3 position = tmap.GetCellCenterLocal(new Vector3Int(tilePos.x, tilePos.y, 0));
-            position.z = 0;
-            GameObject tile = Instantiate(highlightTile, position, Quaternion.identity);
-            tile.GetComponent<SpriteRenderer>().color = Color.red;
+            frontier.Enqueue(new TileInfo(unit.tilePosition, 0));
+            reachedTiles.Add(unit.tilePosition);
+            int bestCost = GetDistanceBetweenTiles(unit.tilePosition, dst);
+            while (frontier.Count > 0){
+                currTile = frontier.Dequeue();
+                neighbors = GetNeighboringTiles(currTile);
+                foreach(TileInfo tileInfo in neighbors){
+                    if (!reachedTiles.Exists(tile => tile == tileInfo.Tile) && unit.CheckTileInMoveRange(tileInfo.Tile) > 0){ // We search onlly if we need to...
+                        if ((GetDistanceBetweenTiles(tileInfo.Tile, dst) == unit.attackRange) &&// Edge of attack range
+                            
+                            GetDistanceBetweenTiles(tileInfo.Tile, dst) >= bestCost &&  // Edge of the map
+                            
+                            (CheckTileIsOccupied(tileInfo) == null || CheckTileIsOccupied(tileInfo).tilePosition == unit.tilePosition)){ // If we can move to this tile...
+                                availSpaces.Add(tileInfo.Tile);
+                                if (GetDistanceBetweenTiles(tileInfo.Tile, dst) > bestCost){ // update the best if found
+                                    bestCost = tileInfo.Cost;
+                                    // remove all the crap 
+                                    availSpaces.RemoveAll(tile => GetDistanceBetweenTiles(tile, dst) < bestCost);
+                                }
+                                    
+                            //}
+                        } else if ((IsEdgeTile(tileInfo.Tile) || unit.CheckTileInMoveRange(tileInfo.Tile) == unit.moveRange) &&
+                                    (GetDistanceBetweenTiles(tileInfo.Tile, dst) <= unit.attackRange) && 
+                                    GetDistanceBetweenTiles(tileInfo.Tile, dst) >= bestCost ){
+                            availSpaces.Add(tileInfo.Tile);
+                            if (GetDistanceBetweenTiles(tileInfo.Tile, dst) > bestCost){ // update the best if found
+                                bestCost = tileInfo.Cost;
+                                // remove all the crap 
+                                availSpaces.RemoveAll(tile => GetDistanceBetweenTiles(tile, dst) < bestCost);
+                            }
+                        }
+                        
+                        if (unit.CheckTileInMoveRange(tileInfo.Tile) > 0 && // Basically iterating throughout all possible move positions that can attack enemy 
+                                GetDistanceBetweenTiles(tileInfo.Tile, dst) <= unit.attackRange){
+                            frontier.Enqueue(tileInfo);
+                            reachedTiles.Add(tileInfo.Tile);
+                        }
+                        
+
+
+                    } 
+                }
+            }
+        } else { // not in range... find closests?
+
         }
+
+        // foreach(Vector2Int tilePos in reachedTiles) { // this is in tile coordinates...
+        //     Vector3 position = tmap.GetCellCenterLocal(new Vector3Int(tilePos.x, tilePos.y, 0));
+        //     position.z = 0;
+        //     GameObject tile = Instantiate(highlightTile, position, Quaternion.identity);
+        //     tile.GetComponent<SpriteRenderer>().color = Color.red;
+        // }
 
         foreach(Vector2Int tilePos in availSpaces) { // this is in tile coordinates...
             Vector3 position = tmap.GetCellCenterLocal(new Vector3Int(tilePos.x, tilePos.y, 0));
@@ -226,6 +273,13 @@ public class BaselineAI : MonoBehaviour
             GameObject tile = Instantiate(highlightTile, position, Quaternion.identity);
             tile.GetComponent<SpriteRenderer>().color = Color.blue;
         }
+    }
+
+    public bool IsEdgeTile(Vector2Int tilePos){
+        return (tilePos.x + 1 > maxCoord.x ||
+            tilePos.x - 1 < minCoord.x ||
+            tilePos.y + 1 > maxCoord.y ||
+            tilePos.y - 1 < minCoord.y);
     }
 
     public int GetDistanceBetweenTiles(Vector2Int a, Vector2Int b){
