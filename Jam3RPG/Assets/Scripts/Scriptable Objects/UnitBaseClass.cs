@@ -200,6 +200,21 @@ public class UnitBaseClass : MonoBehaviour {
         phaseManager.UnitDied(this);
         Destroy(gameObject);
     }
+
+    public int GetDistanceFromTile(Vector2Int tile){
+        Vector2Int result = tilePosition - tile;
+        return Mathf.Abs(result.x) + Mathf.Abs(result.y); // cost
+    }
+    
+    public int CheckTileInRange(Vector2Int tile, int range){
+        int ret = GetDistanceFromTile(tile);
+        return (ret <= range) ? ret : -1;
+    }
+
+    public int CheckTileInMoveRange(Vector2Int tile){
+        return CheckTileInRange(tile, moveRange);
+    }
+
     
 }
 
