@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+using KeyActionPair = System.Collections.Generic.KeyValuePair<string, (UnitBaseClass.UnitAction action, bool needsTarget)>;
 
 // UnitBaseClass Variables:
 //     public bool isEnemy;
@@ -31,6 +32,13 @@ using UnityEngine;
 //[CreateAssetMenu(fileName = "Archer", menuName = "Jam3RPG/New Archer")]
 public class ArcherClass : AttackingClass
 {
+    public int PowerShotDamage = 12;
+
+    override public void ExtraAwake()
+    {
+        base.ExtraAwake();
+        actions.Add(new KeyActionPair("PowerShot", (PowerShot, true)));
+    }
 
     // Volley
     //
@@ -47,8 +55,17 @@ public class ArcherClass : AttackingClass
     //    String Totals: A string with the new health totals of the damaged enemies.
     //    Type? Container: Some sort of container that contains positive integers representing the new health of the enemies.
     //
+
+    /* too out of scope for now
     private void Volley(){  
 
-    }
+    }*/
 
+    private void PowerShot(UnitBaseClass target){
+        ActionSacrifice();
+        if(wasSacrificed){
+            target.ChangeHealth((-1)*PowerShotDamage);
+        }
+        Death(wasSacrificed);
+    }
 }
