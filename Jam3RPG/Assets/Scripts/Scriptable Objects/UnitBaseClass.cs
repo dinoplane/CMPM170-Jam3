@@ -12,6 +12,8 @@ public class UnitBaseClass : MonoBehaviour {
     [Header("Faction")]
     public bool isEnemy = false;
 
+    MenuUI menuUI;
+
     [Header("Basic Stats")]
     public int healthMax;
      public int healthCurrent;
@@ -42,6 +44,7 @@ public class UnitBaseClass : MonoBehaviour {
         armorCurrent = armorMax;
         actions.Add(new KeyActionPair("Wait", (Wait, false)));
         ExtraAwake();
+        menuUI = FindObjectOfType<MenuUI>();
     }
 
     //Designed to be overwritten by subclasses, adding on more stuff.
@@ -201,5 +204,18 @@ public class UnitBaseClass : MonoBehaviour {
         Destroy(gameObject);
     }
     
+    void OnMouseOver(){
+        //UnitBaseClass mouseOverUnit = gameObject.GetComponent<UnitBaseClass>();
+        menuUI.ShowOtherUnit(this);
+        Debug.Log(unitClass);
+        Debug.Log("HP: " + healthCurrent + "/" + healthMax);
+        Debug.Log("AP: " + armorCurrent);
+        AttackingClass tempRef = gameObject.GetComponent<AttackingClass>();
+        int dam = 0;
+        if(tempRef != null){
+            dam = tempRef.attackDamage;
+        }
+        Debug.Log("Dmg: " + dam);
+    } 
 }
 
