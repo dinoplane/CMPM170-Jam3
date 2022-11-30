@@ -7,9 +7,21 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3579139135340624807, guid: d848ebde8bc915747b2260baab0bb184, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 5c351639ebd204c55b145d63c6d56d14, type: 2}
     - target: {fileID: 3868493778953013892, guid: d848ebde8bc915747b2260baab0bb184, type: 3}
       propertyPath: m_Name
       value: Cleric
+      objectReference: {fileID: 0}
+    - target: {fileID: 3868493778953013894, guid: d848ebde8bc915747b2260baab0bb184, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: b1b44de7ca5064529b1c83b211f089a7, type: 3}
+    - target: {fileID: 3868493778953013894, guid: d848ebde8bc915747b2260baab0bb184, type: 3}
+      propertyPath: m_SpriteSortPoint
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3868493778953013945, guid: d848ebde8bc915747b2260baab0bb184, type: 3}
       propertyPath: m_RootOrder
@@ -85,8 +97,14 @@ MonoBehaviour:
   tilePosition: {x: 0, y: 0}
   wasSacrificed: 0
   turnOver: 0
-  sprite: {fileID: 0}
+  sprite: {fileID: 6300302180638895823}
+  altAnimController: {fileID: 9100000, guid: 5c351639ebd204c55b145d63c6d56d14, type: 2}
   invincible: 0
   healAmount: 3
   shieldAmount: 0
   healRange: 1
+--- !u!212 &6300302180638895823 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 3868493778953013894, guid: d848ebde8bc915747b2260baab0bb184, type: 3}
+  m_PrefabInstance: {fileID: 7115843453460948041}
+  m_PrefabAsset: {fileID: 0}
