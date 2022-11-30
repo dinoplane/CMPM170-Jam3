@@ -110,6 +110,7 @@ MonoBehaviour:
   wasSacrificed: 0
   turnOver: 0
   sprite: {fileID: 3868493778953013894}
+  altAnimController: {fileID: 9100000, guid: 5a15dd01f16874caf95039b1a8d108fb, type: 2}
 --- !u!135 &3744407566175788250
 SphereCollider:
   m_ObjectHideFlags: 0

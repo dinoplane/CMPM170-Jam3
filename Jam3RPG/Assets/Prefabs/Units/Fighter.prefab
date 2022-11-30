@@ -62,6 +62,7 @@ MonoBehaviour:
   wasSacrificed: 0
   turnOver: 0
   sprite: {fileID: 5805468987322200810}
+  altAnimController: {fileID: 9100000, guid: 5a15dd01f16874caf95039b1a8d108fb, type: 2}
   attackDamage: 6
   attackRange: 1
   chipDmg: 1

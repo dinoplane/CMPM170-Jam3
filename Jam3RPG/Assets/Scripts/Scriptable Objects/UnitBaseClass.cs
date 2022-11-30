@@ -30,6 +30,7 @@ public class UnitBaseClass : MonoBehaviour {
     public bool turnOver = false;
     public SpriteRenderer sprite;
     Animator animator;
+    public RuntimeAnimatorController altAnimController;
 
     private PhaseManager phaseManager;
 
@@ -47,6 +48,12 @@ public class UnitBaseClass : MonoBehaviour {
         ExtraAwake();
         menuUI = FindObjectOfType<MenuUI>();
         animator = GetComponent<Animator>();
+
+        if (!isEnemy)
+        {
+            animator.runtimeAnimatorController = altAnimController;
+            //animator.Play("Idle");
+        }
     }
 
     //Designed to be overwritten by subclasses, adding on more stuff.
