@@ -47,39 +47,62 @@ public class BaselineAI : MonoBehaviour
         int a = 0;
         foreach(AttackingClass unit in phaseManager.aiUnits){ // For every Ai unit
             if (a < 100){
-                UnitBaseClass target = null; 
-                Vector2Int destTile = minCoord - Vector2Int.one;
-                List<UnitBaseClass> blackList = new List<UnitBaseClass>();
+                checkAggro(unit);
+                if(unit.isAggro == true){
+                    UnitBaseClass target = null; 
+                    Vector2Int destTile = minCoord - Vector2Int.one;
+                    List<UnitBaseClass> blackList = new List<UnitBaseClass>();
 
-                while (!checkValidTile(destTile)){
-                    Debug.Log("hello");
-                    target = FindTargetInRange(unit, blackList); // Find a target
-                    if (target == null)
-                        break;
+                    while (!checkValidTile(destTile)){
+                        Debug.Log("hello");
+                        target = FindTargetInRange(unit, blackList); // Find a target
+                        if (target == null)
+                            break;
 
-                    // Find a tile such that you can attack but also be furthest away from
-                    destTile = FindMinMaxCostTile(unit, target.tilePosition); 
-                    if (!checkValidTile(destTile))
-                        blackList.Add(target);
+                        // Find a tile such that you can attack but also be furthest away from
+                        destTile = FindMinMaxCostTile(unit, target.tilePosition); 
+                        if (!checkValidTile(destTile))
+                            blackList.Add(target);
+                    }
+
+                    if (target == null){ // if no targets in range 
+                        target = unit;
+                        UnitBaseClass closestTarget = FindClosestUnit(unit);
+                        destTile = FindMovementTile(unit, closestTarget);
+
+                        Debug.Log("Closest Unit: "+ closestTarget.tilePosition);
+                    }
+            
+                // lemme get a cursor...
+            
+                    yield return StartCoroutine(StartUnitCommandSequence(unit, target, destTile));
                 }
-
-                if (target == null){ // if no targets in range
-                    List<int> distsToUnits = new List<int>();
-                    foreach(UnitBaseClass p in phaseManager.playerUnits){
-                        distsToUnits.Add(unit.GetDistanceFromTile(p.tilePosition));
-                    }   
-                    target = unit;
-                    destTile = target.tilePosition;
-                }
-        
-            // lemme get a cursor...
-        
-                
-                yield return StartCoroutine(StartUnitCommandSequence(unit, target, destTile));
                 unit.FinishTurn();
             }
             a += 1;
         }
+    }
+
+    public void checkAggro(AttackingClass unit){
+        foreach(UnitBaseClass target in phaseManager.playerUnits){
+            if (unit.CheckTileInRange(target.tilePosition, unit.aggroRange) >= 0){
+                unit.isAggro = true;
+            }
+        }
+    }
+
+    public UnitBaseClass FindClosestUnit(AttackingClass unit){
+        UnitBaseClass closestUnit = null;
+        int closest = 1000;
+
+        foreach(UnitBaseClass target in phaseManager.playerUnits){
+            int currCloseness = unit.GetDistanceFromTile(target.tilePosition);
+            if (currCloseness < closest){
+                closest = currCloseness;
+                closestUnit = target;
+            }
+        }
+        return closestUnit;
     }
 
     public List<UnitBaseClass> FindAllInRange(AttackingClass unit){
@@ -88,6 +111,7 @@ public class BaselineAI : MonoBehaviour
 
         foreach(UnitBaseClass target in phaseManager.playerUnits){
             if (unit.CheckTileInMoveAttackRange(target.tilePosition) >= 0){
+                
                 pTargets.Add(target);
             }
         }
@@ -205,6 +229,71 @@ public class BaselineAI : MonoBehaviour
             }
         }
         return target;
+    }
+
+    // Jank
+    // Start bfs from closest unit
+    // Spread to neighbors but only think about adding a place to move to if tile inside of unit move range
+    public Vector2Int FindMovementTile(AttackingClass unit, UnitBaseClass closestTarget){
+        Vector2Int dst = closestTarget.tilePosition;
+
+        Queue<TileInfo> frontier = new Queue<TileInfo>();
+        List<Vector2Int> reachedTiles = new List<Vector2Int>();    
+        TileInfo currTile;
+        List<TileInfo> neighbors;
+        List<Vector2Int> availSpaces = new List<Vector2Int>();
+        bool notFound = true;
+
+        frontier.Enqueue(new TileInfo(dst, 0));
+        reachedTiles.Add(dst);
+
+        int bestCost = 1000;
+
+        while(notFound){
+            //Get Neighbors
+            if(frontier.Count == 0){
+                break;
+            }
+            currTile = frontier.Dequeue();
+            neighbors = GetNeighboringTiles(currTile);
+
+            foreach(TileInfo tileInfo in neighbors){
+                // Debug.Log("TILE INFO:  " + tileInfo.Tile);
+
+                if (tileInfo.Tile == unit.tilePosition){  // Located
+                    notFound = false;
+                    break;
+                }
+
+                if (!reachedTiles.Exists(tile => tile == tileInfo.Tile)){
+                    if(unit.CheckTileInMoveRange(tileInfo.Tile) >= 0){
+                        if(GetDistanceBetweenTiles(tileInfo.Tile, dst) <= bestCost && (CheckTileIsOccupied(tileInfo) == null || tileInfo.Tile == unit.tilePosition)){
+                            availSpaces.Add(tileInfo.Tile); // a candidate is found
+                            if (tileInfo.Cost < bestCost){ // update the current best if found
+                                bestCost = tileInfo.Cost; 
+                                // remove all tiles with a greater distance from the target
+                                availSpaces.RemoveAll(tile => GetDistanceBetweenTiles(tile, dst) > bestCost);
+                                Debug.Log("TILE INFO:  " + tileInfo.Tile);
+                            }
+                        }
+                    }
+                    else{
+                        frontier.Enqueue(tileInfo);
+                        reachedTiles.Add(tileInfo.Tile);
+                    }
+                }
+            }
+
+        }
+
+        // check if availspaces is not full..
+        if (availSpaces.Count == 0){
+            return maxCoord + new Vector2Int(1, 1);
+        } else {
+            // Return a random tile location... // YOu can make this smarter if you have time...
+            int index = Random.Range(0, availSpaces.Count);
+            return availSpaces[index];
+        }
     }
 
     public Vector2Int FindMinMaxCostTile(AttackingClass unit, Vector2Int dst){ // assumes that the target is within movement + attack range

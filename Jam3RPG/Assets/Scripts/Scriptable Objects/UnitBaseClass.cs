@@ -11,6 +11,8 @@ public class UnitBaseClass : MonoBehaviour {
     
     [Header("Faction")]
     public bool isEnemy = false;
+    public bool isAggro = false;
+    public int aggroRange = 6;
 
     [Header("Basic Stats")]
     public int healthMax;
