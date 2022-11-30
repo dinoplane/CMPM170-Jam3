@@ -29,6 +29,7 @@ public class UnitBaseClass : MonoBehaviour {
     [HideInInspector] public bool wasSacrificed = false;
     public bool turnOver = false;
     public SpriteRenderer sprite;
+    Animator animator;
 
     private PhaseManager phaseManager;
 
@@ -45,6 +46,7 @@ public class UnitBaseClass : MonoBehaviour {
         actions.Add(new KeyActionPair("Wait", (Wait, false)));
         ExtraAwake();
         menuUI = FindObjectOfType<MenuUI>();
+        animator = GetComponent<Animator>();
     }
 
     //Designed to be overwritten by subclasses, adding on more stuff.
@@ -201,7 +203,8 @@ public class UnitBaseClass : MonoBehaviour {
             Debug.Log(name.ToString() + " has died.");
         }
         phaseManager.UnitDied(this);
-        Destroy(gameObject);
+        animator.SetBool("Dead", true);
+        Destroy(gameObject, 1.5f); //Will later change to an end of anim call to destroy the object
     }
     
     void OnMouseOver(){

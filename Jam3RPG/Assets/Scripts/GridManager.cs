@@ -133,7 +133,7 @@ public class GridManager : MonoBehaviour
                 case SelectMode.IdleMode: // We don't have anything selected
                 {
                     // If we selected a unit 
-                    if (hitUnit && !hitUnit.turnOver){ //Selected a unit class? 
+                    if (hitUnit && !hitUnit.turnOver && hitUnit.healthCurrent > 0){ //Selected a unit class? 
                         SetSelUnit(hit.collider.gameObject);
                         gridMode = SelectMode.MoveMode; // Moving units now...
                         Debug.Log("Moving to Move Mode!");
@@ -176,7 +176,7 @@ public class GridManager : MonoBehaviour
                     Later we might need cases for unit actions that require a target that are also not attacking units*/
                     AttackingClass unit = selectedUnit.GetComponent<AttackingClass>();
                     if (checkTileInRange(unit.tilePosition, cursorTileCoords, unit.attackRange) && 
-                            hitUnit && hitUnit.isEnemy != unit.isEnemy){ // check if target is in attack range and if target is on opposite team
+                            hitUnit && hitUnit.isEnemy != unit.isEnemy && hitUnit.healthCurrent > 0){ // check if target is in attack range and if target is on opposite team
                                 UnitExecuteAction(hitUnit);
                                 EndSelUnitTurn();
                                 menuUI.ShowSelectedPlayer();
