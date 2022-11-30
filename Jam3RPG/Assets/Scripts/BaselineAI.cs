@@ -42,22 +42,24 @@ public class BaselineAI : MonoBehaviour
         Debug.Log("ENEMY TURN START");
 
         int a = 0;
-        foreach(AttackingClass unit in phaseManager.aiUnits){
-            if (a == 1){
-                // I really dont want to use casts but ok.
-                UnitBaseClass target = FindTarget(unit);
-                if (target != null){
+        foreach(AttackingClass unit in phaseManager.aiUnits){ // For every Ai unit
+            if (a == 0){
+                UnitBaseClass target = FindTarget(unit); // Find a target
+                Vector2Int destTile;
+                if (target != null){ // If target is found in your range
                     Debug.Log("Target: " + target.name);
-                    FindMinMaxCostTile(unit, target.tilePosition);
-                }
+
+                    // Find a tile such that you can attack but also be furthest away from
+                    FindMinMaxCostTile(unit, target.tilePosition); 
                     
-                } else { // targets not in range
+                } else { // if no targets in range
                     List<int> distsToUnits = new List<int>();
                     foreach(UnitBaseClass p in phaseManager.playerUnits){
                         distsToUnits.Add(unit.GetDistanceFromTile(p.tilePosition));
-                    }
-                
-
+                    }   
+                    target = unit;
+                    destTile = target.tilePosition;
+                }
                 
                 // Find space to move to 
                 
@@ -179,86 +181,86 @@ public class BaselineAI : MonoBehaviour
         return target;
     }
 
-    public void FindMinMaxCostTile(AttackingClass unit, Vector2Int dst){
-        // We assume the destination isn't in move range
+    public void FindMinMaxCostTile(AttackingClass unit, Vector2Int dst){ // assumes that the target is within movement + attack range
+        
+
+        Queue<TileInfo> frontier = new Queue<TileInfo>();
+        List<Vector2Int> reachedTiles = new List<Vector2Int>();    
+        TileInfo currTile;
+        List<TileInfo> neighbors;
         List<Vector2Int> availSpaces = new List<Vector2Int>(); // potential options...
-        if (unit.CheckTileInMoveRange(dst) < 0 && unit.CheckTileInMoveAttackRange(dst) >= 0){
-            Debug.Log("Donut");
-            Queue<TileInfo> frontier = new Queue<TileInfo>();
-            List<Vector2Int> reachedTiles = new List<Vector2Int>();    
-            TileInfo currTile;
-            List<TileInfo> neighbors;
-            
+
+        // When the enemy unit is in the movement + attack (m+a) range, but not in movement range...
+        if (unit.CheckTileInMoveRange(dst) < 0 && unit.CheckTileInMoveAttackRange(dst) >= 0){ 
+
+            // We start a BFS from the target
             frontier.Enqueue(new TileInfo(dst, 0));
             reachedTiles.Add(dst);
-            while (frontier.Count > 0){
+
+            while (frontier.Count > 0){ // While we have tiles to explore
                 currTile = frontier.Dequeue();
-                neighbors = GetNeighboringTiles(currTile);
+                neighbors = GetNeighboringTiles(currTile); // Get the surrounding tiles...
+
                 foreach(TileInfo tileInfo in neighbors){
-                    if (!reachedTiles.Exists(tile => tile == tileInfo.Tile) && unit.CheckTileInMoveAttackRange(tileInfo.Tile) > 0){ // We search onlly if we need to...
-                        if (unit.CheckTileInMoveRange(tileInfo.Tile) > 0 && 
-                            tileInfo.Cost == unit.attackRange &&
-                            (CheckTileIsOccupied(tileInfo) == null || CheckTileIsOccupied(tileInfo).tilePosition == unit.tilePosition)
-                            ){ // If we can move to this tile...
-                            // Check if it is the max distance away from tile?
-                            //if (unit.GetDistanceFromTile(tileInfo.Tile) == range){
-                                availSpaces.Add(tileInfo.Tile);
-                            //}
-                        } else if (unit.CheckTileInMoveAttackRange(tileInfo.Tile) > 0 &&
-                                tileInfo.Cost <= unit.attackRange){
-                            frontier.Enqueue(tileInfo);
-                            reachedTiles.Add(tileInfo.Tile);
+                    if (!reachedTiles.Exists(tile => tile == tileInfo.Tile) && // If we havent visited this tile
+                        unit.CheckTileInMoveAttackRange(tileInfo.Tile) > 0){ // But they are in our m+a range
+
+                        if (unit.CheckTileInMoveRange(tileInfo.Tile) > 0 && // if they are in movement range
+                            tileInfo.Cost == unit.attackRange && // and we can attack the target from that tile...
+
+                            (CheckTileIsOccupied(tileInfo) == null || // And that tile is empty
+                            CheckTileIsOccupied(tileInfo).tilePosition == unit.tilePosition)){ // or is just the enemy unit's tile
+                                availSpaces.Add(tileInfo.Tile); // we found a potential candidate
+                            
+                        } else if (unit.CheckTileInMoveAttackRange(tileInfo.Tile) > 0 && // if the tile is in m+a range 
+                                tileInfo.Cost <= unit.attackRange){ // and we can attack from it (is this needed?)
+                            frontier.Enqueue(tileInfo); // explore its surroundings
+                            reachedTiles.Add(tileInfo.Tile); // we reached this tile...
                         }
                         
-                    } 
+                    } // dont iterate on tiles that are not in our m+a range, in the movement range, or reached before...
                 }
             }
-        } else if (unit.CheckTileInMoveRange(dst) > 0){ // Assume dst are in move range
-            Debug.Log("Hole");
-            Queue<TileInfo> frontier = new Queue<TileInfo>();
-            List<Vector2Int> reachedTiles = new List<Vector2Int>();    
-            TileInfo currTile;
-            List<TileInfo> neighbors;
+        } else if (unit.CheckTileInMoveRange(dst) > 0){ // Assume dst is in move range
+            Debug.Log("Hole"); 
 
-            
-
-            // Start looking from the player unit tile.
-            frontier.Enqueue(new TileInfo(dst, GetDistanceBetweenTiles(unit.tilePosition, dst)));
+            // Start looking from the target's tile
+            frontier.Enqueue(new TileInfo(dst, 0));
             reachedTiles.Add(dst);
-            int bestCost = Mathf.Min(unit.attackRange, GetDistanceBetweenTiles(unit.tilePosition, dst));
+
+            // keep track of the maximum distance WE COULD BE from the destination
+            int bestCost = 0; //Mathf.Min(unit.attackRange, GetDistanceBetweenTiles(unit.tilePosition, dst));
 
             // While there are more tiles to discover
             while (frontier.Count > 0){
                 // Get neighbors
+                Debug.Log(bestCost);
                 currTile = frontier.Dequeue();
                 neighbors = GetNeighboringTiles(currTile);
                 
-                foreach(TileInfo tileInfo in neighbors){
-                    if (tileInfo.Tile == unit.tilePosition){
-                        Debug.Log(!reachedTiles.Exists(tile => tile == tileInfo.Tile));
-                    }
-                    if (!reachedTiles.Exists(tile => tile == tileInfo.Tile) && unit.CheckTileInMoveRange(tileInfo.Tile) >= 0){ // We search onlly if we need to...
-                        if ((GetDistanceBetweenTiles(tileInfo.Tile, dst) == unit.attackRange) &&// Edge of attack range
+                foreach(TileInfo tileInfo in neighbors){ // We look in every neighbor
+                    // if (tileInfo.Tile == unit.tilePosition){
+                    //     Debug.Log(!reachedTiles.Exists(tile => tile == tileInfo.Tile));
+                    // }
+                    if (!reachedTiles.Exists(tile => tile == tileInfo.Tile) && 
+                            unit.CheckTileInMoveRange(tileInfo.Tile) >= 0){ // We only search for tiles we could move to.
+
+                                                                                                            // If we are at a position where the target unit is ...
+                        if (((GetDistanceBetweenTiles(tileInfo.Tile, dst) == unit.attackRange) ||            // on the edge of attack range (basically makes sure bestCost > attackRange is impossible)
+                                                                                         // OR
+                            ((IsEdgeTile(tileInfo.Tile) || unit.CheckTileInMoveRange(tileInfo.Tile) == unit.moveRange) && // we are on the end of the frontier...)
+                             GetDistanceBetweenTiles(tileInfo.Tile, dst) <= unit.attackRange)) && // we can still attack from it
                             
-                            GetDistanceBetweenTiles(tileInfo.Tile, dst) >= bestCost &&  // Edge of the map
+                            GetDistanceBetweenTiles(tileInfo.Tile, dst) >= bestCost && // and we either get further away or maintain our distance from the target...
                             
-                            (CheckTileIsOccupied(tileInfo) == null || tileInfo.Tile == unit.tilePosition)){ // If we can move to this tile...
-                                availSpaces.Add(tileInfo.Tile);
-                                if (GetDistanceBetweenTiles(tileInfo.Tile, dst) > bestCost){ // update the best if found
-                                    bestCost = tileInfo.Cost;
-                                    // remove all the crap 
+                            (CheckTileIsOccupied(tileInfo) == null || tileInfo.Tile == unit.tilePosition)){// and we can move to this tile physically...
+                           
+                                availSpaces.Add(tileInfo.Tile); // a candidate is found
+                                if (tileInfo.Cost > bestCost){ // update the current best if found
+                                    bestCost = tileInfo.Cost; 
+                                    // remove all tiles with a shorter distance from the target
                                     availSpaces.RemoveAll(tile => GetDistanceBetweenTiles(tile, dst) < bestCost);
                                 }
-                        } else if ((IsEdgeTile(tileInfo.Tile) || unit.CheckTileInMoveRange(tileInfo.Tile) == unit.moveRange) && // We are at a limit
-                                    (GetDistanceBetweenTiles(tileInfo.Tile, dst) <= unit.attackRange) && // We can still attack
-                                    GetDistanceBetweenTiles(tileInfo.Tile, dst) >= bestCost ){ // We can be backed into a corner...
-                           
-                            availSpaces.Add(tileInfo.Tile);
-                            if (GetDistanceBetweenTiles(tileInfo.Tile, dst) > bestCost){ // update the best if found
-                                bestCost = tileInfo.Cost;
-                                // remove all the crap 
-                                availSpaces.RemoveAll(tile => GetDistanceBetweenTiles(tile, dst) < bestCost);
-                            }
                         }
                         
                         if (unit.CheckTileInMoveRange(tileInfo.Tile) > 0 && // Basically iterating throughout all possible move positions that can attack enemy 
@@ -334,14 +336,14 @@ public class BaselineAI : MonoBehaviour
     }
 
 
-    public bool IsEdgeTile(Vector2Int tilePos){
+    public bool IsEdgeTile(Vector2Int tilePos){ // are we on the edge of the board?
         return (tilePos.x + 1 > maxCoord.x ||
             tilePos.x - 1 < minCoord.x ||
             tilePos.y + 1 > maxCoord.y ||
             tilePos.y - 1 < minCoord.y);
     }
 
-    public int GetDistanceBetweenTiles(Vector2Int a, Vector2Int b){
+    public int GetDistanceBetweenTiles(Vector2Int a, Vector2Int b){ 
         Vector2Int result = a - b;
         return Mathf.Abs(result.x) + Mathf.Abs(result.y); // cost
     }

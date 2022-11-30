@@ -201,17 +201,19 @@ public class UnitBaseClass : MonoBehaviour {
         Destroy(gameObject);
     }
 
-    public int GetDistanceFromTile(Vector2Int tile){
+    public int GetDistanceFromTile(Vector2Int tile){ // computes the distance from the tile to this unit
         Vector2Int result = tilePosition - tile;
         return Mathf.Abs(result.x) + Mathf.Abs(result.y); // cost
     }
     
-    public int CheckTileInRange(Vector2Int tile, int range){
+    // returns the distance if in range, -1 otherwise
+    public int CheckTileInRange(Vector2Int tile, int range){ 
         int ret = GetDistanceFromTile(tile);
         return (ret <= range) ? ret : -1;
     }
 
-    public int CheckTileInMoveRange(Vector2Int tile){
+    // returns the distance if in movement range, -1 otherwise
+    public int CheckTileInMoveRange(Vector2Int tile){ 
         return CheckTileInRange(tile, moveRange);
     }
 
