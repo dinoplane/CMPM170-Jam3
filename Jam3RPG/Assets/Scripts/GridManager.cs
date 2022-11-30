@@ -29,6 +29,7 @@ public class GridManager : MonoBehaviour
 
     private Grid tmap;
 
+    PhaseManager phaseMngr;
     MenuUI menuUI;
     [SerializeField]
     private Vector2Int cursorTileCoords;// of cursor
@@ -51,7 +52,12 @@ public class GridManager : MonoBehaviour
     private Color moveColor;
     [SerializeField]
     private Color attackColor;
-    
+
+    private void Awake()
+    {
+        phaseMngr = FindObjectOfType<PhaseManager>();
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -122,7 +128,7 @@ public class GridManager : MonoBehaviour
     public void OnClickBoard(InputAction.CallbackContext context){ // Called when left mouse button is selected
         //Debug.Log("Click");
         
-        if (context.phase == InputActionPhase.Started){
+        if (context.phase == InputActionPhase.Started && phaseMngr.playerPhase){
             // Cast a raycast
             RaycastHit hit;
             bool hasSelectedUnit = Physics.Raycast(Camera.main.transform.position, cursor.transform.position - Camera.main.transform.position, out hit);
@@ -382,7 +388,7 @@ public class GridManager : MonoBehaviour
     }
 
     public void OnUndoMove(InputAction.CallbackContext context){
-        if (context.phase == InputActionPhase.Started){
+        if (context.phase == InputActionPhase.Started && phaseMngr.playerPhase){
             switch (gridMode){
                 case SelectMode.MoveMode:{
                     // Unselect unit

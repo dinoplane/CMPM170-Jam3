@@ -31,6 +31,7 @@ public class BaselineAI : MonoBehaviour
         aiCursor.SetActive(false);
     }
 
+    /*Coroutine is started when the AI phase starts*/
     public IEnumerator EnemyTurnStart(){
         if (tileManager == null){
             tileManager = GetComponent<TileManager>();
@@ -55,14 +56,18 @@ public class BaselineAI : MonoBehaviour
 
                     while (!checkValidTile(destTile)){
                         Debug.Log("hello");
-                        target = FindTargetInRange(unit, blackList); // Find a target
+                        target = FindTargetInRange(unit, blackList); /* Find highest priority target not on the blacklist*/
                         if (target == null)
                             break;
 
                         // Find a tile such that you can attack but also be furthest away from
+                        /*But if that tile is occupied / not valid, the target is added to the blacklist
+                         Will always try to return spaces that are valid however - checking for best first and then checking
+                        for 2nd best if 1st is not valid*/
                         destTile = FindMinMaxCostTile(unit, target.tilePosition); 
                         if (!checkValidTile(destTile))
                             blackList.Add(target);
+                            /*If the best target cannot be reached, they are added to blacklist and we try the next best target instead*/
                     }
 
                     if (target == null){ // if no targets in range 
@@ -74,7 +79,7 @@ public class BaselineAI : MonoBehaviour
                     }
             
                 // lemme get a cursor...
-            
+                /*So getting a target is all done in one tick*/
                     yield return StartCoroutine(StartUnitCommandSequence(unit, target, destTile));
                 }
                 unit.FinishTurn();
@@ -83,6 +88,7 @@ public class BaselineAI : MonoBehaviour
         }
     }
 
+    /*Basically implements the squad behavior*/
     public void checkAggro(AttackingClass unit){
         foreach(UnitBaseClass target in phaseManager.playerUnits){
             if (unit.CheckTileInRange(target.tilePosition, unit.aggroRange) >= 0){
@@ -457,6 +463,7 @@ public class BaselineAI : MonoBehaviour
                         came_from[next] = current
             */
 
+    /*Checks if a tile is inside the map?*/
     public bool checkValidTile(Vector2Int tilePos){
         return (tilePos.x <= maxCoord.x &&
             tilePos.x >= minCoord.x &&
@@ -543,7 +550,10 @@ public class BaselineAI : MonoBehaviour
         // attack for real
         Debug.Log("YAAAAAAAAAAAA");
         unit.Attack(target);
+        /*Forgot about the warrior case...I'll try to add later if time is available*/
         tileManager.RemoveRangeTiles();
+        /*Since attacking will cause an animation to play for the unit and target, we'll need some delay between unit.Attack() and when the AI moves its next unit
+         Could try to set up something that will inform the AI of when an animation is finished, but most likely, just using a coroutine wait will be much easier.*/
         yield return new WaitForSeconds(2.0f);
     }
 

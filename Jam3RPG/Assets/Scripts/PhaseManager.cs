@@ -15,7 +15,7 @@ public class PhaseManager : MonoBehaviour
     [HideInInspector] public int playerUnitsThatCanAct = 0;
     public List<UnitBaseClass> aiUnits;
     [HideInInspector] public int aiUnitsThatCanAct = 0;
-    bool playerPhase;
+    [HideInInspector] public bool playerPhase;
     int currentCycle = 0; /*A cycle conists of both a player phase and an enemy phase. 
                            * New cycle begins at start of each player phase. Will become important later*/
 
