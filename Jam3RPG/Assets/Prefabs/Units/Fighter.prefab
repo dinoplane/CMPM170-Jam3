@@ -55,6 +55,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5594868566491284655, guid: d848ebde8bc915747b2260baab0bb184, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 5a15dd01f16874caf95039b1a8d108fb, type: 2}
     m_RemovedComponents:
     - {fileID: 3868493778953013947, guid: d848ebde8bc915747b2260baab0bb184, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: d848ebde8bc915747b2260baab0bb184, type: 3}
@@ -81,6 +85,7 @@ MonoBehaviour:
   armorMax: 3
   armorCurrent: 0
   moveRange: 4
+  unitClass: Fighter
   tilePosition: {x: 0, y: 0}
   wasSacrificed: 0
   turnOver: 0

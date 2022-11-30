@@ -14,7 +14,7 @@ public class UnitBaseClass : MonoBehaviour {
 
     [Header("Basic Stats")]
     public int healthMax;
-     public int healthCurrent;
+    public int healthCurrent;
     public int armorMax;
     [HideInInspector] public int armorCurrent;
     public int moveRange;
@@ -27,6 +27,7 @@ public class UnitBaseClass : MonoBehaviour {
     [HideInInspector] public bool wasSacrificed = false;
     public bool turnOver = false;
     public SpriteRenderer sprite;
+    Animator animator;
 
     private PhaseManager phaseManager;
 
@@ -42,6 +43,7 @@ public class UnitBaseClass : MonoBehaviour {
         armorCurrent = armorMax;
         actions.Add(new KeyActionPair("Wait", (Wait, false)));
         ExtraAwake();
+        animator = GetComponent<Animator>();
     }
 
     //Designed to be overwritten by subclasses, adding on more stuff.
@@ -101,6 +103,7 @@ public class UnitBaseClass : MonoBehaviour {
         // Check if incoming amount is damage or healing. 
         if(amount < 0){ // -ints are damage, +ints are healing
             change = Mathf.Min(amount  + armorCurrent, 0); // Reduce damage by current armor. Returns 0 if armor > damage
+            animator.SetTrigger("DoThing");
         }
         else{
             change = amount; // Healing

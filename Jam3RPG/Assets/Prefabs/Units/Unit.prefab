@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 3868493778953013894}
   - component: {fileID: 3868493778953013947}
   - component: {fileID: 3744407566175788250}
+  - component: {fileID: 5594868566491284655}
   m_Layer: 0
   m_Name: Unit
   m_TagString: Untagged
@@ -104,10 +105,12 @@ MonoBehaviour:
   armorMax: 0
   armorCurrent: 0
   moveRange: 4
+  unitClass: Fighter
   tilePosition: {x: 0, y: 0}
   wasSacrificed: 0
   turnOver: 0
   sprite: {fileID: 3868493778953013894}
+  animator: {fileID: 0}
 --- !u!135 &3744407566175788250
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -121,3 +124,23 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 0.28
   m_Center: {x: 0, y: 0.07, z: 0}
+--- !u!95 &5594868566491284655
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3868493778953013892}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 0}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
