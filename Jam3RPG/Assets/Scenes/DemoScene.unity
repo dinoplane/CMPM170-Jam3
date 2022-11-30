@@ -1055,6 +1055,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 229996068}
     m_Modifications:
+    - target: {fileID: 263030124855679201, guid: a9fd43bd08e92ab4e8d56875e201c3a0, type: 3}
+      propertyPath: healthMax
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 5805468987322200789, guid: a9fd43bd08e92ab4e8d56875e201c3a0, type: 3}
       propertyPath: m_RootOrder
       value: 2
@@ -1252,6 +1256,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 749817025}
     m_Modifications:
+    - target: {fileID: 3060732500346084369, guid: 5120d9b571b110d4797b434b523fc5e5, type: 3}
+      propertyPath: moveRange
+      value: 7
+      objectReference: {fileID: 0}
     - target: {fileID: 3060732500346084369, guid: 5120d9b571b110d4797b434b523fc5e5, type: 3}
       propertyPath: phaseManagerRef
       value: 

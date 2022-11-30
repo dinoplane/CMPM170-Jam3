@@ -100,6 +100,9 @@ public class CultLeaderClass : AttackingClass
 
         phaseManagerRef.GetComponent<PhaseManager>().playerUnitsThatCanAct++;
         phaseManagerRef.GetComponent<PhaseManager>().aiUnitsThatCanAct--;
+
+        /*Changes enemy's animator controller to the cultist version*/
+        enemy.ChangeAnimator();
     }
 
 }

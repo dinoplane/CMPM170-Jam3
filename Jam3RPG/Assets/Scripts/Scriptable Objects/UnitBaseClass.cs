@@ -51,9 +51,14 @@ public class UnitBaseClass : MonoBehaviour {
 
         if (!isEnemy)
         {
-            animator.runtimeAnimatorController = altAnimController;
-            //animator.Play("Idle");
+            ChangeAnimator();
         }
+    }
+
+    //Swaps to the stored Cultist animation controller
+    public void ChangeAnimator()
+    {
+        animator.runtimeAnimatorController = altAnimController;
     }
 
     //Designed to be overwritten by subclasses, adding on more stuff.

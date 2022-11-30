@@ -77,6 +77,7 @@ public class FighterClass : AttackingClass
         StartCoroutine(DestroyArmorAction(enemy));
     }
 
+    /*Gonna have to later replace this with some kind of wait for animation function instead...*/
     IEnumerator DestroyArmorAction(UnitBaseClass enemy)
     {
         yield return new WaitForSeconds(0.5f);
@@ -84,5 +85,6 @@ public class FighterClass : AttackingClass
         enemy.ChangeHealth(-1000);
         yield return new WaitForSeconds(0.5f);
         Death(wasSacrificed);
+        StopAllCoroutines();
     }
 }
