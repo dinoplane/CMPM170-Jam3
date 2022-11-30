@@ -78,11 +78,11 @@ public class UnitBaseClass : MonoBehaviour {
     }
 
     public void SpriteSelect(){
-        sprite.color = Color.yellow;
+        animator.SetBool("Selected", true);
     }
 
     public void SpriteUnselect(){
-        sprite.color = Color.white;
+        animator.SetBool("Selected", false);
     }
 
     public void Wait(UnitBaseClass unit = null){
@@ -93,8 +93,12 @@ public class UnitBaseClass : MonoBehaviour {
         if (phaseManager != null)
         {
             MakeInactive();
-            sprite.color = Color.grey;
+            SpriteUnselect();
             phaseManager.UnitFinishedTurn();
+            if (!wasSacrificed)
+            {
+                sprite.color = Color.grey;
+            }
         }
     }
 
@@ -185,6 +189,7 @@ public class UnitBaseClass : MonoBehaviour {
     public void ActionSacrifice() { // Only usable if team == playerTeam and class != Cult Leader
         if(!isEnemy && unitClass != "Cult Leader"){
             wasSacrificed = true;
+            animator.SetBool("Sacrificed", true);
         }
     }
 

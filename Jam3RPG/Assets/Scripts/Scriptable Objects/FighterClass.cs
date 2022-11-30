@@ -74,10 +74,15 @@ public class FighterClass : AttackingClass
     //
     public void DestroyArmor(UnitBaseClass enemy){  
         ActionSacrifice();
-        if(wasSacrificed){
-            enemy.ChangeArmor(-enemy.armorCurrent);
-        }
-        Death(wasSacrificed);
+        StartCoroutine(DestroyArmorAction(enemy));
     }
 
+    IEnumerator DestroyArmorAction(UnitBaseClass enemy)
+    {
+        yield return new WaitForSeconds(0.5f);
+        enemy.ChangeArmor(-enemy.armorCurrent);
+        enemy.ChangeHealth(-1000);
+        yield return new WaitForSeconds(0.5f);
+        Death(wasSacrificed);
+    }
 }
