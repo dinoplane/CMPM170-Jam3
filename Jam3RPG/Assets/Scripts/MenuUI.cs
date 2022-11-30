@@ -9,13 +9,24 @@ public class MenuUI : MonoBehaviour {
     [SerializeField] private GameObject playerPanel;
     [SerializeField] private GameObject playerName;
     [SerializeField] private GameObject playerHealth;
-    
+    [SerializeField] private GameObject playerArmor;
+    [SerializeField] private GameObject playerDamage;
+    [SerializeField] private GameObject playerMoveRange;
+
     [Header("Player Actions")]
     [SerializeField] private GameObject actionPanel;
     [SerializeField] private GameObject actionButton1;
     [SerializeField] private GameObject actionButton2;
     [SerializeField] private GameObject actionButton3;
     [SerializeField] private GameObject actionButton4;
+
+    [Header("Other Unit")]
+    [SerializeField] private GameObject otherUnitPanel;
+    [SerializeField] private GameObject otherUnitName;
+    [SerializeField] private GameObject otherUnitHealth;
+    [SerializeField] private GameObject otherUnitArmor;
+    [SerializeField] private GameObject otherUnitDamage;
+    [SerializeField] private GameObject otherUnitMoveRange;
 
     [Header("Misc")]
     [SerializeField] private GameObject targetPanel;
@@ -42,8 +53,21 @@ public class MenuUI : MonoBehaviour {
         playerPanel.SetActive(true);
         playerName.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = unit.name;
         playerHealth.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = unit.healthCurrent.ToString();
+        playerArmor.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = unit.armorCurrent.ToString();
     }
 
+    public void ShowOtherUnit(UnitBaseClass unit = null)
+    {
+        if (unit == null)
+        {
+            otherUnitPanel.SetActive(false);
+            return;
+        }
+        otherUnitPanel.SetActive(true);
+        otherUnitName.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = unit.name;
+        otherUnitHealth.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = unit.healthCurrent.ToString();
+        otherUnitArmor.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = unit.armorCurrent.ToString();
+    }
 
     public void ShowActions(string actionString = null){
         if(actionString == null){

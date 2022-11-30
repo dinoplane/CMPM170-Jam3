@@ -40,10 +40,15 @@ public class TileManager : MonoBehaviour
         tmap = GameObject.Find("Grid").GetComponent<Grid>();
         Debug.Log(tmap);
 
-        SuperMap m = FindObjectOfType<SuperMap>();
-        minCoord = new Vector2Int(-m.m_Width/2, -m.m_Height/2);
-        maxCoord = new Vector2Int(m.m_Width/2 - 1, m.m_Height/2 - 1);
-        
+        if(minCoord == maxCoord)
+        {
+            SuperMap m = FindObjectOfType<SuperMap>();
+            minCoord = new Vector2Int(-m.m_Width / 2, -m.m_Height / 2);
+            maxCoord = new Vector2Int(m.m_Width / 2 - 1, m.m_Height / 2 - 1);
+        }
+        Debug.Log("Min Coord: " + minCoord.ToString());
+        Debug.Log("Max Coord: " + maxCoord.ToString());
+
         tileContainer = gameObject.transform.Find("RangeContainer").gameObject;
         //CreateRangeTiles(new Vector2Int(0,0), 5);
     }
