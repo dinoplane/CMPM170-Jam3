@@ -94,7 +94,7 @@ public class PhaseManager : MonoBehaviour
 
         if (canvasUI != null)
             canvasUI.StartAiPhase();
-        enemyAI.EnemyTurnStart();
+        StartCoroutine(enemyAI.EnemyTurnStart());
     }
 
     //Called whenever a unit finishes a turn
