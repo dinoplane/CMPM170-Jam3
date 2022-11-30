@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+using KeyActionPair = System.Collections.Generic.KeyValuePair<string, (UnitBaseClass.UnitAction action, bool needsTarget)>;
 
 // UnitBaseClass Variables:
 //     bool isEnemy;
@@ -31,6 +32,13 @@ public class ClericClass : UnitBaseClass
     public int shieldAmount; 
     public int healRange;
 
+    override public void ExtraAwake()
+    {
+        base.ExtraAwake();
+        actions.Add(new KeyActionPair("Heal", (HealAlly, true)));
+        actions.Add(new KeyActionPair("Shield", (ShieldAlly, true)));
+    }
+
 
     // HealAlly
     //
@@ -43,8 +51,12 @@ public class ClericClass : UnitBaseClass
     // Possible Returns:
     //    Int Total: Positive integer that represents new health total of ally.
     //
-    private void HealAlly(){  
-
+    private void HealAlly(UnitBaseClass target){  
+        if(!target.isEnemy){
+            target.ChangeHealth(healAmount);
+        }else{
+            Debug.Log("Heal failed");
+        }
     }
 
 
@@ -59,7 +71,13 @@ public class ClericClass : UnitBaseClass
     // Possible Returns:
     //    None?
     //
-    private void ShieldAlly(){  
-
+    private void ShieldAlly(UnitBaseClass target){  
+        ActionSacrifice();
+        if(wasSacrificed){
+            target.healthCurrent = target.healthMax;
+            target.armorCurrent = target.armorMax;
+            target.invincible = true;
+        }
+        Death(wasSacrificed);
     }
 }

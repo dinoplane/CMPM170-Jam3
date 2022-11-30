@@ -16,7 +16,7 @@ public class UnitBaseClass : MonoBehaviour {
 
     [Header("Basic Stats")]
     public int healthMax;
-     public int healthCurrent;
+    public int healthCurrent;
     public int armorMax;
     [HideInInspector] public int armorCurrent;
     public int moveRange;
@@ -31,6 +31,7 @@ public class UnitBaseClass : MonoBehaviour {
     public SpriteRenderer sprite;
     Animator animator;
     public RuntimeAnimatorController altAnimController;
+    public bool invincible = false;
 
     private PhaseManager phaseManager;
 
@@ -75,6 +76,9 @@ public class UnitBaseClass : MonoBehaviour {
     public void MakeActive()
     {
         turnOver = false;
+        if(invincible){
+            invincible = false;
+        }
     }
 
     public void MakeInactive()
@@ -120,8 +124,10 @@ public class UnitBaseClass : MonoBehaviour {
     public void ChangeHealth(int amount){  
         int change;
         // Check if incoming amount is damage or healing. 
-        if(amount < 0){ // -ints are damage, +ints are healing
+        if(amount < 0 && !invincible){ // -ints are damage, +ints are healing
             change = Mathf.Min(amount  + armorCurrent, 0); // Reduce damage by current armor. Returns 0 if armor > damage
+        }else if(invincible){
+            change = 0;
         }
         else{
             change = amount; // Healing

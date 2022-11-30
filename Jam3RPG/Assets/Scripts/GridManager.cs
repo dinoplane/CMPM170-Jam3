@@ -113,8 +113,14 @@ public class GridManager : MonoBehaviour
             // Check if the cursor is on a friendly sprite??? a small collision check
 
         } else if (gridMode == SelectMode.ChooseTargetMode){
-            AttackingClass unit = selectedUnit.GetComponent<AttackingClass>();
-            UpdateCursorSprite(unit.tilePosition, unit.attackRange);
+            if(selectedUnit.GetComponent<UnitBaseClass>().unitClass == "Cleric"){ 
+                ClericClass unit = selectedUnit.GetComponent<ClericClass>();
+                UpdateCursorSprite(unit.tilePosition, unit.healRange);
+                GetComponent<TileManager>().CreateRangeTiles(unit.tilePosition, unit.healRange, attackColor);
+            }else{
+                AttackingClass unit = selectedUnit.GetComponent<AttackingClass>();
+                UpdateCursorSprite(unit.tilePosition, unit.attackRange);
+            }
         }
     }
 
@@ -174,15 +180,29 @@ public class GridManager : MonoBehaviour
                     // Assume actions only hit enemies...
                     /*We can add a special case later for the healer - Santi
                     Later we might need cases for unit actions that require a target that are also not attacking units*/
+                    
                     AttackingClass unit = selectedUnit.GetComponent<AttackingClass>();
-                    if (checkTileInRange(unit.tilePosition, cursorTileCoords, unit.attackRange) && 
-                            hitUnit && hitUnit.isEnemy != unit.isEnemy && hitUnit.healthCurrent > 0){ // check if target is in attack range and if target is on opposite team
-                                UnitExecuteAction(hitUnit);
-                                EndSelUnitTurn();
-                                menuUI.ShowSelectedPlayer();
-                                menuUI.ShowActions();
-                                menuUI.ShowTargetMessage();
-                                
+                    if(unit != null){
+                        if (checkTileInRange(unit.tilePosition, cursorTileCoords, unit.attackRange) && 
+                                hitUnit && hitUnit.isEnemy != unit.isEnemy && hitUnit.healthCurrent > 0){ // check if target is in attack range and if target is on opposite team
+                                    UnitExecuteAction(hitUnit);
+                                    EndSelUnitTurn();
+                                    menuUI.ShowSelectedPlayer();
+                                    menuUI.ShowActions();
+                                    menuUI.ShowTargetMessage();
+                                    
+                        }
+                    }else{
+                        ClericClass cleric = selectedUnit.GetComponent<ClericClass>();
+                        if (checkTileInRange(cleric.tilePosition, cursorTileCoords, cleric.healRange) && 
+                                hitUnit && hitUnit.isEnemy == cleric.isEnemy && hitUnit.healthCurrent > 0){ // check if target is in attack range and if target is on opposite team
+                                    UnitExecuteAction(hitUnit);
+                                    EndSelUnitTurn();
+                                    menuUI.ShowSelectedPlayer();
+                                    menuUI.ShowActions();
+                                    menuUI.ShowTargetMessage();
+                                    
+                        }
                     }
                 } break;  
             }
@@ -335,9 +355,15 @@ public class GridManager : MonoBehaviour
                 menuUI.ShowTargetMessage(true);
                 Debug.Log("Choose target mode!");
                 gridMode = SelectMode.ChooseTargetMode;
-                AttackingClass unit = selectedUnit.GetComponent<AttackingClass>();
-                UpdateCursorSprite(unit.tilePosition, unit.attackRange);
-                GetComponent<TileManager>().CreateRangeTiles(unit.tilePosition, unit.attackRange, attackColor);
+                if(selectedUnit.GetComponent<UnitBaseClass>().unitClass == "Cleric"){ 
+                    ClericClass unit = selectedUnit.GetComponent<ClericClass>();
+                    UpdateCursorSprite(unit.tilePosition, unit.healRange);
+                    GetComponent<TileManager>().CreateRangeTiles(unit.tilePosition, unit.healRange, attackColor);
+                }else{
+                    AttackingClass unit = selectedUnit.GetComponent<AttackingClass>();
+                    UpdateCursorSprite(unit.tilePosition, unit.attackRange);
+                    GetComponent<TileManager>().CreateRangeTiles(unit.tilePosition, unit.attackRange, attackColor);
+                }
             }
             else
             {
