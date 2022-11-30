@@ -1,0 +1,92 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &7115843453460948041
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 3868493778953013892, guid: d848ebde8bc915747b2260baab0bb184, type: 3}
+      propertyPath: m_Name
+      value: Cleric
+      objectReference: {fileID: 0}
+    - target: {fileID: 3868493778953013945, guid: d848ebde8bc915747b2260baab0bb184, type: 3}
+      propertyPath: m_RootOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3868493778953013945, guid: d848ebde8bc915747b2260baab0bb184, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3868493778953013945, guid: d848ebde8bc915747b2260baab0bb184, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3868493778953013945, guid: d848ebde8bc915747b2260baab0bb184, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3868493778953013945, guid: d848ebde8bc915747b2260baab0bb184, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3868493778953013945, guid: d848ebde8bc915747b2260baab0bb184, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3868493778953013945, guid: d848ebde8bc915747b2260baab0bb184, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3868493778953013945, guid: d848ebde8bc915747b2260baab0bb184, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3868493778953013945, guid: d848ebde8bc915747b2260baab0bb184, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3868493778953013945, guid: d848ebde8bc915747b2260baab0bb184, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3868493778953013945, guid: d848ebde8bc915747b2260baab0bb184, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 3868493778953013947, guid: d848ebde8bc915747b2260baab0bb184, type: 3}
+  m_SourcePrefab: {fileID: 100100000, guid: d848ebde8bc915747b2260baab0bb184, type: 3}
+--- !u!1 &6300302180638895821 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3868493778953013892, guid: d848ebde8bc915747b2260baab0bb184, type: 3}
+  m_PrefabInstance: {fileID: 7115843453460948041}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &-2830705947564337083
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6300302180638895821}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 16f5452bdb6881d4e8ed0bd74dc6bc56, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isEnemy: 0
+  healthMax: 12
+  healthCurrent: 0
+  armorMax: 2
+  armorCurrent: 0
+  moveRange: 4
+  unitClass: Cleric
+  tilePosition: {x: 0, y: 0}
+  wasSacrificed: 0
+  turnOver: 0
+  sprite: {fileID: 0}
+  invincible: 0
+  healAmount: 3
+  shieldAmount: 0
+  healRange: 1
