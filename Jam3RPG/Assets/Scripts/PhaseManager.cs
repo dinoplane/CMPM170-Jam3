@@ -15,15 +15,21 @@ public class PhaseManager : MonoBehaviour
     [HideInInspector] public int playerUnitsThatCanAct = 0;
     public List<UnitBaseClass> aiUnits;
     [HideInInspector] public int aiUnitsThatCanAct = 0;
-    bool playerPhase;
+    [HideInInspector] public bool playerPhase;
     int currentCycle = 0; /*A cycle conists of both a player phase and an enemy phase. 
                            * New cycle begins at start of each player phase. Will become important later*/
 
     public CanvasUI canvasUI;
 
+    [SerializeField]
+    private GameObject gridManager;
+
+    public BaselineAI enemyAI;
+
     // Start is called before the first frame update
     void Start()
     {
+
         UnitBaseClass[] units = FindObjectsOfType<UnitBaseClass>();
         foreach(UnitBaseClass unit in units)
         {
@@ -39,8 +45,13 @@ public class PhaseManager : MonoBehaviour
 
         Debug.Log("Player units " + playerUnits.Count);
         Debug.Log("Enemy units " + aiUnits.Count);
+
+        enemyAI = gridManager.GetComponent<BaselineAI>();
+
         MakeUnitsInactive(aiUnits);
         StartPlayerPhase();
+        // MakeUnitsInactive(playerUnits);
+        // StartAiPhase();
     }
 
     
@@ -83,6 +94,7 @@ public class PhaseManager : MonoBehaviour
 
         if (canvasUI != null)
             canvasUI.StartAiPhase();
+        StartCoroutine(enemyAI.EnemyTurnStart());
     }
 
     //Called whenever a unit finishes a turn

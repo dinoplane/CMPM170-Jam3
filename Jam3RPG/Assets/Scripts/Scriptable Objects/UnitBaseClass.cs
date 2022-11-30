@@ -11,6 +11,8 @@ public class UnitBaseClass : MonoBehaviour {
     
     [Header("Faction")]
     public bool isEnemy = false;
+    public bool isAggro = false;
+    public int aggroRange = 6;
 
     MenuUI menuUI;
 
@@ -229,6 +231,23 @@ public class UnitBaseClass : MonoBehaviour {
         animator.SetBool("Dead", true);
         Destroy(gameObject, 1.5f); //Will later change to an end of anim call to destroy the object
     }
+
+    public int GetDistanceFromTile(Vector2Int tile){ // computes the distance from the tile to this unit
+        Vector2Int result = tilePosition - tile;
+        return Mathf.Abs(result.x) + Mathf.Abs(result.y); // cost
+    }
+    
+    // returns the distance if in range, -1 otherwise
+    public int CheckTileInRange(Vector2Int tile, int range){ 
+        int ret = GetDistanceFromTile(tile);
+        return (ret <= range) ? ret : -1;
+    }
+
+    // returns the distance if in movement range, -1 otherwise
+    public int CheckTileInMoveRange(Vector2Int tile){ 
+        return CheckTileInRange(tile, moveRange);
+    }
+
     
     void OnMouseOver(){
         //UnitBaseClass mouseOverUnit = gameObject.GetComponent<UnitBaseClass>();

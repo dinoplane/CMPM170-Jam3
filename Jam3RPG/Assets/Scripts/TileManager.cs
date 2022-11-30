@@ -26,19 +26,19 @@ public class TileManager : MonoBehaviour
     [SerializeField]
     private GameObject highlightTile;
 
-    private Grid tmap;
+    public Grid tmap;
 
-    [SerializeField]
-    private Vector2Int minCoord;
-    [SerializeField]
-    private Vector2Int maxCoord;
+    public Vector2Int minCoord;
+    public Vector2Int maxCoord;
     
     // Start is called before the first frame update
     void Start()
     {
+        
         reachedTiles = new List<Vector2Int>();
         createdTiles = new List<GameObject>();
         tmap = GameObject.Find("Grid").GetComponent<Grid>();
+        Debug.Log(tmap);
 
         SuperMap m = FindObjectOfType<SuperMap>();
         minCoord = new Vector2Int(-m.m_Width/2, -m.m_Height/2);
