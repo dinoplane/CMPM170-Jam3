@@ -63,9 +63,15 @@ public class ArcherClass : AttackingClass
 
     private void PowerShot(UnitBaseClass target){
         ActionSacrifice();
-        if(wasSacrificed){
-            target.ChangeHealth((-1)*PowerShotDamage);
-        }
+        StartCoroutine(PowerShotAction(target));
+    }
+
+    IEnumerator PowerShotAction(UnitBaseClass enemy)
+    {
+        yield return new WaitForSeconds(0.5f);
+        enemy.ChangeHealth((-1) * PowerShotDamage);
+        yield return new WaitForSeconds(0.5f);
         Death(wasSacrificed);
+        StopAllCoroutines();
     }
 }

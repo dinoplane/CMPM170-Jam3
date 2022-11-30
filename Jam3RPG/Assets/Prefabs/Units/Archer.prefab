@@ -7,10 +7,18 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3579139135340624807, guid: d848ebde8bc915747b2260baab0bb184, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: bba3e78e693654e7dacd1f1da394481a, type: 2}
     - target: {fileID: 3868493778953013892, guid: d848ebde8bc915747b2260baab0bb184, type: 3}
       propertyPath: m_Name
       value: Archer
       objectReference: {fileID: 0}
+    - target: {fileID: 3868493778953013894, guid: d848ebde8bc915747b2260baab0bb184, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 89457de654d8146bd92236c671fd9aa0, type: 3}
     - target: {fileID: 3868493778953013945, guid: d848ebde8bc915747b2260baab0bb184, type: 3}
       propertyPath: m_RootOrder
       value: 0
@@ -58,6 +66,7 @@ MonoBehaviour:
   wasSacrificed: 0
   turnOver: 0
   sprite: {fileID: 4933821673509002747}
+  altAnimController: {fileID: 9100000, guid: d5b9517f3a01548feb75f49de10c1223, type: 2}
   attackDamage: 5
   attackRange: 5
   PowerShotDamage: 12
