@@ -33,6 +33,7 @@ public class UnitBaseClass : MonoBehaviour {
     public bool turnOver = false;
     public SpriteRenderer sprite;
     Animator animator;
+    Animator vfx;
     public RuntimeAnimatorController altAnimController;
     public bool invincible = false;
 
@@ -52,6 +53,10 @@ public class UnitBaseClass : MonoBehaviour {
         ExtraAwake();
         menuUI = FindObjectOfType<MenuUI>();
         animator = GetComponent<Animator>();
+        vfx = GetComponentInChildren<VFXonUnit>().vfxAnimator; //A rather roundabout way of getting this...
+
+        if (animator == vfx)
+            Debug.LogError("Bruh");
 
         if (!isEnemy)
         {
@@ -129,6 +134,7 @@ public class UnitBaseClass : MonoBehaviour {
         // Check if incoming amount is damage or healing. 
         if(amount < 0 && !invincible){ // -ints are damage, +ints are healing
             change = Mathf.Min(amount  + armorCurrent, 0); // Reduce damage by current armor. Returns 0 if armor > damage
+            vfx.SetTrigger("Hit");
         }else if(invincible){
             change = 0;
         }
