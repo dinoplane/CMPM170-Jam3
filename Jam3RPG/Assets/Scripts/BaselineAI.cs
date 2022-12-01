@@ -224,9 +224,9 @@ public class BaselineAI : MonoBehaviour
             }
             // Remove all occurrances in the blacklist...
 
-
+            /*I'm not sure how this method of getting target from one of these lists works... - Santiago*/
             if (healthList.Count > 0){
-                int maxIndex = healthList.IndexOf(healthList.Max());
+                int maxIndex = healthList.IndexOf(healthList.Max()); 
                 target = hitList[maxIndex]; // I think it is implied that the cult leader will be prioritized anyways...
             }
             if (damageList.Count > 0){ // No target yet...
@@ -343,6 +343,11 @@ public class BaselineAI : MonoBehaviour
                             reachedTiles.Add(tileInfo.Tile); // we reached this tile...
                         }
                         
+                        if(CheckTileIsOccupied(tileInfo) != null)
+                        {
+                            Debug.LogWarning("Potential attacking position is occupied");
+                        }
+
                     } // dont iterate on tiles that are not in our m+a range, in the movement range, or reached before...
                 }
             }
@@ -497,7 +502,7 @@ public class BaselineAI : MonoBehaviour
         if (target != unit) // Attack only if needed
             yield return StartCoroutine(DisplayAttackHighlights(unit, target));
         
-        yield return StartCoroutine(Pause());
+        //yield return StartCoroutine(Pause());
         
     }
 
@@ -517,19 +522,19 @@ public class BaselineAI : MonoBehaviour
         // Display Highlights
         tileManager.CreateRangeTiles(unit.tilePosition, unit.moveRange, Color.blue);
 
-        yield return new WaitForSeconds(2.0f);
+        yield return new WaitForSeconds(1.0f);
 
         // Show cursor at destination
         Vector3 position = tmap.GetCellCenterLocal(new Vector3Int(destTile.x, destTile.y, 0));
         position.z = 0;
         aiCursor.transform.position = position;
-        yield return new WaitForSeconds(2.0f);
+        yield return new WaitForSeconds(1.0f);
 
         // move for real
         unit.MoveToSpace(destTile);
         unit.transform.position = aiCursor.transform.position;
         tileManager.RemoveRangeTiles();
-        yield return new WaitForSeconds(2.0f);
+        yield return new WaitForSeconds(1.0f);
 
 
     }
@@ -539,13 +544,13 @@ public class BaselineAI : MonoBehaviour
         // Display Highlights
         tileManager.CreateRangeTiles(unit.tilePosition, unit.attackRange, Color.red);
 
-        yield return new WaitForSeconds(2.0f);
+        yield return new WaitForSeconds(1.0f);
 
         // Show cursor at target
         Vector3 position = tmap.GetCellCenterLocal(new Vector3Int(target.tilePosition.x, target.tilePosition.y, 0));
         position.z = 0;
         aiCursor.transform.position = position;
-        yield return new WaitForSeconds(2.0f);
+        yield return new WaitForSeconds(1.0f);
 
         // attack for real
         Debug.Log("YAAAAAAAAAAAA");
@@ -554,12 +559,12 @@ public class BaselineAI : MonoBehaviour
         tileManager.RemoveRangeTiles();
         /*Since attacking will cause an animation to play for the unit and target, we'll need some delay between unit.Attack() and when the AI moves its next unit
          Could try to set up something that will inform the AI of when an animation is finished, but most likely, just using a coroutine wait will be much easier.*/
-        yield return new WaitForSeconds(2.0f);
+        yield return new WaitForSeconds(1.0f);
     }
 
     private IEnumerator Pause(){
         Debug.Log("pause");
-        yield return new WaitForSeconds(2.0f);
+        yield return new WaitForSeconds(1.0f);
     }
 // End of coroutines---------------------------------------
 
