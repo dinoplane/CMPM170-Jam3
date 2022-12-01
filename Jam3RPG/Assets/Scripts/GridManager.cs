@@ -484,8 +484,14 @@ public class GridManager : MonoBehaviour
         diff.y = Mathf.Abs(diff.y);
 
         // get length of path
-        int length = diff.x + diff.y;        
+        int length = diff.x + diff.y;
         //Debug.Log(length <= range);
+
+        /*Additionally, check if the tile is within map bounds*/
+        Vector2Int minBounds = GetComponent<TileManager>().minCoord;
+        Vector2Int maxBounds = GetComponent<TileManager>().maxCoord;
+        if (dst.x > maxBounds.x || dst.x < minBounds.x || dst.y > maxBounds.y || dst.y < minBounds.y)
+            return false;
 
         return length <= range;
     }
@@ -555,5 +561,19 @@ public class GridManager : MonoBehaviour
     public void OnExit()
     {
         Application.Quit();
+    }
+
+    //Called if the player presses button to make all remaining units wait
+    public void EndTurn()
+    {
+        menuUI.ShowActions();
+        menuUI.ShowTargetMessage();
+
+        if(selectedUnit != null)
+        {
+            UnSelUnit();
+        }
+        gridMode = SelectMode.IdleMode;
+        cursor.GetComponent<SpriteRenderer>().sprite = valid;
     }
 }

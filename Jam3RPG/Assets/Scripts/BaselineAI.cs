@@ -191,6 +191,14 @@ public class BaselineAI : MonoBehaviour
             return hit.collider.gameObject.GetComponent<UnitBaseClass>();
         }
 
+        /*Additionally, check that tile is not OoB*/
+        //if (!checkValidTile(tileInfo.Tile))
+        //{
+        //    /*Nope, can't do it like this...*/
+        //    UnitBaseClass dummy = new UnitBaseClass();
+        //    return dummy;
+        //}
+
         return null;
     }
 
