@@ -40,7 +40,7 @@ public class CultLeaderClass : AttackingClass
     public int garunteedConvertThresh = 2;
     bool isExist;
     private int x;
-    private int hp;
+    [HideInInspector] public int hp;
     Random rand = new Random();
 
     override public void ExtraAwake()

@@ -34,6 +34,7 @@ public class GridManager : MonoBehaviour
     private Vector2Int cursorTileCoords;// of cursor
 
     private GameObject selectedUnit = null;
+    AttackingClass selectedUnitRef;
     private List<KeyActionPair> selectedUnitActions = null;
 
     private Vector2Int pastTile;// of units
@@ -116,6 +117,17 @@ public class GridManager : MonoBehaviour
         } else if (gridMode == SelectMode.ChooseTargetMode){
             AttackingClass unit = selectedUnit.GetComponent<AttackingClass>();
             UpdateCursorSprite(unit.tilePosition, unit.attackRange);
+
+            RaycastHit hit;
+            bool hasSelectedUnit = Physics.Raycast(Camera.main.transform.position, cursor.transform.position - Camera.main.transform.position, out hit);
+            UnitBaseClass hitUnit = (!hasSelectedUnit) ? null : hit.collider.gameObject.GetComponent<UnitBaseClass>();
+            
+            //only show for enemies - not accounting for range 
+            //if(hitUnit && hitUnit.isEnemy != unit.isEnemy){
+                menuUI.ShowCombatForecast(selectedUnitRef, hitUnit);
+            //}
+            
+
         }
     }
 
@@ -148,6 +160,7 @@ public class GridManager : MonoBehaviour
                 case SelectMode.MoveMode: // We have something selected
                 {
                     UnitBaseClass unit = selectedUnit.GetComponent<UnitBaseClass>();
+                    selectedUnitRef = selectedUnit.GetComponent<AttackingClass>();
                     if (hitUnit){ // If we have touched another unit
                         if (selectedUnit == hit.collider.gameObject) // And it is self
                             ChangeToPickActionMode(); // Don't move. Just pick action.
@@ -178,11 +191,13 @@ public class GridManager : MonoBehaviour
                     AttackingClass unit = selectedUnit.GetComponent<AttackingClass>();
                     if (checkTileInRange(unit.tilePosition, cursorTileCoords, unit.attackRange) && 
                             hitUnit && hitUnit.isEnemy != unit.isEnemy){ // check if target is in attack range and if target is on opposite team
+                                
                                 UnitExecuteAction(hitUnit);
                                 EndSelUnitTurn();
                                 menuUI.ShowSelectedPlayer();
                                 menuUI.ShowActions();
                                 menuUI.ShowTargetMessage();
+                                menuUI.ShowCombatForecast();
                                 
                     }
                 } break;  
@@ -195,6 +210,8 @@ public class GridManager : MonoBehaviour
         GetComponent<TileManager>().RemoveRangeTiles();
         //Get unit's action list
         selectedUnitActions = selectedUnit.GetComponent<UnitBaseClass>().actions;
+        selectedUnitRef.attackDamage = selectedUnit.GetComponent<AttackingClass>().attackDamage;
+        selectedUnitRef.actions = selectedUnitActions;
         Debug.Log("Picking Action Mode!");
         /*Because this is delared when MoveMode is ended, it doesn't show the action list again
          when canceling the target select.
@@ -390,6 +407,7 @@ public class GridManager : MonoBehaviour
                     UpdateCursorSprite(cursorTileCoords, 0);
                     menuUI.ShowSelectedPlayer();
                     menuUI.ShowActions();
+                    menuUI.ShowCombatForecast();
                     Debug.Log("Back to Idle");
                 } break;
 
@@ -406,6 +424,7 @@ public class GridManager : MonoBehaviour
                     GetComponent<TileManager>().CreateRangeTiles(unit.tilePosition, unit.moveRange, moveColor);
 
                     menuUI.ShowActions();
+                    menuUI.ShowCombatForecast();
                     Debug.Log("Back to Move");
                 } break;
 
