@@ -483,12 +483,13 @@ public class BaselineAI : MonoBehaviour
             // }
         } 
         
+        /*
         foreach(Vector2Int tilePos in availSpaces) { // this is in tile coordinates...
             Vector3 position = tmap.GetCellCenterLocal(new Vector3Int(tilePos.x, tilePos.y, 0));
             position.z = 0;
             GameObject tile = Instantiate(highlightTile, position, Quaternion.identity);
             tile.GetComponent<SpriteRenderer>().color = Color.green;
-        }
+        }*/
 
         
         // check if availspaces is not full..
