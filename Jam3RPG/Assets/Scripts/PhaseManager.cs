@@ -146,4 +146,18 @@ public class PhaseManager : MonoBehaviour
             }
         }
     }
+
+    /*Called if player presses the End Turn button during their phase*/
+    public void EndTurn()
+    {
+        if (playerPhase)
+        {
+            gridManager.GetComponent<GridManager>().EndTurn();
+            foreach (UnitBaseClass unit in playerUnits)
+            {
+                if(!unit.turnOver)
+                    unit.FinishTurn();
+            }
+        }
+    }
 }
