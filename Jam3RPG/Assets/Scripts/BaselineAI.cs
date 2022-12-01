@@ -346,8 +346,8 @@ public class BaselineAI : MonoBehaviour
                 }
 
                 if (!reachedTiles.Exists(tile => tile == tileInfo.Tile)){
-                    if(unit.CheckTileInMoveRange(tileInfo.Tile) >= 0 && (tileInfo.Tile == unit.tilePosition || IsTileEmpty(tileInfo))){
-                        if(GetDistanceBetweenTiles(tileInfo.Tile, dst) <= bestCost){
+                    if(unit.CheckTileInMoveRange(tileInfo.Tile) >= 0){
+                        if(GetDistanceBetweenTiles(tileInfo.Tile, dst) <= bestCost &&  (tileInfo.Tile == unit.tilePosition || IsTileEmpty(tileInfo))){
                             availSpaces.Add(tileInfo.Tile); // a candidate is found
                             if (tileInfo.Cost < bestCost){ // update the current best if found
                                 bestCost = tileInfo.Cost; 
