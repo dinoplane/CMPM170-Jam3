@@ -346,8 +346,8 @@ public class BaselineAI : MonoBehaviour
                 }
 
                 if (!reachedTiles.Exists(tile => tile == tileInfo.Tile)){
-                    if(unit.CheckTileInMoveRange(tileInfo.Tile) >= 0 && (tileInfo.Tile == unit.tilePosition || IsTileEmpty(tileInfo))){
-                        if(GetDistanceBetweenTiles(tileInfo.Tile, dst) <= bestCost){
+                    if(unit.CheckTileInMoveRange(tileInfo.Tile) >= 0){
+                        if(GetDistanceBetweenTiles(tileInfo.Tile, dst) <= bestCost &&  (tileInfo.Tile == unit.tilePosition || IsTileEmpty(tileInfo))){
                             availSpaces.Add(tileInfo.Tile); // a candidate is found
                             if (tileInfo.Cost < bestCost){ // update the current best if found
                                 bestCost = tileInfo.Cost; 
@@ -483,12 +483,13 @@ public class BaselineAI : MonoBehaviour
             // }
         } 
         
+        /*
         foreach(Vector2Int tilePos in availSpaces) { // this is in tile coordinates...
             Vector3 position = tmap.GetCellCenterLocal(new Vector3Int(tilePos.x, tilePos.y, 0));
             position.z = 0;
             GameObject tile = Instantiate(highlightTile, position, Quaternion.identity);
             tile.GetComponent<SpriteRenderer>().color = Color.green;
-        }
+        }*/
 
         
         // check if availspaces is not full..
