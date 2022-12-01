@@ -418,9 +418,9 @@ public class BaselineAI : MonoBehaviour
                             reachedTiles.Add(tileInfo.Tile); // we reached this tile...
                         }
                         
-                        if(CheckTileIsOccupied(tileInfo) != null)
+                        if(!IsTileEmpty(tileInfo))
                         {
-                            Debug.LogWarning("Potential attacking position is occupied");
+                            Debug.LogWarning("Potential attacking position is occupied or OOB");
                         }
 
                     } // dont iterate on tiles that are not in our m+a range, in the movement range, or reached before...
