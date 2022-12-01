@@ -91,6 +91,17 @@ public class CultLeaderClass : AttackingClass
         }
     }
 
+    /*
+     * For hypnotize, can make the sprite play on the enemy, then do a coroutine wait for the the anim to finish before waiting for the anim to succeed
+     * Alternatively...can make this anim be a sprite on another object, who's position is changed to be the position of the enemy. And the end of that animation
+     * calls the real hypnotize function.
+     * 
+     * Cult leader cannot end turn before the hypnotize finishes because otherwise that would cause a 
+    IEnumerator HypnotizeWaitForAnim()
+    {
+
+    }*/
+
     private void ChangeEnemyToAlly(UnitBaseClass enemy)
     {
         enemy.isEnemy = false;

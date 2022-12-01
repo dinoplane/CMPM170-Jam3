@@ -70,11 +70,28 @@ public class BaselineAI : MonoBehaviour
                     }
 
                     if (target == null){ // if no targets in range 
-                        target = unit;
-                        UnitBaseClass closestTarget = FindClosestUnit(unit);
-                        destTile = FindMovementTile(unit, closestTarget);
+                        target=unit;
+                        destTile = minCoord - Vector2Int.one;
+                        UnitBaseClass closestTarget;
+                        blackList.Clear(); // should the blacklist carryover?
 
-                        Debug.Log("Closest Unit: "+ closestTarget.tilePosition);
+                        /* We try to find the nearest targets as long as they exist... 
+                        Otherwise stay in the same position and dont move...
+                        */
+                        while (!checkValidTile(destTile)){
+                            closestTarget = FindClosestUnit(unit, blackList);
+                            if (closestTarget == null){
+                                destTile = unit.tilePosition;
+                                break;
+                            }
+                                
+                            destTile = FindMovementTile(unit, closestTarget);
+                            
+                            if (!checkValidTile(destTile))
+                                blackList.Add(target);
+                            
+                            Debug.Log("Closest Unit: "+ closestTarget.tilePosition);
+                        }
                     }
             
                 // lemme get a cursor...
@@ -90,18 +107,50 @@ public class BaselineAI : MonoBehaviour
 
     /*Basically implements the squad behavior*/
     public void checkAggro(AttackingClass unit){
-        foreach(UnitBaseClass target in phaseManager.playerUnits){
-            if (unit.CheckTileInRange(target.tilePosition, unit.aggroRange) >= 0){
-                unit.isAggro = true;
+        if (unit.squad <= -1) //If no squad, become aggro
+        {
+            unit.isAggro = true;
+        }
+        if (unit.isAggro == true){
+            return;
+        }
+
+        List<Vector2Int> coordList = SquadStuff.squadList[unit.squad];
+        Vector2Int firstCoord = coordList[0];
+        Vector2Int secondCoord = coordList[1];
+        int smallX = (firstCoord.x < secondCoord.x) ? firstCoord.x : secondCoord.x;
+        int bigX = (firstCoord.x > secondCoord.x) ? firstCoord.x : secondCoord.x;
+        int smallY = (firstCoord.y < secondCoord.y) ? firstCoord.y : secondCoord.y;
+        int bigY = (firstCoord.y > secondCoord.y) ? firstCoord.y : secondCoord.y;
+        //Debug.Log(string.Format("First: {0}, Second: {1}", firstCoord, secondCoord));
+        //Debug.Log(string.Format("sX: {0}, bX: {1}, sY{2}, bY{3}", smallX, bigX, smallY, bigY));
+
+        for(int x = smallX; x <= bigX; x+=1){
+            for(int y = smallY; y <= bigY; y +=1){
+                //Debug.Log(string.Format("X: {0}, Y: {1}", x,y));
+                if(CheckTileHasPlayer(x,y)){
+                    SquadStuff.squadAggro[unit.squad] = true;
+                }
+            }
+        }
+
+        if(SquadStuff.squadAggro[unit.squad] == true){
+            foreach(AttackingClass ai in phaseManager.aiUnits){
+                if(ai.squad == unit.squad){
+                    ai.isAggro = true;
+                }
             }
         }
     }
 
-    public UnitBaseClass FindClosestUnit(AttackingClass unit){
+    public UnitBaseClass FindClosestUnit(AttackingClass unit, List<UnitBaseClass> blackList=null){
         UnitBaseClass closestUnit = null;
         int closest = 1000;
 
         foreach(UnitBaseClass target in phaseManager.playerUnits){
+            if (blackList != null && blackList.Exists(unit => target == unit)) // Skip blacklisted
+                continue;
+
             int currCloseness = unit.GetDistanceFromTile(target.tilePosition);
             if (currCloseness < closest){
                 closest = currCloseness;
@@ -181,25 +230,42 @@ public class BaselineAI : MonoBehaviour
         return ret;
     }
 
-    public UnitBaseClass CheckTileIsOccupied(TileInfo tileInfo){
-        Vector2Int tilePos = tileInfo.Tile;
-        Vector3 tileLocation = tmap.GetCellCenterLocal(new Vector3Int(tilePos.x, tilePos.y, 0));
+    public bool CheckTileHasPlayer(int x, int y){
+        Vector2Int tile = new Vector2Int(x,y); 
+        foreach(UnitBaseClass target in phaseManager.playerUnits){
+            if(target.tilePosition == tile){
+                return true;
+            }
+        }
+        return false;
+    }
 
-        RaycastHit hit;
-        bool hasSelectedUnit = Physics.Raycast(Camera.main.transform.position,tileLocation - Camera.main.transform.position, out hit);
-        if (hasSelectedUnit){
-            return hit.collider.gameObject.GetComponent<UnitBaseClass>();
+    public bool IsTileEmpty(TileInfo tileInfo){
+        Vector2Int tilePos = tileInfo.Tile;
+        // Vector3 tileLocation = tmap.GetCellCenterLocal(new Vector3Int(tilePos.x, tilePos.y, 0));
+
+        // RaycastHit hit;
+        // bool hasSelectedUnit = Physics.Raycast(Camera.main.transform.position,tileLocation - Camera.main.transform.position, out hit);
+        // if (hasSelectedUnit){
+        //     return hit.collider.gameObject.GetComponent<UnitBaseClass>();
+        // }
+
+        // last resort method
+        bool isEmpty = true;
+        foreach(UnitBaseClass other in phaseManager.aiUnits){
+            isEmpty &= tilePos != other.tilePosition;
+        }
+        foreach(UnitBaseClass other in phaseManager.playerUnits){
+            isEmpty &= tilePos != other.tilePosition;
         }
 
         /*Additionally, check that tile is not OoB*/
-        //if (!checkValidTile(tileInfo.Tile))
-        //{
-        //    /*Nope, can't do it like this...*/
-        //    UnitBaseClass dummy = new UnitBaseClass();
-        //    return dummy;
-        //}
+        if (!checkValidTile(tileInfo.Tile))
+        {
+            return false;
+        }
 
-        return null;
+        return isEmpty;
     }
 
     public UnitBaseClass FindTargetInRange(AttackingClass unit, List<UnitBaseClass> blackList=null){ // finds the target of the enemy unit
@@ -262,7 +328,7 @@ public class BaselineAI : MonoBehaviour
         reachedTiles.Add(dst);
 
         int bestCost = 1000;
-
+        //Debug.Log(closestTarget.name);
         while(notFound){
             //Get Neighbors
             if(frontier.Count == 0){
@@ -280,8 +346,8 @@ public class BaselineAI : MonoBehaviour
                 }
 
                 if (!reachedTiles.Exists(tile => tile == tileInfo.Tile)){
-                    if(unit.CheckTileInMoveRange(tileInfo.Tile) >= 0){
-                        if(GetDistanceBetweenTiles(tileInfo.Tile, dst) <= bestCost && (CheckTileIsOccupied(tileInfo) == null || tileInfo.Tile == unit.tilePosition)){
+                    if(unit.CheckTileInMoveRange(tileInfo.Tile) >= 0 && (tileInfo.Tile == unit.tilePosition || IsTileEmpty(tileInfo))){
+                        if(GetDistanceBetweenTiles(tileInfo.Tile, dst) <= bestCost){
                             availSpaces.Add(tileInfo.Tile); // a candidate is found
                             if (tileInfo.Cost < bestCost){ // update the current best if found
                                 bestCost = tileInfo.Cost; 
@@ -321,7 +387,7 @@ public class BaselineAI : MonoBehaviour
 
         // When the enemy unit is in the movement + attack (m+a) range, but not in movement range...
         if (unit.CheckTileInMoveRange(dst) < 0 && unit.CheckTileInMoveAttackRange(dst) >= 0){ 
-
+            Debug.Log("Donut");
             // We start a BFS from the target
             frontier.Enqueue(new TileInfo(dst, 0));
             reachedTiles.Add(dst);
@@ -341,8 +407,9 @@ public class BaselineAI : MonoBehaviour
                         if (unit.CheckTileInMoveRange(tileInfo.Tile) >= 0 && // if they are in movement range
                             tileInfo.Cost == unit.attackRange && // and we can attack the target from that tile...
 
-                            (CheckTileIsOccupied(tileInfo) == null || // And that tile is empty
-                            tileInfo.Tile == unit.tilePosition)){ // or is just the enemy unit's tile
+                            (tileInfo.Tile == unit.tilePosition || // or is just the enemy unit's tile
+                                IsTileEmpty(tileInfo))){ // And that tile is empty
+                             
                                 availSpaces.Add(tileInfo.Tile); // we found a potential candidate
                             
                         } else if (unit.CheckTileInMoveAttackRange(tileInfo.Tile) >= 0 && // if the tile is in m+a range 
@@ -351,9 +418,9 @@ public class BaselineAI : MonoBehaviour
                             reachedTiles.Add(tileInfo.Tile); // we reached this tile...
                         }
                         
-                        if(CheckTileIsOccupied(tileInfo) != null)
+                        if(!IsTileEmpty(tileInfo))
                         {
-                            Debug.LogWarning("Potential attacking position is occupied");
+                            Debug.LogWarning("Potential attacking position is occupied or OOB");
                         }
 
                     } // dont iterate on tiles that are not in our m+a range, in the movement range, or reached before...
@@ -372,7 +439,7 @@ public class BaselineAI : MonoBehaviour
             // While there are more tiles to discover
             while (frontier.Count > 0){
                 // Get neighbors
-                Debug.Log(bestCost);
+                //Debug.Log(bestCost);
                 currTile = frontier.Dequeue();
                 neighbors = GetNeighboringTiles(currTile);
                 
@@ -389,7 +456,7 @@ public class BaselineAI : MonoBehaviour
                             
                             GetDistanceBetweenTiles(tileInfo.Tile, dst) >= bestCost && // and we either get further away or maintain our distance from the target...
                             
-                            (CheckTileIsOccupied(tileInfo) == null || tileInfo.Tile == unit.tilePosition)){// and we can move to this tile physically...
+                            (tileInfo.Tile == unit.tilePosition || IsTileEmpty(tileInfo))){// and we can move to this tile physically...
                            
                                 availSpaces.Add(tileInfo.Tile); // a candidate is found
                                 if (tileInfo.Cost > bestCost){ // update the current best if found
@@ -416,12 +483,12 @@ public class BaselineAI : MonoBehaviour
             // }
         } 
         
-        // foreach(Vector2Int tilePos in availSpaces) { // this is in tile coordinates...
-        //     Vector3 position = tmap.GetCellCenterLocal(new Vector3Int(tilePos.x, tilePos.y, 0));
-        //     position.z = 0;
-        //     GameObject tile = Instantiate(highlightTile, position, Quaternion.identity);
-        //     tile.GetComponent<SpriteRenderer>().color = Color.blue;
-        // }
+        foreach(Vector2Int tilePos in availSpaces) { // this is in tile coordinates...
+            Vector3 position = tmap.GetCellCenterLocal(new Vector3Int(tilePos.x, tilePos.y, 0));
+            position.z = 0;
+            GameObject tile = Instantiate(highlightTile, position, Quaternion.identity);
+            tile.GetComponent<SpriteRenderer>().color = Color.green;
+        }
 
         
         // check if availspaces is not full..
