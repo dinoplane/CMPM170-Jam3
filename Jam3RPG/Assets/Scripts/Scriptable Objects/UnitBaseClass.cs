@@ -140,6 +140,7 @@ public class UnitBaseClass : MonoBehaviour {
         }
         else{
             change = amount; // Healing
+            vfx.SetTrigger("Heal");
         }
 
         healthCurrent += change; // Change health to show damage or healing
