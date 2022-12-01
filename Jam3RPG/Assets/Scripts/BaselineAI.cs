@@ -90,9 +90,38 @@ public class BaselineAI : MonoBehaviour
 
     /*Basically implements the squad behavior*/
     public void checkAggro(AttackingClass unit){
-        foreach(UnitBaseClass target in phaseManager.playerUnits){
-            if (unit.CheckTileInRange(target.tilePosition, unit.aggroRange) >= 0){
-                unit.isAggro = true;
+        if (unit.squad <= -1) //If no squad, become aggro
+        {
+            unit.isAggro = true;
+        }
+        if (unit.isAggro == true){
+            return;
+        }
+
+        List<Vector2Int> coordList = SquadStuff.squadList[unit.squad];
+        Vector2Int firstCoord = coordList[0];
+        Vector2Int secondCoord = coordList[1];
+        int smallX = (firstCoord.x < secondCoord.x) ? firstCoord.x : secondCoord.x;
+        int bigX = (firstCoord.x > secondCoord.x) ? firstCoord.x : secondCoord.x;
+        int smallY = (firstCoord.y < secondCoord.y) ? firstCoord.y : secondCoord.y;
+        int bigY = (firstCoord.y > secondCoord.y) ? firstCoord.y : secondCoord.y;
+        //Debug.Log(string.Format("First: {0}, Second: {1}", firstCoord, secondCoord));
+        //Debug.Log(string.Format("sX: {0}, bX: {1}, sY{2}, bY{3}", smallX, bigX, smallY, bigY));
+
+        for(int x = smallX; x <= bigX; x+=1){
+            for(int y = smallY; y <= bigY; y +=1){
+                //Debug.Log(string.Format("X: {0}, Y: {1}", x,y));
+                if(CheckTileHasPlayer(x,y)){
+                    SquadStuff.squadAggro[unit.squad] = true;
+                }
+            }
+        }
+
+        if(SquadStuff.squadAggro[unit.squad] == true){
+            foreach(AttackingClass ai in phaseManager.aiUnits){
+                if(ai.squad == unit.squad){
+                    ai.isAggro = true;
+                }
             }
         }
     }
@@ -179,6 +208,16 @@ public class BaselineAI : MonoBehaviour
             ret.Add(new TileInfo(new Vector2Int(tileInfo.Tile.x,     tileInfo.Tile.y - 1 ), tileInfo.Cost + 1));
         
         return ret;
+    }
+
+    public bool CheckTileHasPlayer(int x, int y){
+        Vector2Int tile = new Vector2Int(x,y); 
+        foreach(UnitBaseClass target in phaseManager.playerUnits){
+            if(target.tilePosition == tile){
+                return true;
+            }
+        }
+        return false;
     }
 
     public UnitBaseClass CheckTileIsOccupied(TileInfo tileInfo){

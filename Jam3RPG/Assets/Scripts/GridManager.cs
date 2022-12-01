@@ -112,7 +112,7 @@ public class GridManager : MonoBehaviour
         SetCursorPos(cursorTileCoords);
 
         if (gridMode == SelectMode.MoveMode){
-            //Debug.Log(cursorTileCoords);
+            Debug.Log(cursorTileCoords);
             UnitBaseClass unit = selectedUnit.GetComponent<UnitBaseClass>();
             UpdateCursorSprite(unit.tilePosition, unit.moveRange);
 
