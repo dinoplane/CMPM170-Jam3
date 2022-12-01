@@ -90,7 +90,11 @@ public class BaselineAI : MonoBehaviour
 
     /*Basically implements the squad behavior*/
     public void checkAggro(AttackingClass unit){
-        if(unit.isAggro == true){
+        if (unit.squad <= -1) //If no squad, become aggro
+        {
+            unit.isAggro = true;
+        }
+        if (unit.isAggro == true){
             return;
         }
 
