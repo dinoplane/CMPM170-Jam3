@@ -105,11 +105,11 @@ public class UnitBaseClass : MonoBehaviour {
         {
             MakeInactive();
             SpriteUnselect();
-            phaseManager.UnitFinishedTurn();
             if (!wasSacrificed)
             {
                 sprite.color = Color.grey;
             }
+            phaseManager.UnitFinishedTurn();
         }
     }
 

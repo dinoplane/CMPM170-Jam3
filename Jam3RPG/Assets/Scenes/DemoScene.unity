@@ -1180,6 +1180,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 229996068}
     m_Modifications:
     - target: {fileID: 263030124855679201, guid: a9fd43bd08e92ab4e8d56875e201c3a0, type: 3}
+      propertyPath: isAggro
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 263030124855679201, guid: a9fd43bd08e92ab4e8d56875e201c3a0, type: 3}
       propertyPath: healthMax
       value: 2
       objectReference: {fileID: 0}
@@ -2501,6 +2505,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 229996068}
     m_Modifications:
+    - target: {fileID: 3562165130445676614, guid: 310dfb1ef2325424bba8d0c32afc5b86, type: 3}
+      propertyPath: isAggro
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3562165130445676614, guid: 310dfb1ef2325424bba8d0c32afc5b86, type: 3}
       propertyPath: healthMax
       value: 2
@@ -4918,6 +4926,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 229996068}
     m_Modifications:
+    - target: {fileID: 2009004593960242560, guid: 206f84cf274211c4bbb900e8ca0d47f0, type: 3}
+      propertyPath: isAggro
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2009004593960242560, guid: 206f84cf274211c4bbb900e8ca0d47f0, type: 3}
       propertyPath: healthMax
       value: 2

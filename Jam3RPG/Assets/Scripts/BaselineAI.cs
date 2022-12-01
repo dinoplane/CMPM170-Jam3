@@ -39,11 +39,10 @@ public class BaselineAI : MonoBehaviour
             minCoord = tileManager.minCoord;
             maxCoord = tileManager.maxCoord;
             tmap = tileManager.tmap;
-
-            aiCursor.SetActive(true);
         }
         // testing getting the units...
         Debug.Log("ENEMY TURN START");
+        aiCursor.SetActive(true);
 
         int a = 0;
         foreach(AttackingClass unit in phaseManager.aiUnits){ // For every Ai unit
@@ -86,6 +85,7 @@ public class BaselineAI : MonoBehaviour
             }
             a += 1;
         }
+        aiCursor.SetActive(false);
     }
 
     /*Basically implements the squad behavior*/
