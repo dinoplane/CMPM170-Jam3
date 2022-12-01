@@ -556,4 +556,18 @@ public class GridManager : MonoBehaviour
     {
         Application.Quit();
     }
+
+    //Called if the player presses button to make all remaining units wait
+    public void EndTurn()
+    {
+        menuUI.ShowActions();
+        menuUI.ShowTargetMessage();
+
+        if(selectedUnit != null)
+        {
+            UnSelUnit();
+        }
+        gridMode = SelectMode.IdleMode;
+        cursor.GetComponent<SpriteRenderer>().sprite = valid;
+    }
 }
