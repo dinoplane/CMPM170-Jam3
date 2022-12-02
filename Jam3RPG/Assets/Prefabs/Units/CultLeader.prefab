@@ -56,17 +56,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isEnemy: 0
+  isAggro: 0
+  squad: -1
   healthMax: 12
   healthCurrent: 0
   armorMax: 3
   armorCurrent: 0
   moveRange: 4
-  unitClass: Fighter
+  unitClass: Cult Leader
   tilePosition: {x: 0, y: 0}
   wasSacrificed: 0
   turnOver: 0
   sprite: {fileID: 4933821673509002747}
   altAnimController: {fileID: 9100000, guid: 9f399e326a0f5463e8ca728dd6bfae6b, type: 2}
+  invincible: 0
   attackDamage: 4
   attackRange: 1
   phaseManagerRef: {fileID: 0}
