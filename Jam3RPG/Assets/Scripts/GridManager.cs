@@ -239,6 +239,7 @@ public class GridManager : MonoBehaviour
         GetComponent<TileManager>().RemoveRangeTiles();
         //Get unit's action list
         selectedUnitActions = selectedUnit.GetComponent<UnitBaseClass>().actions;
+
         Debug.Log("Picking Action Mode!");
         /*Because this is delared when MoveMode is ended, it doesn't show the action list again
          when canceling the target select.
@@ -247,11 +248,17 @@ public class GridManager : MonoBehaviour
         foreach (KeyActionPair actionPair in selectedUnitActions)
         {
             Debug.Log("Available action: " + actionPair.Key);
-            menuUI.ShowActions(actionPair.Key);  // Displays the action bar and any actions the unit has
+            menuUI.ShowActions(actionPair.Key, selectedUnit);  // Displays the action bar and any actions the unit has
         }
         gridMode = SelectMode.PickActionMode;
     }
 
+// UnitBaseClass unit = selectedUnit.GetComponent<UnitBaseClass>();
+// AttackingClass unit2 = selectedUnit.GetComponent<AttackingClass>();
+// int dmg = 0;
+// if(selectedUnit.GetComponent<AttackingClass>() != null){
+//     dmg = selectedUnit.GetComponent<AttackingClass>().attackDamage;
+// }
 
     public void ButtonAction1(){
         Debug.Log("Slected Action 0");
@@ -467,10 +474,12 @@ public class GridManager : MonoBehaviour
                     UpdateCursorSprite(cursorTileCoords, 0);
                     Debug.Log("Back to PickAction");
                     menuUI.ShowTargetMessage();
+                    
+
                     foreach (KeyActionPair actionPair in selectedUnitActions)
                     {
                         Debug.Log("Available action: " + actionPair.Key);
-                        menuUI.ShowActions(actionPair.Key);
+                        menuUI.ShowActions(actionPair.Key, selectedUnit);
                     }
                     } break;
 
@@ -518,6 +527,7 @@ public class GridManager : MonoBehaviour
         UnSelUnit();
         selectedUnit = unit;
         UnitBaseClass s = selectedUnit.GetComponent<UnitBaseClass>();
+        menuUI.ShowSelectedPlayer(s);
         s.SpriteSelect();
         pastTile = s.tilePosition;
         pastPosition = selectedUnit.transform.position;
