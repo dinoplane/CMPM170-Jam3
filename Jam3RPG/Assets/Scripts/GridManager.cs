@@ -35,6 +35,7 @@ public class GridManager : MonoBehaviour
 
     private GameObject selectedUnit = null;
     AttackingClass selectedUnitRef;
+    [HideInInspector] public string globalAction = "";
     private List<KeyActionPair> selectedUnitActions = null;
 
     private Vector2Int pastTile;// of units
@@ -124,7 +125,7 @@ public class GridManager : MonoBehaviour
             
             //only show for enemies - not accounting for range 
             //if(hitUnit && hitUnit.isEnemy != unit.isEnemy){
-                menuUI.ShowCombatForecast(selectedUnitRef, hitUnit);
+                menuUI.ShowCombatForecast(selectedUnitRef, hitUnit, globalAction);
             //}
             
 
@@ -341,6 +342,7 @@ public class GridManager : MonoBehaviour
         
         if (selectedUnitActions.Count > selectedOptionNum){
             action = selectedUnitActions[selectedOptionNum].Key;
+            globalAction = selectedUnitActions[selectedOptionNum].Key;
             requiresTarget = selectedUnitActions[selectedOptionNum].Value.needsTarget;
         }        
 

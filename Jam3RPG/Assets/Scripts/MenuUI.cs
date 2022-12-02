@@ -32,9 +32,7 @@ public class MenuUI : MonoBehaviour {
     [Header("Combat Forecast")]
     [SerializeField] private GameObject combatPanel;
     [SerializeField] private GameObject combatUnitName;
-    [SerializeField] private GameObject combatAttackDmg;
-    [SerializeField] private GameObject combatAction2;
-    [SerializeField] private GameObject combatAction3;
+    [SerializeField] private GameObject combatAction;
 
     [Header("Misc")]
     [SerializeField] private GameObject targetPanel;
@@ -51,8 +49,6 @@ public class MenuUI : MonoBehaviour {
         targetPanel.SetActive(false);
         otherUnitPanel.SetActive(false);
         combatPanel.SetActive(false);
-        combatAction2.SetActive(false);
-        combatAction3.SetActive(false);
     }
 
 
@@ -79,11 +75,9 @@ public class MenuUI : MonoBehaviour {
         otherUnitArmor.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = unit.armorCurrent.ToString();
     }
 
-    public void ShowCombatForecast(AttackingClass prime = null, UnitBaseClass unit = null){
+    public void ShowCombatForecast(AttackingClass prime = null, UnitBaseClass unit = null, string action = null){
         if(unit == null){
             combatPanel.SetActive(false);
-            combatAction2.SetActive(false);
-            combatAction3.SetActive(false);
             return;
         } else if (prime.isEnemy != unit.isEnemy){
 
@@ -91,8 +85,31 @@ public class MenuUI : MonoBehaviour {
             combatPanel.SetActive(true);
             //show new stats - attack dmg, and specific
             combatUnitName.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = "Engaging Enemy " + unit.name;
-            combatAttackDmg.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = "Health after Attack: " + (prime.attackDamage - unit.healthCurrent).ToString();
-            foreach (KeyActionPair actionPair in prime.actions)
+            
+            if(action == "Attack"){
+                int atkDmg = unit.armorCurrent - prime.attackDamage;
+                int resultNum = 0;
+                //armor is destroyed -> atk health
+                if(atkDmg < 0){
+                    atkDmg = ((unit.healthCurrent - atkDmg) < 0) ? 0 : unit.healthCurrent - atkDmg;
+                    combatAction.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = "Health after Attack: " + atkDmg;
+                }
+                else{ //armor was chipped
+                    combatAction.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = "Armor after Attack: " + atkDmg + "\nEnemy Health: " + unit.healthCurrent.ToString();
+                }
+            }
+            else if(action == "ChipArmor"){
+                int chipDmg = ((unit.armorCurrent - prime.GetComponent<FighterClass>().chipDmg) < 0) ? 0 : unit.armorCurrent - prime.GetComponent<FighterClass>().chipDmg;
+                combatAction.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = "Armor after Chip: " + chipDmg;
+            }
+            else if(action == "DestroyArmor"){
+                combatAction.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = "Armor: 0 \n" + prime.name + " Health: 0";
+            }
+            else if(action == "Hypnotize"){
+                combatAction.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = "Convert Rate: " + prime.GetComponent<CultLeaderClass>().hp + "%";
+            }
+            //combatAction.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = "Health after Attack: " + (prime.attackDamage - unit.healthCurrent).ToString();
+           /* foreach (KeyActionPair actionPair in prime.actions)
             {
                 if(actionPair.Key == ("ChipArmor")){
                     combatAction2.SetActive(true);
@@ -108,6 +125,7 @@ public class MenuUI : MonoBehaviour {
                     combatAction2.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = "Convert Rate: " + prime.GetComponent<CultLeaderClass>().hp + "%";
                 }
             }
+            */
         }
     }
 
