@@ -35,7 +35,6 @@ public class GridManager : MonoBehaviour
     private Vector2Int cursorTileCoords;// of cursor
 
     private GameObject selectedUnit = null;
-    AttackingClass selectedUnitRef;
     [HideInInspector] public string globalAction = "";
     private List<KeyActionPair> selectedUnitActions = null;
 
@@ -114,7 +113,7 @@ public class GridManager : MonoBehaviour
         SetCursorPos(cursorTileCoords);
 
         if (gridMode == SelectMode.MoveMode){
-            Debug.Log(cursorTileCoords);
+            //Debug.Log(cursorTileCoords);
             UnitBaseClass unit = selectedUnit.GetComponent<UnitBaseClass>();
             UpdateCursorSprite(unit.tilePosition, unit.moveRange);
 
@@ -135,7 +134,7 @@ public class GridManager : MonoBehaviour
 
                 //only show for enemies - not accounting for range 
                 //if(hitUnit && hitUnit.isEnemy != unit.isEnemy){
-                menuUI.ShowCombatForecast(selectedUnitRef, hitUnit, globalAction);
+                menuUI.ShowCombatForecast(unit, hitUnit, globalAction);
                 //}
             }
         }
@@ -172,7 +171,6 @@ public class GridManager : MonoBehaviour
                 case SelectMode.MoveMode: // We have something selected
                 {
                     UnitBaseClass unit = selectedUnit.GetComponent<UnitBaseClass>();
-                    selectedUnitRef = selectedUnit.GetComponent<AttackingClass>();
                     if (hitUnit){ // If we have touched another unit
                         if (selectedUnit == hit.collider.gameObject) // And it is self
                             ChangeToPickActionMode(); // Don't move. Just pick action.
@@ -234,8 +232,6 @@ public class GridManager : MonoBehaviour
         GetComponent<TileManager>().RemoveRangeTiles();
         //Get unit's action list
         selectedUnitActions = selectedUnit.GetComponent<UnitBaseClass>().actions;
-        selectedUnitRef.attackDamage = selectedUnit.GetComponent<AttackingClass>().attackDamage;
-        selectedUnitRef.actions = selectedUnitActions;
         Debug.Log("Picking Action Mode!");
         /*Because this is delared when MoveMode is ended, it doesn't show the action list again
          when canceling the target select.
