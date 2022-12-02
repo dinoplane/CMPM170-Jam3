@@ -20,6 +20,8 @@ public class BaselineAI : MonoBehaviour
 
     private Grid tmap;
 
+    AudioClip attackSound;
+
     void Awake(){
 
     }
@@ -29,6 +31,7 @@ public class BaselineAI : MonoBehaviour
     {
         aiCursor =  GameObject.Find("AICursor");
         aiCursor.SetActive(false);
+        attackSound = Resources.Load<AudioClip>("Attack&Chip armor");
     }
 
     /*Coroutine is started when the AI phase starts*/
@@ -631,6 +634,7 @@ public class BaselineAI : MonoBehaviour
         // attack for real
         Debug.Log("YAAAAAAAAAAAA");
         unit.Attack(target);
+        AudioSource.PlayClipAtPoint(attackSound, new Vector3(0,0,0));
         /*Forgot about the warrior case...I'll try to add later if time is available*/
         tileManager.RemoveRangeTiles();
         /*Since attacking will cause an animation to play for the unit and target, we'll need some delay between unit.Attack() and when the AI moves its next unit

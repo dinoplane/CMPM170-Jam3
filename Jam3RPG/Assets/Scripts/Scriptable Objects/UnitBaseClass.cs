@@ -44,6 +44,13 @@ public class UnitBaseClass : MonoBehaviour {
     
     [HideInInspector] public List<KeyActionPair> actions = new List<KeyActionPair>(); //The bool is whether or not it requires a target.
 
+    // Loads sounds
+    AudioClip deathSound1;
+    AudioClip deathSound2;
+    AudioClip deathSound3;
+    AudioClip deathSound4;
+    AudioClip leaderDeathSound;
+    AudioClip sacrificeSound;
     
     // Set health and armor to their max value
     private void Awake() {
@@ -62,6 +69,13 @@ public class UnitBaseClass : MonoBehaviour {
         {
             ChangeAnimator();
         }
+
+        deathSound1 = Resources.Load<AudioClip>("Death 1");
+        deathSound2 = Resources.Load<AudioClip>("Death 2");
+        deathSound3 = Resources.Load<AudioClip>("Death 3");
+        deathSound4 = Resources.Load<AudioClip>("Death 4");
+        leaderDeathSound = Resources.Load<AudioClip>("Kid Death");
+        sacrificeSound = Resources.Load<AudioClip>("Sacrifice");
     }
 
     //Swaps to the stored Cultist animation controller
@@ -230,10 +244,16 @@ public class UnitBaseClass : MonoBehaviour {
         if(wasSacrificed){
             //Do cool sacrifice death
             Debug.Log(name.ToString() + " has sacrificed themselves to the Dark God");
+            AudioSource.PlayClipAtPoint(sacrificeSound, new Vector3(0,0,0));
         }
         else{
             //Do regular death
             Debug.Log(name.ToString() + " has died.");
+            if(unitClass != "Cult Leader"){
+                AudioSource.PlayClipAtPoint(deathSound4, new Vector3(0,0,0));
+            }else{
+                AudioSource.PlayClipAtPoint(leaderDeathSound, new Vector3(0,0,0));
+            }
         }
         phaseManager.UnitDied(this);
         animator.SetBool("Dead", true);

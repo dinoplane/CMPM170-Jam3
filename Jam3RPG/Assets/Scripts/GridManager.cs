@@ -53,6 +53,11 @@ public class GridManager : MonoBehaviour
     [SerializeField]
     private Color attackColor;
 
+    // Loads sounds
+    AudioClip attackSound;
+    AudioClip healSound;
+    AudioClip teleportSound;
+
     private void Awake()
     {
         phaseMngr = FindObjectOfType<PhaseManager>();
@@ -75,6 +80,9 @@ public class GridManager : MonoBehaviour
             SnapUnitToGrid(unit);
         }
 
+        attackSound = Resources.Load<AudioClip>("Attack&Chip armor");
+        healSound = Resources.Load<AudioClip>("Heal");
+        teleportSound = Resources.Load<AudioClip>("Teleport");
     }
 
     public void OnGridMovement(InputAction.CallbackContext context){ // Called when WASD is pressed... kinda useless
@@ -172,6 +180,7 @@ public class GridManager : MonoBehaviour
                         if (checkTileInRange(unit.tilePosition, cursorTileCoords, unit.moveRange)){
                             //Move selected unit and update position
                             unit.MoveToSpace(cursorTileCoords);
+                            AudioSource.PlayClipAtPoint(teleportSound, new Vector3(0,0,0));
                             selectedUnit.transform.position = cursor.transform.position;
                             ChangeToPickActionMode();
                         }
@@ -194,6 +203,7 @@ public class GridManager : MonoBehaviour
                         if (checkTileInRange(unit.tilePosition, cursorTileCoords, unit.attackRange) && 
                                 hitUnit && hitUnit.isEnemy != unit.isEnemy && hitUnit.healthCurrent > 0){ // check if target is in attack range and if target is on opposite team
                                     UnitExecuteAction(hitUnit);
+                                    AudioSource.PlayClipAtPoint(attackSound, new Vector3(0,0,0));
                                     EndSelUnitTurn();
                                     menuUI.ShowSelectedPlayer();
                                     menuUI.ShowActions();
@@ -205,6 +215,7 @@ public class GridManager : MonoBehaviour
                         if (checkTileInRange(cleric.tilePosition, cursorTileCoords, cleric.healRange) && 
                                 hitUnit && hitUnit.isEnemy == cleric.isEnemy && hitUnit.healthCurrent > 0){ // check if target is in attack range and if target is on opposite team
                                     UnitExecuteAction(hitUnit);
+                                    AudioSource.PlayClipAtPoint(healSound, new Vector3(0,0,0));
                                     EndSelUnitTurn();
                                     menuUI.ShowSelectedPlayer();
                                     menuUI.ShowActions();
