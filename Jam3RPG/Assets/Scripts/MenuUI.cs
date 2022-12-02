@@ -35,6 +35,7 @@ public class MenuUI : MonoBehaviour {
 
     void Awake() {
         playerPanel.SetActive(false);
+        otherUnitPanel.SetActive(false);
         actionPanel.SetActive(false);
         actionButton1.SetActive(false);
         actionButton2.SetActive(false);
