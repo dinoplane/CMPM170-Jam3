@@ -225,6 +225,7 @@ public class UnitBaseClass : MonoBehaviour {
         if(!isEnemy && unitClass != "Cult Leader"){
             wasSacrificed = true;
             animator.SetBool("Sacrificed", true);
+            Debug.LogWarning("Hello?");
         }
     }
 

@@ -72,6 +72,7 @@ public class ArcherClass : AttackingClass
         enemy.ChangeHealth((-1) * PowerShotDamage);
         yield return new WaitForSeconds(0.5f);
         Death(wasSacrificed);
+        FinishTurn();
         StopAllCoroutines();
     }
 }

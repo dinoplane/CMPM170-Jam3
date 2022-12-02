@@ -84,6 +84,7 @@ public class FighterClass : AttackingClass
         enemy.ChangeArmor(-enemy.armorCurrent);
         yield return new WaitForSeconds(0.5f);
         Death(wasSacrificed);
+        FinishTurn();
         StopAllCoroutines();
     }
 }
