@@ -91,7 +91,14 @@ public class MenuUI : MonoBehaviour {
                 int atkDmg = prime.attackDamage - unit.armorCurrent;
                 atkDmg = Mathf.Max(atkDmg, 0);
                 int finalHP = Mathf.Max(unit.healthCurrent - atkDmg, 0);
-                combatAction.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = (prime.attackDamage.ToString() + " DMG  - " + unit.armorCurrent.ToString() + " AMR = " + atkDmg.ToString() + " Total DMG\n Enemy HP Change: " + unit.healthCurrent.ToString() + " -> " + finalHP.ToString());
+                combatAction.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = (prime.attackDamage.ToString() + " DMG - " + unit.armorCurrent.ToString() + " AMR = " + atkDmg.ToString() + " Total DMG\n Enemy HP Change: " + unit.healthCurrent.ToString() + " -> " + finalHP.ToString());
+            }
+            else if(action == "PowerShot")
+            {
+                int atkDmg = prime.GetComponent<ArcherClass>().PowerShotDamage - unit.armorCurrent;
+                atkDmg = Mathf.Max(atkDmg, 0);
+                int finalHP = Mathf.Max(unit.healthCurrent - atkDmg, 0);
+                combatAction.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = (prime.GetComponent<ArcherClass>().PowerShotDamage + " DMG - " + unit.armorCurrent.ToString() + " AMR = " + atkDmg.ToString() + " Total DMG\n Enemy HP Change: " + unit.healthCurrent.ToString() + " -> " + finalHP.ToString());
             }
             else if(action == "ChipArmor"){
                 int chipStr = prime.GetComponent<FighterClass>().chipDmg;
