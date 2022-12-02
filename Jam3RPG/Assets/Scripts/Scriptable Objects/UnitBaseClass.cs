@@ -124,7 +124,7 @@ public class UnitBaseClass : MonoBehaviour {
         if (phaseManager != null)
         {
             MakeInactive();
-            SpriteUnselect();
+            //SpriteUnselect();
             if (!wasSacrificed)
             {
                 sprite.color = Color.grey;
@@ -225,7 +225,6 @@ public class UnitBaseClass : MonoBehaviour {
         if(!isEnemy && unitClass != "Cult Leader"){
             wasSacrificed = true;
             animator.SetBool("Sacrificed", true);
-            Debug.LogWarning("Hello?");
         }
     }
 

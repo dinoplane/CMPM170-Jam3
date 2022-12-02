@@ -459,7 +459,8 @@ public class GridManager : MonoBehaviour
 
     private void EndSelUnitTurn(){
         if(selectedUnitAction != "DestroyArmor" && selectedUnitAction != "PowerShot")
-            selectedUnit.GetComponent<UnitBaseClass>().FinishTurn(); 
+            selectedUnit.GetComponent<UnitBaseClass>().FinishTurn();
+        selectedUnit.GetComponent<UnitBaseClass>().SpriteUnselect();
         GetComponent<TileManager>().RemoveRangeTiles();
         selectedUnit = null;
         gridMode = SelectMode.IdleMode;
