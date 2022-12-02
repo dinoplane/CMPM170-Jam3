@@ -25,6 +25,7 @@ public class PhaseManager : MonoBehaviour
     private GameObject gridManager;
 
     public BaselineAI enemyAI;
+    public bool gameEnd = false;
 
     // Start is called before the first frame update
     void Start()
@@ -109,7 +110,8 @@ public class PhaseManager : MonoBehaviour
                 {
                     unit.sprite.color = Color.white; //Un-greys-out the units
                 }
-                StartAiPhase();
+                if (!gameEnd)
+                    StartAiPhase();
             }
         }
         else
@@ -121,9 +123,32 @@ public class PhaseManager : MonoBehaviour
                 {
                     unit.sprite.color = Color.white; //Un-greys-out the units
                 }
-                StartPlayerPhase();
+                if (!gameEnd)
+                    StartPlayerPhase();
             }
         }
+    }
+
+
+    public bool checkEndgame(UnitBaseClass unit){
+        bool ret = false;
+        if(aiUnits.Count <= 0){
+            Debug.Log("All enemies defeated. Victory!");
+            
+            if(canvasUI != null)
+                canvasUI.StartPlayerVictory();
+            ret = true;
+        }
+
+        if (unit.GetComponent<CultLeaderClass>()){
+            Debug.Log("Cult leader defeated. Game Over");
+            ret = true;
+            
+            if(canvasUI != null)
+                canvasUI.StartPlayerLose();
+        }
+        gameEnd = ret;
+        return ret;
     }
 
     public void UnitDied(UnitBaseClass unit)
@@ -131,19 +156,13 @@ public class PhaseManager : MonoBehaviour
         if (unit.isEnemy)
         {
             aiUnits.Remove(unit);
-            if(aiUnits.Count <= 0)
-            {
-                Debug.Log("All enemies defeated. Victory!");
-            }
+            checkEndgame(unit);
         }
         else
         {
             playerUnits.Remove(unit);
             //Checks if Unit has the Cult Leader script as a component
-            if (unit.GetComponent<CultLeaderClass>()) 
-            {
-                Debug.Log("Cult leader defeated. Game Over");
-            }
+            checkEndgame(unit);
         }
     }
 
