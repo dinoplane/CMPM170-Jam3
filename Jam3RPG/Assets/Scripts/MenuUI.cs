@@ -87,16 +87,10 @@ public class MenuUI : MonoBehaviour {
             combatUnitName.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = "Engaging Enemy " + unit.name;
             
             if(action == "Attack"){
-                int atkDmg = unit.armorCurrent - prime.attackDamage;
-                int resultNum = 0;
-                //armor is destroyed -> atk health
-                if(atkDmg < 0){
-                    atkDmg = ((unit.healthCurrent - atkDmg) < 0) ? 0 : unit.healthCurrent - atkDmg;
-                    combatAction.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = "Health after Attack: " + atkDmg;
-                }
-                else{ //armor was chipped
-                    combatAction.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = "Armor after Attack: " + atkDmg + "\nEnemy Health: " + unit.healthCurrent.ToString();
-                }
+                int atkDmg = prime.attackDamage - unit.armorCurrent;
+                atkDmg = Mathf.Max(atkDmg, 0);
+                int finalHP = Mathf.Max(unit.healthCurrent - atkDmg, 0);
+                combatAction.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = (prime.attackDamage.ToString() + " DMG  - " + unit.armorCurrent.ToString() + " AMR = " + atkDmg.ToString() + " Total DMG\n Enemy HP: " + unit.healthCurrent.ToString() + " -> " + finalHP.ToString());
             }
             else if(action == "ChipArmor"){
                 int chipDmg = ((unit.armorCurrent - prime.GetComponent<FighterClass>().chipDmg) < 0) ? 0 : unit.armorCurrent - prime.GetComponent<FighterClass>().chipDmg;
