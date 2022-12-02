@@ -218,8 +218,8 @@ public class GridManager : MonoBehaviour
                                     menuUI.ShowSelectedPlayer();
                                     menuUI.ShowActions();
                                     menuUI.ShowTargetMessage();
-                                    
-                        }
+                                menuUI.ShowCombatForecast();
+                            }
                     }else{
                         ClericClass cleric = selectedUnit.GetComponent<ClericClass>();
                         if (checkTileInRange(cleric.tilePosition, cursorTileCoords, cleric.healRange) && 
@@ -231,7 +231,7 @@ public class GridManager : MonoBehaviour
                                     menuUI.ShowActions();
                                     menuUI.ShowTargetMessage();
                                     
-                        }
+                            }
                     }
                 } break;  
             }
@@ -319,6 +319,7 @@ public class GridManager : MonoBehaviour
                 UnitExecuteAction();
                 EndSelUnitTurn();
                 menuUI.ShowSelectedPlayer();
+                menuUI.ShowCombatForecast();
             }
         }
         //After selecting target, we execute the action

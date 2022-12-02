@@ -290,5 +290,10 @@ public class UnitBaseClass : MonoBehaviour {
         }
         //Debug.Log("Dmg: " + dam);
     } 
+
+    public void HypnotizeAnim()
+    {
+        vfx.SetTrigger("Hypnotize");
+    }
 }
 

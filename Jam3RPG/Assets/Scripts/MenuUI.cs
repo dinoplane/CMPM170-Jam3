@@ -77,7 +77,7 @@ public class MenuUI : MonoBehaviour {
     }
 
     public void ShowCombatForecast(AttackingClass prime = null, UnitBaseClass unit = null, string action = null){
-        if(unit == null){
+        if(unit == null || prime == null){
             combatPanel.SetActive(false);
             return;
         } else if (prime.isEnemy != unit.isEnemy){

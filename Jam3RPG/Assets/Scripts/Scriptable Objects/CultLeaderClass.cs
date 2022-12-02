@@ -61,6 +61,8 @@ public class CultLeaderClass : AttackingClass
     //    *Hillbilly Workaround* Type? Unit: Perhaps "kills" enemy unit and spawns a new identical unit in its place thats on the players control.
     //
     private void Hypnotize(UnitBaseClass enemy){
+        enemy.HypnotizeAnim(); //Plays the hypnotize VFX (Reguardless of if successful or not)
+        
         //100% convert rate
         if(enemy.healthCurrent <= garunteedConvertThresh){
             ChangeEnemyToAlly(enemy);
