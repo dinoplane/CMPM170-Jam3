@@ -53,10 +53,10 @@ public class MenuUI : MonoBehaviour {
         }
         playerPanel.SetActive(true);
         playerName.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = unit.name;
-        playerHealth.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = unit.healthCurrent.ToString();
-        playerArmor.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = unit.armorCurrent.ToString();
-        playerDamage.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = dmg.ToString();
-        playerMoveRange.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = unit.moveRange.ToString();
+        playerHealth.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = "HP: " + unit.healthCurrent.ToString();
+        playerArmor.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = "Def: " + unit.armorCurrent.ToString();
+        playerDamage.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = "Atk: " + dmg.ToString();
+        playerMoveRange.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = "Move: " + unit.moveRange.ToString();
     }
 
     public void ShowOtherUnit(UnitBaseClass unit = null, int dmg = 0)
@@ -68,10 +68,10 @@ public class MenuUI : MonoBehaviour {
         }
         otherUnitPanel.SetActive(true);
         otherUnitName.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = unit.name;
-        otherUnitHealth.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = unit.healthCurrent.ToString();
-        otherUnitArmor.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = unit.armorCurrent.ToString();
-        otherUnitDamage.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = dmg.ToString();
-        otherUnitMoveRange.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = unit.moveRange.ToString();
+        otherUnitHealth.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = "HP: " + unit.healthCurrent.ToString();
+        otherUnitArmor.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = "Def: " + unit.armorCurrent.ToString();
+        otherUnitDamage.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = "Atk: " + dmg.ToString();
+        otherUnitMoveRange.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = "Move: " + unit.moveRange.ToString();
     }
 
     public void ShowActions(string actionString = null){
