@@ -90,11 +90,12 @@ public class MenuUI : MonoBehaviour {
                 int atkDmg = prime.attackDamage - unit.armorCurrent;
                 atkDmg = Mathf.Max(atkDmg, 0);
                 int finalHP = Mathf.Max(unit.healthCurrent - atkDmg, 0);
-                combatAction.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = (prime.attackDamage.ToString() + " DMG  - " + unit.armorCurrent.ToString() + " AMR = " + atkDmg.ToString() + " Total DMG\n Enemy HP: " + unit.healthCurrent.ToString() + " -> " + finalHP.ToString());
+                combatAction.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = (prime.attackDamage.ToString() + " DMG  - " + unit.armorCurrent.ToString() + " AMR = " + atkDmg.ToString() + " Total DMG\n Enemy HP Change: " + unit.healthCurrent.ToString() + " -> " + finalHP.ToString());
             }
             else if(action == "ChipArmor"){
-                int chipDmg = ((unit.armorCurrent - prime.GetComponent<FighterClass>().chipDmg) < 0) ? 0 : unit.armorCurrent - prime.GetComponent<FighterClass>().chipDmg;
-                combatAction.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = "Armor after Chip: " + chipDmg;
+                int chipStr = prime.GetComponent<FighterClass>().chipDmg;
+                int finalArmor = Mathf.Max(unit.armorCurrent - chipStr, 0);
+                combatAction.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = ("Enemy Armor Change: " + unit.armorCurrent.ToString() + " -> " + finalArmor.ToString());
             }
             else if(action == "DestroyArmor"){
                 combatAction.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = "Armor: 0 \n" + prime.name + " Health: 0";
