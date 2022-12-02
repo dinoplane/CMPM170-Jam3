@@ -45,7 +45,7 @@ public class MenuUI : MonoBehaviour {
     }
 
 
-    public void ShowSelectedPlayer(UnitBaseClass unit = null){
+    public void ShowSelectedPlayer(UnitBaseClass unit = null, int dmg = 0){
         if(unit == null){
             playerPanel.SetActive(false);
             return;
@@ -54,9 +54,11 @@ public class MenuUI : MonoBehaviour {
         playerName.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = unit.name;
         playerHealth.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = unit.healthCurrent.ToString();
         playerArmor.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = unit.armorCurrent.ToString();
+        playerDamage.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = dmg.ToString();
+        playerMoveRange.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = unit.moveRange.ToString();
     }
 
-    public void ShowOtherUnit(UnitBaseClass unit = null)
+    public void ShowOtherUnit(UnitBaseClass unit = null, int dmg = 0)
     {
         if (unit == null)
         {
@@ -67,6 +69,8 @@ public class MenuUI : MonoBehaviour {
         otherUnitName.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = unit.name;
         otherUnitHealth.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = unit.healthCurrent.ToString();
         otherUnitArmor.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = unit.armorCurrent.ToString();
+        otherUnitDamage.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = dmg.ToString();
+        otherUnitMoveRange.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = unit.moveRange.ToString();
     }
 
     public void ShowActions(string actionString = null){

@@ -149,7 +149,14 @@ public class GridManager : MonoBehaviour
                         gridMode = SelectMode.MoveMode; // Moving units now...
 
                         UnitBaseClass unit = selectedUnit.GetComponent<UnitBaseClass>();
-                        menuUI.ShowSelectedPlayer(unit);
+
+                        int dmg = 0;
+                        if(selectedUnit.GetComponent<AttackingClass>() != null){
+                            dmg = selectedUnit.GetComponent<AttackingClass>().attackDamage;
+                        }
+
+                        menuUI.ShowSelectedPlayer(unit, dmg);
+                        
                         Debug.Log("Moving to Move Mode!");
                     }
                     else {
