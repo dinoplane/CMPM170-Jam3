@@ -98,10 +98,17 @@ public class MenuUI : MonoBehaviour {
                 combatAction.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = ("Enemy Armor Change: " + unit.armorCurrent.ToString() + " -> " + finalArmor.ToString());
             }
             else if(action == "DestroyArmor"){
-                combatAction.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = "Armor: 0 \n" + prime.name + " Health: 0";
+                combatAction.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = ("Enemy Armor Change: " + unit.armorCurrent.ToString() + " -> 0");
             }
             else if(action == "Hypnotize"){
-                combatAction.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = "Convert Rate: " + prime.GetComponent<CultLeaderClass>().hp + "%";
+                int garunteedThresh = prime.GetComponent<CultLeaderClass>().garunteedConvertThresh;
+                int hp = (10 - (unit.healthCurrent - garunteedThresh)) * 10;
+                if (hp < 10)
+                {
+                    hp = 10;
+                }
+                int hpAboveThresh = Mathf.Max(unit.healthCurrent - garunteedThresh, 0);
+                combatAction.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = ("Enemy HP: " + hpAboveThresh + " above " + garunteedThresh + "\nChange to convert: " + hp.ToString() + "%");
             }
             //combatAction.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = "Health after Attack: " + (prime.attackDamage - unit.healthCurrent).ToString();
            /* foreach (KeyActionPair actionPair in prime.actions)
