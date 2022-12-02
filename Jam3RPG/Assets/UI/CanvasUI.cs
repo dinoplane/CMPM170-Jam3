@@ -15,4 +15,14 @@ public class CanvasUI : MonoBehaviour
     {
         uiAnims.Play("CanvasAiPhaseStart");
     }
+
+    public void StartPlayerVictory()
+    {
+        uiAnims.Play("CanvasPlayerVictory");
+    }
+
+    public void StartPlayerLose()
+    {
+        uiAnims.Play("CanvasPlayerLose");
+    }
 }

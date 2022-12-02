@@ -91,6 +91,7 @@ public class CultLeaderClass : AttackingClass
                 Debug.Log(string.Format("Enemy Health: {0} Rolled #: {1} Success threshold: {2}", enemy.healthCurrent, x, hp));
             }
         }
+        phaseManagerRef.GetComponent<PhaseManager>().checkEndgame(enemy);
     }
 
     /*
@@ -113,6 +114,8 @@ public class CultLeaderClass : AttackingClass
 
         phaseManagerRef.GetComponent<PhaseManager>().playerUnitsThatCanAct++;
         phaseManagerRef.GetComponent<PhaseManager>().aiUnitsThatCanAct--;
+
+        
 
         /*Changes enemy's animator controller to the cultist version*/
         enemy.ChangeAnimator();
