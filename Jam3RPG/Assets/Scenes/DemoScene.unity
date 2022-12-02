@@ -1479,6 +1479,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 749817025}
     m_Modifications:
     - target: {fileID: 3060732500346084369, guid: 5120d9b571b110d4797b434b523fc5e5, type: 3}
+      propertyPath: moveRange
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 3060732500346084369, guid: 5120d9b571b110d4797b434b523fc5e5, type: 3}
       propertyPath: phaseManagerRef
       value: 
       objectReference: {fileID: 1876701196}
