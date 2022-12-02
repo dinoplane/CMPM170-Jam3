@@ -35,6 +35,7 @@ public class GridManager : MonoBehaviour
     private Vector2Int cursorTileCoords;// of cursor
 
     private GameObject selectedUnit = null;
+    [HideInInspector] public string globalAction = "";
     private List<KeyActionPair> selectedUnitActions = null;
 
     private Vector2Int pastTile;// of units
@@ -112,7 +113,7 @@ public class GridManager : MonoBehaviour
         SetCursorPos(cursorTileCoords);
 
         if (gridMode == SelectMode.MoveMode){
-            Debug.Log(cursorTileCoords);
+            //Debug.Log(cursorTileCoords);
             UnitBaseClass unit = selectedUnit.GetComponent<UnitBaseClass>();
             UpdateCursorSprite(unit.tilePosition, unit.moveRange);
 
@@ -126,6 +127,15 @@ public class GridManager : MonoBehaviour
             }else{
                 AttackingClass unit = selectedUnit.GetComponent<AttackingClass>();
                 UpdateCursorSprite(unit.tilePosition, unit.attackRange);
+
+                RaycastHit hit;
+                bool hasSelectedUnit = Physics.Raycast(Camera.main.transform.position, cursor.transform.position - Camera.main.transform.position, out hit);
+                UnitBaseClass hitUnit = (!hasSelectedUnit) ? null : hit.collider.gameObject.GetComponent<UnitBaseClass>();
+
+                //only show for enemies - not accounting for range 
+                //if(hitUnit && hitUnit.isEnemy != unit.isEnemy){
+                menuUI.ShowCombatForecast(unit, hitUnit, globalAction);
+                //}
             }
         }
     }
@@ -356,6 +366,7 @@ public class GridManager : MonoBehaviour
         
         if (selectedUnitActions.Count > selectedOptionNum){
             action = selectedUnitActions[selectedOptionNum].Key;
+            globalAction = selectedUnitActions[selectedOptionNum].Key;
             requiresTarget = selectedUnitActions[selectedOptionNum].Value.needsTarget;
         }        
 
@@ -428,6 +439,7 @@ public class GridManager : MonoBehaviour
                     UpdateCursorSprite(cursorTileCoords, 0);
                     menuUI.ShowSelectedPlayer();
                     menuUI.ShowActions();
+                    menuUI.ShowCombatForecast();
                     Debug.Log("Back to Idle");
                 } break;
 
@@ -444,6 +456,7 @@ public class GridManager : MonoBehaviour
                     GetComponent<TileManager>().CreateRangeTiles(unit.tilePosition, unit.moveRange, moveColor);
 
                     menuUI.ShowActions();
+                    menuUI.ShowCombatForecast();
                     Debug.Log("Back to Move");
                 } break;
 

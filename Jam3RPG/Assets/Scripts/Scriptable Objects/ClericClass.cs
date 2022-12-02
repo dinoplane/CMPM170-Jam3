@@ -36,7 +36,7 @@ public class ClericClass : UnitBaseClass
     {
         base.ExtraAwake();
         actions.Add(new KeyActionPair("Heal", (HealAlly, true)));
-        actions.Add(new KeyActionPair("Shield", (ShieldAlly, true)));
+        //actions.Add(new KeyActionPair("Shield", (ShieldAlly, true)));
     }
 
 

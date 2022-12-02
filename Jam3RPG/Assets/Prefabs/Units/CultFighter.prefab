@@ -11,6 +11,10 @@ PrefabInstance:
       propertyPath: isEnemy
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 263030124855679201, guid: a9fd43bd08e92ab4e8d56875e201c3a0, type: 3}
+      propertyPath: altAnimController
+      value: 
+      objectReference: {fileID: 9100000, guid: 5a15dd01f16874caf95039b1a8d108fb, type: 2}
     - target: {fileID: 5805468987322200789, guid: a9fd43bd08e92ab4e8d56875e201c3a0, type: 3}
       propertyPath: m_RootOrder
       value: 0

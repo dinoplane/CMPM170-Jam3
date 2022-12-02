@@ -84,6 +84,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isEnemy: 1
+  isAggro: 0
+  squad: -1
   healthMax: 16
   healthCurrent: 0
   armorMax: 6
@@ -94,7 +96,8 @@ MonoBehaviour:
   wasSacrificed: 0
   turnOver: 0
   sprite: {fileID: 4933821673509002747}
-  altAnimController: {fileID: 9100000, guid: b6c8bafe281d341289da7b17610fabd6, type: 2}
+  altAnimController: {fileID: 9100000, guid: 71c31c71770aa8e498624b445dff0f40, type: 2}
+  invincible: 0
   attackDamage: 8
   attackRange: 1
 --- !u!212 &4933821673509002747 stripped
