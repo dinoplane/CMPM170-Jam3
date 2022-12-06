@@ -20,6 +20,7 @@ public class MenuUI : MonoBehaviour {
     [SerializeField] private GameObject ClericPanel;
     [SerializeField] private GameObject ArcherPanel;
     [SerializeField] private GameObject FighterPanel;
+    [SerializeField] private GameObject PaladinPanel;
     [SerializeField] private GameObject actionButton1;
     [SerializeField] private GameObject actionButton2;
     [SerializeField] private GameObject actionButton3;
@@ -51,6 +52,7 @@ public class MenuUI : MonoBehaviour {
         ClericPanel.SetActive(false);
         ArcherPanel.SetActive(false);
         FighterPanel.SetActive(false);
+        PaladinPanel.SetActive(false);
         actionButton1.SetActive(false);
         actionButton2.SetActive(false);
         actionButton3.SetActive(false);
@@ -78,8 +80,9 @@ public class MenuUI : MonoBehaviour {
         ClericPanel.SetActive(false);
         ArcherPanel.SetActive(false);
         FighterPanel.SetActive(false);
+        PaladinPanel.SetActive(false);
 
-        if(unit.unitClass == "Fighter"){
+        if (unit.unitClass == "Fighter"){
             FighterPanel.SetActive(true);
         }
         else if(unit.unitClass == "Archer"){
@@ -90,6 +93,10 @@ public class MenuUI : MonoBehaviour {
         }
         else if(unit.unitClass == "Cult Leader"){
             CultLeaderPanel.SetActive(true);
+        }
+        else if(unit.unitClass == "Paladin")
+        {
+            PaladinPanel.SetActive(true);
         }
     }
 
@@ -207,6 +214,11 @@ public class MenuUI : MonoBehaviour {
             CultLeaderClass leader = selectedUnit.GetComponent<CultLeaderClass>();
             action2 = leader.attackDamage.ToString();
             action3 = "%";
+        }
+        else if(unit.unitClass == "Paladin")
+        {
+            PaladinClass paladin = selectedUnit.GetComponent<PaladinClass>();
+            action2 = paladin.attackDamage.ToString();
         }
 
 

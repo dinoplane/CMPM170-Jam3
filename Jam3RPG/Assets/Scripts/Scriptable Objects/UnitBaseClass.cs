@@ -284,7 +284,7 @@ public class UnitBaseClass : MonoBehaviour {
         }
 
         menuUI.ShowOtherUnit(this, dmg);
-    } 
+    }
 
     public void HypnotizeAnim()
     {
