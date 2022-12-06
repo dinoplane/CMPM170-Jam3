@@ -1028,6 +1028,14 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: -12
       objectReference: {fileID: 0}
+    - target: {fileID: 5408404706952043862, guid: b4e27e32799a1754080f0437666f9668, type: 3}
+      propertyPath: m_RootOrder
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 7089453951475076559, guid: b4e27e32799a1754080f0437666f9668, type: 3}
+      propertyPath: m_RootOrder
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 7089453951652912264, guid: b4e27e32799a1754080f0437666f9668, type: 3}
       propertyPath: m_Name
       value: CanvasUI
@@ -6669,10 +6677,6 @@ PrefabInstance:
     - target: {fileID: 263030124855679201, guid: a9fd43bd08e92ab4e8d56875e201c3a0, type: 3}
       propertyPath: squad
       value: -1
-      objectReference: {fileID: 0}
-    - target: {fileID: 263030124855679201, guid: a9fd43bd08e92ab4e8d56875e201c3a0, type: 3}
-      propertyPath: healthMax
-      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 5805468987322200789, guid: a9fd43bd08e92ab4e8d56875e201c3a0, type: 3}
       propertyPath: m_RootOrder
