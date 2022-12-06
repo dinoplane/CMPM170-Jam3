@@ -37,6 +37,7 @@ public class ArcherClass : AttackingClass
     override public void ExtraAwake()
     {
         base.ExtraAwake();
+        unitClass = "Archer";
         actions.Add(new KeyActionPair("PowerShot", (PowerShot, true)));
     }
 

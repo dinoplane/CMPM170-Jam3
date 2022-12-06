@@ -167,7 +167,14 @@ public class GridManager : MonoBehaviour
                         gridMode = SelectMode.MoveMode; // Moving units now...
 
                         UnitBaseClass unit = selectedUnit.GetComponent<UnitBaseClass>();
-                        menuUI.ShowSelectedPlayer(unit);
+
+                        int dmg = 0;
+                        if(selectedUnit.GetComponent<AttackingClass>() != null){
+                            dmg = selectedUnit.GetComponent<AttackingClass>().attackDamage;
+                        }
+
+                        menuUI.ShowSelectedPlayer(unit, dmg);
+                        
                         Debug.Log("Moving to Move Mode!");
                     }
                     else {
@@ -243,6 +250,7 @@ public class GridManager : MonoBehaviour
         GetComponent<TileManager>().RemoveRangeTiles();
         //Get unit's action list
         selectedUnitActions = selectedUnit.GetComponent<UnitBaseClass>().actions;
+
         Debug.Log("Picking Action Mode!");
         /*Because this is delared when MoveMode is ended, it doesn't show the action list again
          when canceling the target select.
@@ -251,11 +259,17 @@ public class GridManager : MonoBehaviour
         foreach (KeyActionPair actionPair in selectedUnitActions)
         {
             Debug.Log("Available action: " + actionPair.Key);
-            menuUI.ShowActions(actionPair.Key);  // Displays the action bar and any actions the unit has
+            menuUI.ShowActions(actionPair.Key, selectedUnit);  // Displays the action bar and any actions the unit has
         }
         gridMode = SelectMode.PickActionMode;
     }
 
+// UnitBaseClass unit = selectedUnit.GetComponent<UnitBaseClass>();
+// AttackingClass unit2 = selectedUnit.GetComponent<AttackingClass>();
+// int dmg = 0;
+// if(selectedUnit.GetComponent<AttackingClass>() != null){
+//     dmg = selectedUnit.GetComponent<AttackingClass>().attackDamage;
+// }
 
     public void ButtonAction1(){
         Debug.Log("Slected Action 0");
@@ -280,6 +294,85 @@ public class GridManager : MonoBehaviour
         ContinueAction(3);
     }
 
+
+    // Called when player presses a key on the keyboard. Used to select an action
+    
+    public void OnSelectOption(InputAction.CallbackContext context){
+        if (context.phase == InputActionPhase.Started && gridMode == SelectMode.PickActionMode)
+
+            /*switch(context.control.name){
+                case "1": // Action
+                    gridMode = SelectMode.ChooseTargetMode;
+                    AttackingClass unit = selectedUnit.GetComponent<AttackingClass>();
+                    UpdateCursorSprite(unit.tilePosition, unit.attackRange);*/
+                    
+        {
+            string action = "";
+            bool requiresTarget = false;
+            int optionNum = int.Parse(context.control.name);
+            selectedOptionNum = optionNum - 1;
+            Debug.Log(optionNum);
+            if (selectedUnitActions.Count > selectedOptionNum){
+                action = selectedUnitActions[selectedOptionNum].Key;
+                requiresTarget = selectedUnitActions[selectedOptionNum].Value.needsTarget;
+            }
+            // switch (context.control.name)
+            // {
+            //     case "1":
+            //         if(selectedUnitActions.Count > 0)
+            //         {
+            //             action = selectedUnitActions[0].Key;
+            //             requiresTarget = selectedUnitActions[0].Value;
+            //         }
+            //         break;
+            //     case "2":
+            //         if (selectedUnitActions.Count > 1)
+            //         {
+            //             action = selectedUnitActions[1].Key;
+            //             requiresTarget = selectedUnitActions[1].Value;
+            //         }
+            //         break;
+            //     case "3":
+            //         if (selectedUnitActions.Count > 2)
+            //         {
+            //             action = selectedUnitActions[2].Key;
+            //             requiresTarget = selectedUnitActions[2].Value;
+            //         }
+            //         break;
+            //     case "4":
+            //         if (selectedUnitActions.Count > 3)
+            //         {
+            //             action = selectedUnitActions[3].Key;
+            //             requiresTarget = selectedUnitActions[3].Value;
+            //         }
+            //         break;
+            // };
+
+            if(action != "") //Do not end action select if there is no action for the chosen value
+            {
+                Debug.Log("Doing action " + action);
+                selectedUnitAction = action;
+                //Note that wait action is always last (for user friendliness)
+                if (requiresTarget)
+                {
+                    Debug.Log("Choose target mode!");
+                    gridMode = SelectMode.ChooseTargetMode;
+                    AttackingClass unit = selectedUnit.GetComponent<AttackingClass>();
+                    UpdateCursorSprite(unit.tilePosition, unit.attackRange);
+                    GetComponent<TileManager>().CreateRangeTiles(unit.tilePosition, unit.attackRange, attackColor);
+                }
+                else
+                {
+                    UnitExecuteAction();
+                    EndSelUnitTurn();
+                    menuUI.ShowSelectedPlayer();
+                    menuUI.ShowActions();
+                }
+            }
+            //After selecting target, we execute the action
+            //Can be done by seeing what the action was, then getting component of the class that action is defined in, and doing it.
+        }
+    }
 
 
     // Using Action Buttons
@@ -393,10 +486,12 @@ public class GridManager : MonoBehaviour
                     UpdateCursorSprite(cursorTileCoords, 0);
                     Debug.Log("Back to PickAction");
                     menuUI.ShowTargetMessage();
+                    
+
                     foreach (KeyActionPair actionPair in selectedUnitActions)
                     {
                         Debug.Log("Available action: " + actionPair.Key);
-                        menuUI.ShowActions(actionPair.Key);
+                        menuUI.ShowActions(actionPair.Key, selectedUnit);
                     }
                     } break;
 
@@ -444,6 +539,7 @@ public class GridManager : MonoBehaviour
         UnSelUnit();
         selectedUnit = unit;
         UnitBaseClass s = selectedUnit.GetComponent<UnitBaseClass>();
+        menuUI.ShowSelectedPlayer(s);
         s.SpriteSelect();
         pastTile = s.tilePosition;
         pastPosition = selectedUnit.transform.position;

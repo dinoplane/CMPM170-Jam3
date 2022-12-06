@@ -46,6 +46,7 @@ public class CultLeaderClass : AttackingClass
     override public void ExtraAwake()
     {
         base.ExtraAwake();
+        unitClass = "Cult Leader";
         actions.Add(new KeyActionPair("Hypnotize", (Hypnotize, true)));
     }
     // Convert

@@ -34,6 +34,7 @@ public class PaladinClass : AttackingClass
     override public void ExtraAwake()
     {
         base.ExtraAwake();
+        unitClass = "Paladin";
         //actions.Add(new KeyValuePair<string, bool>("", true));
     }
 

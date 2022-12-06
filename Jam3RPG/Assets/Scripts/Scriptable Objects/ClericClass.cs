@@ -35,6 +35,7 @@ public class ClericClass : UnitBaseClass
     override public void ExtraAwake()
     {
         base.ExtraAwake();
+        unitClass = "Cleric";
         actions.Add(new KeyActionPair("Heal", (HealAlly, true)));
         //actions.Add(new KeyActionPair("Shield", (ShieldAlly, true)));
     }

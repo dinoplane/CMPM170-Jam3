@@ -16,6 +16,10 @@ public class MenuUI : MonoBehaviour {
 
     [Header("Player Actions")]
     [SerializeField] private GameObject actionPanel;
+    [SerializeField] private GameObject CultLeaderPanel;
+    [SerializeField] private GameObject ClericPanel;
+    [SerializeField] private GameObject ArcherPanel;
+    [SerializeField] private GameObject FighterPanel;
     [SerializeField] private GameObject actionButton1;
     [SerializeField] private GameObject actionButton2;
     [SerializeField] private GameObject actionButton3;
@@ -41,7 +45,12 @@ public class MenuUI : MonoBehaviour {
 
     void Awake() {
         playerPanel.SetActive(false);
+        otherUnitPanel.SetActive(false);
         actionPanel.SetActive(false);
+        CultLeaderPanel.SetActive(false);
+        ClericPanel.SetActive(false);
+        ArcherPanel.SetActive(false);
+        FighterPanel.SetActive(false);
         actionButton1.SetActive(false);
         actionButton2.SetActive(false);
         actionButton3.SetActive(false);
@@ -52,7 +61,7 @@ public class MenuUI : MonoBehaviour {
     }
 
 
-    public void ShowSelectedPlayer(UnitBaseClass unit = null){
+    public void ShowSelectedPlayer(UnitBaseClass unit = null, int dmg = 0){
         if(unit == null){
             playerPanel.SetActive(false);
             return;
@@ -61,9 +70,30 @@ public class MenuUI : MonoBehaviour {
         playerName.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = unit.name;
         playerHealth.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = unit.healthCurrent.ToString();
         playerArmor.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = unit.armorCurrent.ToString();
+        playerDamage.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = dmg.ToString();
+        playerMoveRange.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = unit.moveRange.ToString();
+
+
+        CultLeaderPanel.SetActive(false);
+        ClericPanel.SetActive(false);
+        ArcherPanel.SetActive(false);
+        FighterPanel.SetActive(false);
+
+        if(unit.unitClass == "Fighter"){
+            FighterPanel.SetActive(true);
+        }
+        else if(unit.unitClass == "Archer"){
+            ArcherPanel.SetActive(true);
+        }
+        else if(unit.unitClass == "Cleric"){
+            ClericPanel.SetActive(true);
+        }
+        else if(unit.unitClass == "Cult Leader"){
+            CultLeaderPanel.SetActive(true);
+        }
     }
 
-    public void ShowOtherUnit(UnitBaseClass unit = null)
+    public void ShowOtherUnit(UnitBaseClass unit = null, int dmg = 0)
     {
         if (unit == null)
         {
@@ -74,6 +104,8 @@ public class MenuUI : MonoBehaviour {
         otherUnitName.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = unit.name;
         otherUnitHealth.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = unit.healthCurrent.ToString();
         otherUnitArmor.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = unit.armorCurrent.ToString();
+        otherUnitDamage.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = dmg.ToString();
+        otherUnitMoveRange.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = unit.moveRange.ToString();
     }
 
     public void ShowCombatForecast(AttackingClass prime = null, UnitBaseClass unit = null, string action = null){
@@ -140,7 +172,7 @@ public class MenuUI : MonoBehaviour {
     }
 
 
-    public void ShowActions(string actionString = null){
+    public void ShowActions(string actionString = null, GameObject selectedUnit= null){
         if(actionString == null){
             actionPanel.SetActive(false);
             actionButton1.SetActive(false);
@@ -150,23 +182,52 @@ public class MenuUI : MonoBehaviour {
             return;
         }
 
+        UnitBaseClass unit = selectedUnit.GetComponent<UnitBaseClass>();
+
+        string action2 = "";
+        string action3 = "";
+        string action4 = "";
+
+        if(unit.unitClass == "Fighter"){
+            FighterClass fighter = selectedUnit.GetComponent<FighterClass>();
+            action2 = fighter.attackDamage.ToString();
+            action3 = fighter.chipDmg.ToString();
+            action4 = "99";
+        }
+        else if(unit.unitClass == "Archer"){
+            ArcherClass archer = selectedUnit.GetComponent<ArcherClass>();
+            action2 = archer.attackDamage.ToString();
+            action3 = archer.PowerShotDamage.ToString();
+        }
+        else if(unit.unitClass == "Cleric"){
+            ClericClass cleric = selectedUnit.GetComponent<ClericClass>();
+            action2 = cleric.healAmount.ToString();
+        }
+        else if(unit.unitClass == "Cult Leader"){
+            CultLeaderClass leader = selectedUnit.GetComponent<CultLeaderClass>();
+            action2 = leader.attackDamage.ToString();
+            action3 = "%";
+        }
+
+
+
         actionPanel.SetActive(true);
         switch(true){
             case true when actionButton1.activeSelf == false:
                 actionButton1.SetActive(true);
-                actionButton1.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = actionString;
                 break;
             case true when actionButton2.activeSelf == false:
                 actionButton2.SetActive(true);
-                actionButton2.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = actionString;
+                actionButton2.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = action2;
+
                 break;
             case true when actionButton3.activeSelf == false:
                 actionButton3.SetActive(true);
-                actionButton3.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = actionString;
+                actionButton3.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = action3;
                 break;
             case true when actionButton4.activeSelf == false:
                 actionButton4.SetActive(true);
-                actionButton4.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = actionString;
+                actionButton4.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = action4;
                 break;
             default:
                 break;            
