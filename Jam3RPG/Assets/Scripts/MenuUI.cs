@@ -67,7 +67,7 @@ public class MenuUI : MonoBehaviour {
             return;
         }
         playerPanel.SetActive(true);
-        playerName.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = unit.name;
+        playerName.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = unit.unitClass;
         playerHealth.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = unit.healthCurrent.ToString();
         playerArmor.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = unit.armorCurrent.ToString();
         playerDamage.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = dmg.ToString();
@@ -101,7 +101,7 @@ public class MenuUI : MonoBehaviour {
             return;
         }
         otherUnitPanel.SetActive(true);
-        otherUnitName.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = unit.name;
+        otherUnitName.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = unit.unitClass;
         otherUnitHealth.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = unit.healthCurrent.ToString();
         otherUnitArmor.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = unit.armorCurrent.ToString();
         otherUnitDamage.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = dmg.ToString();
@@ -117,7 +117,7 @@ public class MenuUI : MonoBehaviour {
         
             combatPanel.SetActive(true);
             //show new stats - attack dmg, and specific
-            combatUnitName.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = "Engaging Enemy " + unit.name;
+            combatUnitName.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = "Engaging Enemy " + unit.unitClass;
             
             if(action == "Attack"){
                 int atkDmg = prime.attackDamage - unit.armorCurrent;

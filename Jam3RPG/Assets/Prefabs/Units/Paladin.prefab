@@ -91,7 +91,7 @@ MonoBehaviour:
   armorMax: 6
   armorCurrent: 0
   moveRange: 2
-  unitClass: Fighter
+  unitClass: Paladin
   tilePosition: {x: 0, y: 0}
   wasSacrificed: 0
   turnOver: 0

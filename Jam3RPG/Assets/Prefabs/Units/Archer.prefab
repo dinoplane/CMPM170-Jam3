@@ -63,7 +63,7 @@ MonoBehaviour:
   armorMax: 2
   armorCurrent: 0
   moveRange: 4
-  unitClass: Fighter
+  unitClass: Archer
   tilePosition: {x: 0, y: 0}
   wasSacrificed: 0
   turnOver: 0

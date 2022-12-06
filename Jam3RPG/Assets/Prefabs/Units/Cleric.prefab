@@ -88,6 +88,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isEnemy: 0
+  isAggro: 0
+  squad: -1
   healthMax: 12
   healthCurrent: 0
   armorMax: 2
